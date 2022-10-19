@@ -1,0 +1,8 @@
+version: '3.4'
+
+services:
+  schoolpostponementapi:
+    image: ${DOCKER_REGISTRY-}schoolpostponementapi
+    build:
+      context: .
+      dockerfile: SchoolPostponementAPI/Dockerfile
