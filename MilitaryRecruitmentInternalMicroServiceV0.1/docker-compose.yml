@@ -19,5 +19,11 @@ services:
       context: .
       dockerfile: SchoolPostponementAPI/Dockerfile
 
+  alonepostponement:
+    image: ${DOCKER_REGISTRY-}alonepostponement
+    build:
+      context: .
+      dockerfile: AlonePostponement/Dockerfile
+
 volumes:
   sqlvol2:

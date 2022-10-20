@@ -13,6 +13,7 @@ using System.Security.Claims;
 using System.Linq;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using AlonePostponement.Models;
 
 namespace AlonePostponement.Controllers
 {
@@ -38,6 +39,7 @@ namespace AlonePostponement.Controllers
 
         private void AddCert(int CUserID)
         {
+            
            Models.AlonePostponement st = new Models.AlonePostponement { UserID = CUserID, DateOfGiven = DateTime.Now, DateOfEnd = DateTime.Now.AddYears(3) };
             _context.AlonePostponementDBS.Add(st);
             _context.SaveChanges();
