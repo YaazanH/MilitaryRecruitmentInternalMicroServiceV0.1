@@ -25,6 +25,13 @@ services:
       context: .
       dockerfile: TravelApprovalAPI/Dockerfile
 
+  cashallowanceapi:
+    image: ${DOCKER_REGISTRY-}cashallowanceapi
+    build:
+      context: .
+      dockerfile: CashAllowanceAPI/Dockerfile
+
 volumes:
   sqlvol2:
+
 

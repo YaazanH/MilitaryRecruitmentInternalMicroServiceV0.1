@@ -66,3 +66,9 @@ D:\MS\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMic
 D:\MS\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1\bin\Debug\TravelApprovalAPI.exe
 D:\MS\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1\bin\Debug\TravelApprovalAPI.dll
 D:\MS\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1\bin\Debug\TravelApprovalAPI.pdb
+D:\MS\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1\bin\Debug\CashAllowanceAPI.dll
+D:\MS\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1\bin\Debug\CashAllowanceAPI.deps.json
+D:\MS\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1\bin\Debug\CashAllowanceAPI.runtimeconfig.json
+D:\MS\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1\bin\Debug\CashAllowanceAPI.runtimeconfig.dev.json
+D:\MS\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1\bin\Debug\CashAllowanceAPI.exe
+D:\MS\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1\bin\Debug\CashAllowanceAPI.pdb
