@@ -19,11 +19,26 @@ services:
       context: .
       dockerfile: SchoolPostponementAPI/Dockerfile
 
-  alonepostponement:
-    image: ${DOCKER_REGISTRY-}alonepostponement
+  travelapprovalapi:
+    image: ${DOCKER_REGISTRY-}travelapprovalapi
     build:
       context: .
-      dockerfile: AlonePostponement/Dockerfile
+      dockerfile: TravelApprovalAPI/Dockerfile
+
+  cashallowanceapi:
+    image: ${DOCKER_REGISTRY-}cashallowanceapi
+    build:
+      context: .
+      dockerfile: CashAllowanceAPI/Dockerfile
+
+  cashallowanclessthan42:
+    image: ${DOCKER_REGISTRY-}cashallowanclessthan42
+    build:
+      context: .
+      dockerfile: CashAllowancLessThan42/Dockerfile
 
 volumes:
   sqlvol2:
+
+
+

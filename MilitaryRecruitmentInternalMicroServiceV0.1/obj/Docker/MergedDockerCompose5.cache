@@ -1,32 +1,8 @@
-name: dockercompose5144703731817758637
+name: dockercompose1791817882577683927
 services:
-  alonepostponement:
-    build:
-      context: D:\jounier\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1
-      dockerfile: AlonePostponement/Dockerfile
-    environment:
-      ASPNETCORE_ENVIRONMENT: Development
-      ASPNETCORE_URLS: https://+:443;http://+:80
-    image: alonepostponement
-    networks:
-      default: null
-    ports:
-    - mode: ingress
-      target: 80
-      protocol: tcp
-    - mode: ingress
-      target: 443
-      protocol: tcp
-    volumes:
-    - type: bind
-      source: C:\Users\yazon\AppData\Roaming/ASP.NET/Https
-      target: /root/.aspnet/https
-      read_only: true
-      bind:
-        create_host_path: true
   schoolpostponementapi:
     build:
-      context: D:\jounier\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1
+      context: D:\MS\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1
       dockerfile: SchoolPostponementAPI/Dockerfile
     environment:
       ASPNETCORE_ENVIRONMENT: Development
@@ -43,7 +19,7 @@ services:
       protocol: tcp
     volumes:
     - type: bind
-      source: C:\Users\yazon\AppData\Roaming/ASP.NET/Https
+      source: C:\Users\mooha\AppData\Roaming/ASP.NET/Https
       target: /root/.aspnet/https
       read_only: true
       bind:
@@ -66,9 +42,39 @@ services:
       source: sqlvol2
       target: /var/opt/mssql
       volume: {}
+  travelapproval:
+    build:
+      context: D:\MS\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1
+      dockerfile: TravelApproval/Dockerfile
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_URLS: https://+:443;http://+:80
+    image: travelapproval
+    networks:
+      default: null
+    ports:
+    - mode: ingress
+      target: 80
+      protocol: tcp
+    - mode: ingress
+      target: 443
+      protocol: tcp
+    volumes:
+    - type: bind
+      source: C:\Users\mooha\AppData\Roaming/Microsoft/UserSecrets
+      target: /root/.microsoft/usersecrets
+      read_only: true
+      bind:
+        create_host_path: true
+    - type: bind
+      source: C:\Users\mooha\AppData\Roaming/ASP.NET/Https
+      target: /root/.aspnet/https
+      read_only: true
+      bind:
+        create_host_path: true
 networks:
   default:
-    name: dockercompose5144703731817758637_default
+    name: dockercompose1791817882577683927_default
 volumes:
   sqlvol2:
-    name: dockercompose5144703731817758637_sqlvol2
+    name: dockercompose1791817882577683927_sqlvol2
