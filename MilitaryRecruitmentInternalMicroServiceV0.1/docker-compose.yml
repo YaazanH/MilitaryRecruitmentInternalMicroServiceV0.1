@@ -19,5 +19,12 @@ services:
       context: .
       dockerfile: SchoolPostponementAPI/Dockerfile
 
+  travelapprovalapi:
+    image: ${DOCKER_REGISTRY-}travelapprovalapi
+    build:
+      context: .
+      dockerfile: TravelApprovalAPI/Dockerfile
+
 volumes:
   sqlvol2:
+
