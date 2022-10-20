@@ -1,8 +1,23 @@
 version: '3.4'
 
 services:
+
+  sql-server-db:
+    container_name: SQL_Server
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    volumes:
+      - sqlvol2:/var/opt/mssql
+    ports:
+      - "1404:1433"
+    environment:
+      SA_PASSWORD: "r00t.R00T"
+      ACCEPT_EULA: "Y"
+
   schoolpostponementapi:
     image: ${DOCKER_REGISTRY-}schoolpostponementapi
     build:
       context: .
       dockerfile: SchoolPostponementAPI/Dockerfile
+
+volumes:
+  sqlvol2:
