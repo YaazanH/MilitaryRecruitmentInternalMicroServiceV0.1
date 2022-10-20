@@ -13,16 +13,16 @@ using System.Threading.Tasks;
 using CashAllowanceAPI.Data;
 using CashAllowanceAPI.Models;
 
-namespace TravelApprovalAPI.Controllers
+namespace CashAllowanceAPI.Controllers
 {
 
     [ApiController]
     [Route("CashAllowance")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    public class TravelApprovalController : Controller
+    public class CashAllowanceController : Controller
     {
         private readonly CashAllowanceContext _context;
-        public TravelApprovalController(CashAllowanceContext context)
+        public CashAllowanceController(CashAllowanceContext context)
         {
             _context = context;
         }
@@ -38,7 +38,7 @@ namespace TravelApprovalAPI.Controllers
 
         private void AddCert(int CUserID)
         {
-            CashAllowance tra = new CashAllowance { UserID = CUserID, DateOfGiven = DateTime.Now, DateOfEnd = DateTime.Now.AddMonths(6) };
+            CashAllowance tra = new CashAllowance { UserID = CUserID, DateOfGiven = DateTime.Now };
             _context.CashAllowanceDb.Add(tra);
             _context.SaveChanges();
 
@@ -87,14 +87,7 @@ namespace TravelApprovalAPI.Controllers
         public async Task<IActionResult> GetAbleToHaveTravelApproval()
         {
             int CUserID = GetCurrentUserID();
-            var User = _context.CashAllowanceDb.Where(x => x.UserID == CUserID).FirstOrDefault();
-            if (User != null)
-            {
-                if (User.DateOfEnd.DateTime > DateTime.Now)
-                {
-                    return Ok("You aready have vaild cert");
-                }
-            }
+         
 
 
 
@@ -108,7 +101,7 @@ namespace TravelApprovalAPI.Controllers
                 }
             }
 
-            switch (JsonConvert.DeserializeObject<string>(await APICall("https://host.docker.internal:40006/University/GetStudyYears")))
+            switch (JsonConvert.DeserializeObject<string>(await APICall("https://host.docker.internal:40018/RecordsAdminstration/GetAge")))
             {
                 case "2":
                     if (Age == 43)

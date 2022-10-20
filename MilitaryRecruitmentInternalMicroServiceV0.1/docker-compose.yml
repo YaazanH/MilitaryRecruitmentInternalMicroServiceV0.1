@@ -31,7 +31,14 @@ services:
       context: .
       dockerfile: CashAllowanceAPI/Dockerfile
 
+  cashallowanclessthan42:
+    image: ${DOCKER_REGISTRY-}cashallowanclessthan42
+    build:
+      context: .
+      dockerfile: CashAllowancLessThan42/Dockerfile
+
 volumes:
   sqlvol2:
+
 
 
