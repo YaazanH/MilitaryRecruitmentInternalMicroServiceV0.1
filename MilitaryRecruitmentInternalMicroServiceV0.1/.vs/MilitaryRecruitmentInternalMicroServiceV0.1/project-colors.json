@@ -20,7 +20,17 @@
       "ProjectGuid": "a6ac4b0d-316a-444d-8bcb-93fce19faffa",
       "DisplayName": "AlonePostponement",
       "ColorIndex": 2
+    },
+    "40d94bbd-42ad-40aa-8310-1521c68a024d": {
+      "ProjectGuid": "40d94bbd-42ad-40aa-8310-1521c68a024d",
+      "DisplayName": "CashAllowancLessThan42",
+      "ColorIndex": 3
+    },
+    "a023c6d5-cdf6-48ff-905f-23f0e33cdc97": {
+      "ProjectGuid": "a023c6d5-cdf6-48ff-905f-23f0e33cdc97",
+      "DisplayName": "CashAllowanceAPI",
+      "ColorIndex": 4
     }
   },
-  "NextColorIndex": 3
+  "NextColorIndex": 5
 }
