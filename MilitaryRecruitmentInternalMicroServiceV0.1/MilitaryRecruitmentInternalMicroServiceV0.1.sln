@@ -1,11 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.0.31919.166
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.32901.82
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SchoolPostponementAPI", "SchoolPostponementAPI\SchoolPostponementAPI.csproj", "{C8DEF8FD-C175-4D9A-8710-914A84AFFEE9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SchoolPostponementAPI", "SchoolPostponementAPI\SchoolPostponementAPI.csproj", "{C8DEF8FD-C175-4D9A-8710-914A84AFFEE9}"
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{54D670E1-2801-418B-9696-8D3D94AFF115}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BrotherInServicePostponementAPI", "BrotherInServicePostponementAPI\BrotherInServicePostponementAPI.csproj", "{79593624-D16D-42BE-A3D1-905B38242A80}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FixedServiceAllowanceAPI", "FixedServiceAllowanceAPI\FixedServiceAllowanceAPI.csproj", "{2F9E55FE-2186-4FDB-A285-EEA1C13F47DF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +25,14 @@ Global
 		{54D670E1-2801-418B-9696-8D3D94AFF115}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{54D670E1-2801-418B-9696-8D3D94AFF115}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{54D670E1-2801-418B-9696-8D3D94AFF115}.Release|Any CPU.Build.0 = Release|Any CPU
+		{79593624-D16D-42BE-A3D1-905B38242A80}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{79593624-D16D-42BE-A3D1-905B38242A80}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{79593624-D16D-42BE-A3D1-905B38242A80}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{79593624-D16D-42BE-A3D1-905B38242A80}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2F9E55FE-2186-4FDB-A285-EEA1C13F47DF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2F9E55FE-2186-4FDB-A285-EEA1C13F47DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2F9E55FE-2186-4FDB-A285-EEA1C13F47DF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2F9E55FE-2186-4FDB-A285-EEA1C13F47DF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

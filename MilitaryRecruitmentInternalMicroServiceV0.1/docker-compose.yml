@@ -19,5 +19,18 @@ services:
       context: .
       dockerfile: SchoolPostponementAPI/Dockerfile
 
+  brotherinservicepostponementapi:
+    image: ${DOCKER_REGISTRY-}brotherinservicepostponementapi
+    build:
+      context: .
+      dockerfile: BrotherInServicePostponementAPI/Dockerfile
+
+  fixedserviceallowanceapi:
+    image: ${DOCKER_REGISTRY-}fixedserviceallowanceapi
+    build:
+      context: .
+      dockerfile: FixedServiceAllowanceAPI/Dockerfile
+
 volumes:
   sqlvol2:
+
