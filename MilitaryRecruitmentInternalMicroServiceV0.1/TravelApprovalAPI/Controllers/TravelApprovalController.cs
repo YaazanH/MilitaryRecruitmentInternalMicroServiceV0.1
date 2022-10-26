@@ -106,13 +106,14 @@ namespace TravelApprovalAPI.Controllers
             }
             else
             {
-                //is worker
-                if (JsonConvert.DeserializeObject<bool>(await APICall("https://host.docker.internal:40024/LaborMinAPI/GetIsAWorker")))
-                {
-                    return Ok("You cant cert because of Your Current Job");
-                }
-                else
-                {
+               
+                    //is worker
+                    if (JsonConvert.DeserializeObject<bool>(await APICall("https://host.docker.internal:40024/LaborMinAPI/GetIsAWorker")))
+                     {
+                         return Ok("You cant cert because of Your Current Job");
+                     }
+                      else
+                      {
 
                     //Is clear financially
                     if (!JsonConvert.DeserializeObject<bool>(await APICall("https://host.docker.internal:40022/Finance/GetUserTransactions")))
@@ -127,10 +128,10 @@ namespace TravelApprovalAPI.Controllers
                         AddCert(GetCurrentUserID());
                         return Ok("You Have Succesfully Postponement!");
                     }
-                   
-                }
-            }
 
+                }
+               }
+            AddCert(GetCurrentUserID());
             return NoContent();
 
 
