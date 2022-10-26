@@ -9,9 +9,15 @@ Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-co
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TravelApprovalAPI", "TravelApprovalAPI\TravelApprovalAPI.csproj", "{F081088F-FBEC-4BF8-8C09-C30E81CC501A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CashAllowanceAPI", "CashAllowanceAPI\CashAllowanceAPI.csproj", "{A023C6D5-CDF6-48FF-905F-23F0E33CDC97}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CashAllowanceAPI", "CashAllowanceAPI\CashAllowanceAPI.csproj", "{A023C6D5-CDF6-48FF-905F-23F0E33CDC97}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CashAllowancLessThan42", "CashAllowancLessThan42\CashAllowancLessThan42.csproj", "{40D94BBD-42AD-40AA-8310-1521C68A024D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CashAllowancLessThan42", "CashAllowancLessThan42\CashAllowancLessThan42.csproj", "{40D94BBD-42AD-40AA-8310-1521C68A024D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AlonePostponement", "AlonePostponement\AlonePostponement.csproj", "{890C9554-C0AD-47C2-B658-568ED69E0A63}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BrotherInServicePostponementAPI", "BrotherInServicePostponementAPI\BrotherInServicePostponementAPI.csproj", "{C323219D-A05D-4DF1-B04E-0AA368851BD1}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FixedServiceAllowanceAPI", "FixedServiceAllowanceAPI\FixedServiceAllowanceAPI.csproj", "{A8B6AF8B-C6D1-4FB2-A6B1-2CF65E885FD6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +45,18 @@ Global
 		{40D94BBD-42AD-40AA-8310-1521C68A024D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{40D94BBD-42AD-40AA-8310-1521C68A024D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{40D94BBD-42AD-40AA-8310-1521C68A024D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{890C9554-C0AD-47C2-B658-568ED69E0A63}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{890C9554-C0AD-47C2-B658-568ED69E0A63}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{890C9554-C0AD-47C2-B658-568ED69E0A63}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{890C9554-C0AD-47C2-B658-568ED69E0A63}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C323219D-A05D-4DF1-B04E-0AA368851BD1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C323219D-A05D-4DF1-B04E-0AA368851BD1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C323219D-A05D-4DF1-B04E-0AA368851BD1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C323219D-A05D-4DF1-B04E-0AA368851BD1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A8B6AF8B-C6D1-4FB2-A6B1-2CF65E885FD6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A8B6AF8B-C6D1-4FB2-A6B1-2CF65E885FD6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A8B6AF8B-C6D1-4FB2-A6B1-2CF65E885FD6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A8B6AF8B-C6D1-4FB2-A6B1-2CF65E885FD6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -37,8 +37,17 @@ services:
       context: .
       dockerfile: CashAllowancLessThan42/Dockerfile
 
+  alonepostponement:
+    image: ${DOCKER_REGISTRY-}alonepostponement
+    build:
+      context: .
+      dockerfile: AlonePostponement/Dockerfile
+
+  brotherinservicepostponementapi:
+    image: ${DOCKER_REGISTRY-}brotherinservicepostponementapi
+    build:
+      context: .
+      dockerfile: BrotherInServicePostponementAPI/Dockerfile
+
 volumes:
   sqlvol2:
-
-
-
