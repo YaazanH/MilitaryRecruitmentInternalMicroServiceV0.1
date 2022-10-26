@@ -98,7 +98,7 @@ namespace TravelApprovalAPI.Controllers
 
 
 
-            int Age = JsonConvert.DeserializeObject<int>(await APICall("https://host.docker.internal:40018/RecordsAdminstration/GetAge"));
+            int Age = JsonConvert.DeserializeObject<int>(await APICall("https://host.docker.internal:40018/RecordAdminstration/GetAge"));
 
             if (Age >= 42)
             {
@@ -124,6 +124,7 @@ namespace TravelApprovalAPI.Controllers
                     //is in country
                     if (JsonConvert.DeserializeObject<bool>(await APICall("https://host.docker.internal:40011/Passport/GetIstravel")))
                     {
+                        AddCert(GetCurrentUserID());
                         return Ok("You Have Succesfully Postponement!");
                     }
                    

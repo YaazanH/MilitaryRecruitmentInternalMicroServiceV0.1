@@ -27,36 +27,54 @@ services:
     build:
       context: .
       dockerfile: SchoolPostponementAPI/Dockerfile
+    ports:
+      - "41025:80"
+      - "40025:443"
 
   travelapprovalapi:
     image: ${DOCKER_REGISTRY-}travelapprovalapi
     build:
       context: .
       dockerfile: TravelApprovalAPI/Dockerfile
+    ports:
+      - "41026:80"
+      - "40026:443"
 
   cashallowanceapi:
     image: ${DOCKER_REGISTRY-}cashallowanceapi
     build:
       context: .
       dockerfile: CashAllowanceAPI/Dockerfile
+    ports:
+      - "41027:80"
+      - "40027:443"
 
   cashallowanclessthan42:
     image: ${DOCKER_REGISTRY-}cashallowanclessthan42
     build:
       context: .
       dockerfile: CashAllowancLessThan42/Dockerfile
+    ports:
+      - "41028:80"
+      - "40028:443"
 
   alonepostponement:
     image: ${DOCKER_REGISTRY-}alonepostponement
     build:
       context: .
       dockerfile: AlonePostponement/Dockerfile
+    ports:
+      - "41029:80"
+      - "40029:443"
 
   brotherinservicepostponementapi:
     image: ${DOCKER_REGISTRY-}brotherinservicepostponementapi
     build:
       context: .
       dockerfile: BrotherInServicePostponementAPI/Dockerfile
+    ports:
+      - "41030:80"
+      - "40030:443"
 
 volumes:
   sqlvol2:
