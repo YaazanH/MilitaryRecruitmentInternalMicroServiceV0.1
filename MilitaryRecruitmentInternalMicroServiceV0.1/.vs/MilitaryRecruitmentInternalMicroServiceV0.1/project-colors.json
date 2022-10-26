@@ -1,5 +1,36 @@
 {
   "Version": 1,
-  "ProjectMap": {},
-  "NextColorIndex": 0
+  "ProjectMap": {
+    "54d670e1-2801-418b-9696-8d3d94aff115": {
+      "ProjectGuid": "54d670e1-2801-418b-9696-8d3d94aff115",
+      "DisplayName": "docker-compose",
+      "ColorIndex": 0
+    },
+    "c8def8fd-c175-4d9a-8710-914a84affee9": {
+      "ProjectGuid": "c8def8fd-c175-4d9a-8710-914a84affee9",
+      "DisplayName": "SchoolPostponementAPI",
+      "ColorIndex": 1
+    },
+    "a2fe74e1-b743-11d0-ae1a-00a0c90fffc3": {
+      "ProjectGuid": "a2fe74e1-b743-11d0-ae1a-00a0c90fffc3",
+      "DisplayName": "Miscellaneous Files",
+      "ColorIndex": -1
+    },
+    "a6ac4b0d-316a-444d-8bcb-93fce19faffa": {
+      "ProjectGuid": "a6ac4b0d-316a-444d-8bcb-93fce19faffa",
+      "DisplayName": "AlonePostponement",
+      "ColorIndex": 2
+    },
+    "40d94bbd-42ad-40aa-8310-1521c68a024d": {
+      "ProjectGuid": "40d94bbd-42ad-40aa-8310-1521c68a024d",
+      "DisplayName": "CashAllowancLessThan42",
+      "ColorIndex": 3
+    },
+    "a023c6d5-cdf6-48ff-905f-23f0e33cdc97": {
+      "ProjectGuid": "a023c6d5-cdf6-48ff-905f-23f0e33cdc97",
+      "DisplayName": "CashAllowanceAPI",
+      "ColorIndex": 4
+    }
+  },
+  "NextColorIndex": 5
 }
