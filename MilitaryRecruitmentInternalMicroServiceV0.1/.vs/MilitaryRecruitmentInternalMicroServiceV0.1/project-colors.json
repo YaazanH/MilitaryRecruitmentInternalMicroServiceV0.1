@@ -35,7 +35,22 @@
       "ProjectGuid": "f081088f-fbec-4bf8-8c09-c30e81cc501a",
       "DisplayName": "TravelApprovalAPI",
       "ColorIndex": 5
+    },
+    "890c9554-c0ad-47c2-b658-568ed69e0a63": {
+      "ProjectGuid": "890c9554-c0ad-47c2-b658-568ed69e0a63",
+      "DisplayName": "AlonePostponement",
+      "ColorIndex": 6
+    },
+    "c323219d-a05d-4df1-b04e-0aa368851bd1": {
+      "ProjectGuid": "c323219d-a05d-4df1-b04e-0aa368851bd1",
+      "DisplayName": "BrotherInServicePostponementAPI",
+      "ColorIndex": 7
+    },
+    "a8b6af8b-c6d1-4fb2-a6b1-2cf65e885fd6": {
+      "ProjectGuid": "a8b6af8b-c6d1-4fb2-a6b1-2cf65e885fd6",
+      "DisplayName": "FixedServiceAllowanceAPI",
+      "ColorIndex": 8
     }
   },
-  "NextColorIndex": 6
+  "NextColorIndex": 9
 }
