@@ -19,18 +19,26 @@ services:
       context: .
       dockerfile: SchoolPostponementAPI/Dockerfile
 
-  brotherinservicepostponementapi:
-    image: ${DOCKER_REGISTRY-}brotherinservicepostponementapi
+  travelapprovalapi:
+    image: ${DOCKER_REGISTRY-}travelapprovalapi
     build:
       context: .
-      dockerfile: BrotherInServicePostponementAPI/Dockerfile
+      dockerfile: TravelApprovalAPI/Dockerfile
 
-  fixedserviceallowanceapi:
-    image: ${DOCKER_REGISTRY-}fixedserviceallowanceapi
+  cashallowanceapi:
+    image: ${DOCKER_REGISTRY-}cashallowanceapi
     build:
       context: .
-      dockerfile: FixedServiceAllowanceAPI/Dockerfile
+      dockerfile: CashAllowanceAPI/Dockerfile
+
+  cashallowanclessthan42:
+    image: ${DOCKER_REGISTRY-}cashallowanclessthan42
+    build:
+      context: .
+      dockerfile: CashAllowancLessThan42/Dockerfile
 
 volumes:
   sqlvol2:
+
+
 
