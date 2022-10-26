@@ -30,7 +30,12 @@
       "ProjectGuid": "a023c6d5-cdf6-48ff-905f-23f0e33cdc97",
       "DisplayName": "CashAllowanceAPI",
       "ColorIndex": 4
+    },
+    "f081088f-fbec-4bf8-8c09-c30e81cc501a": {
+      "ProjectGuid": "f081088f-fbec-4bf8-8c09-c30e81cc501a",
+      "DisplayName": "TravelApprovalAPI",
+      "ColorIndex": 5
     }
   },
-  "NextColorIndex": 5
+  "NextColorIndex": 6
 }
