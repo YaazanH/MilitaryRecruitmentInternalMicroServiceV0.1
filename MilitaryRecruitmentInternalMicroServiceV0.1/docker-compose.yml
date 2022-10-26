@@ -3,7 +3,7 @@ version: '3.4'
 services:
 
   sql-server-db:
-    container_name: SQL_Server
+    container_name: SQL_Server2
     image: mcr.microsoft.com/mssql/server:2019-latest
     volumes:
       - sqlvol2:/var/opt/mssql
@@ -15,7 +15,7 @@ services:
 
   consul:
     image: consul:latest
-    container_name: consul_server
+    container_name: consul_server2
     network_mode: bridge
     ports:
       - "8501:8500"
