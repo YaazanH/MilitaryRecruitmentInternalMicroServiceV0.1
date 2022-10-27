@@ -37,8 +37,8 @@ services:
       context: .
       dockerfile: TravelApprovalAPI/Dockerfile
     ports:
-      - "41026:80"
-      - "40026:443"
+      - "51000:80"
+      - "50000:443"
 
   cashallowanceapi:
     image: ${DOCKER_REGISTRY-}cashallowanceapi
@@ -46,8 +46,8 @@ services:
       context: .
       dockerfile: CashAllowanceAPI/Dockerfile
     ports:
-      - "41027:80"
-      - "40027:443"
+      - "51001:80"
+      - "50001:443"
 
   cashallowanclessthan42:
     image: ${DOCKER_REGISTRY-}cashallowanclessthan42
@@ -55,8 +55,8 @@ services:
       context: .
       dockerfile: CashAllowancLessThan42/Dockerfile
     ports:
-      - "41028:80"
-      - "40028:443"
+      - "51002:80"
+      - "50002:443"
 
   alonepostponement:
     image: ${DOCKER_REGISTRY-}alonepostponement
