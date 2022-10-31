@@ -28,8 +28,8 @@ services:
       context: .
       dockerfile: SchoolPostponementAPI/Dockerfile
     ports:
-      - "41025:80"
-      - "40025:443"
+      - "51012:80"
+      - "50012:443"
 
   travelapprovalapi:
     image: ${DOCKER_REGISTRY-}travelapprovalapi
@@ -64,8 +64,8 @@ services:
       context: .
       dockerfile: AlonePostponement/Dockerfile
     ports:
-      - "41029:80"
-      - "40029:443"
+      - "51014:80"
+      - "50014:443"
 
   brotherinservicepostponementapi:
     image: ${DOCKER_REGISTRY-}brotherinservicepostponementapi
@@ -76,5 +76,25 @@ services:
       - "41030:80"
       - "40030:443"
 
+  loginapi:
+    image: ${DOCKER_REGISTRY-}loginapi
+    build:
+      context: .
+      dockerfile: LoginAPI/Dockerfile
+    ports:
+      - "51050:80"
+      - "50050:443"
+
+
+  apigateway:
+    image: ${DOCKER_REGISTRY-}apigateway
+    build:
+      context: .
+      dockerfile: APIGateway/Dockerfile
+    ports:
+      - "51051:80"
+      - "50051:443"
+
 volumes:
   sqlvol2:
+
