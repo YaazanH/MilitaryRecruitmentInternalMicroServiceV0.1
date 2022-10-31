@@ -1,0 +1,36 @@
+{
+  "Routes": [
+    // Alone Web API
+    {
+      "DownstreamPathTemplate": "/AlonePostponement/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 51014
+        }
+      ],
+      "UpstreamPathTemplate": "/AlonePostponement/{everything}",
+      "UpstreamHttpMethod": [ "Get" ]
+    },
+    {
+      "DownstreamPathTemplate": "/SchoolPostponement/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 51012
+        }
+      ],
+      "UpstreamPathTemplate": "/SchoolPostponement/{everything}",
+      "UpstreamHttpMethod": [ "Get" ]
+    }
+  ],
+  "GlobalConfiguration": {
+    "BaseUrl": "http://host.docker.internal:50051",
+    "RateLimitOptions": {
+      "QuotaExceededMessage": "Request not allowed",
+      "HttpStatusCode": 909
+    }
+  }
+}

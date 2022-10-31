@@ -95,15 +95,15 @@ namespace AlonePostponement.Controllers
                 }
             }
             //check have boy brothers
-            if(JsonConvert.DeserializeObject<bool>(await APICall("https://host.docker.internal:40006/University/GetStudyYears")))
+            if(JsonConvert.DeserializeObject<bool>(await APICall("https://host.docker.internal:40006/RecordAdminstration/GetIfHasMaleBrothers")))
             {
                 List<int> BrotherNotDied = new List<int>();
                 //add brother id 
-                List<int> BrothersID = JsonConvert.DeserializeObject<List<int>>(await APICall("https://host.docker.internal:40006/University/GetStudyYears"));
+                List<int> BrothersID = JsonConvert.DeserializeObject<List<int>>(await APICall("https://host.docker.internal:40006/RecordAdminstration/GetListOfBros"));
                 foreach (var item in BrothersID)
                 {
                     //if any brother death
-                    if (!JsonConvert.DeserializeObject<bool>(await APICall("https://host.docker.internal:40006/University/GetStudyYears?id="+item.ToString())))
+                    if (!JsonConvert.DeserializeObject<bool>(await APICall("https://host.docker.internal:40006/RecordAdminstration/GetDeath?id=" + item.ToString())))
                     {
                         BrotherNotDied.Add(item);
                     }
@@ -113,7 +113,7 @@ namespace AlonePostponement.Controllers
                     foreach (var item in BrotherNotDied)
                     {
                         //check if one of the brother not eill
-                        if (!JsonConvert.DeserializeObject<bool>(await APICall("https://host.docker.internal:40006/University/GetStudyYears?id=" + item.ToString())))
+                        if (!JsonConvert.DeserializeObject<bool>(await APICall("https://host.docker.internal:40006/HealthMin/GetHaveProb?id=" + item.ToString())))
                         {
                             return Ok("you cant because you have brothers");
                         }
