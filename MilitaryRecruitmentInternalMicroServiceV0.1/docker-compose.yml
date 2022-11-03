@@ -76,5 +76,25 @@ services:
       - "41030:80"
       - "40030:443"
 
+  postponementofconvictsapi:
+    image: ${DOCKER_REGISTRY-}postponementofconvictsapi
+    build:
+      context: .
+      dockerfile: PostponementOfConvictsAPI/Dockerfile
+    ports:
+      - "51004:80"
+      - "50004:443"
+
+  obligatoryserviceapi:
+    image: ${DOCKER_REGISTRY-}obligatoryserviceapi
+    build:
+      context: .
+      dockerfile: ObligatoryServiceAPI/Dockerfile
+    ports:
+      - "51005:80"
+      - "50005:443"
+
 volumes:
   sqlvol2:
+
+

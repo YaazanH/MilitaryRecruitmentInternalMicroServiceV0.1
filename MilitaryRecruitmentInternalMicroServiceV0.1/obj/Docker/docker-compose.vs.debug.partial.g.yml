@@ -14,10 +14,10 @@ services:
       - ASPNETCORE_LOGGING__CONSOLE__DISABLECOLORS=true
       - NUGET_FALLBACK_PACKAGES=
     volumes:
-      - D:\MS\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1\AlonePostponement:/app
-      - D:\MS\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1:/src
-      - C:\Users\mooha\vsdbg\vs2017u5:/remote_debugger:rw
-      - C:\Users\mooha\.nuget\packages\:/root/.nuget/packages:ro
+      - E:\Jun\MilitaryRecruitmentMicroServiceInternal\MilitaryRecruitmentInternalMicroServiceV0.1\AlonePostponement:/app
+      - E:\Jun\MilitaryRecruitmentMicroServiceInternal\MilitaryRecruitmentInternalMicroServiceV0.1:/src
+      - C:\Users\BeanDady\vsdbg\vs2017u5:/remote_debugger:rw
+      - C:\Users\BeanDady\.nuget\packages\:/root/.nuget/packages:ro
       - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
       - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
 
@@ -41,10 +41,10 @@ services:
       - ASPNETCORE_LOGGING__CONSOLE__DISABLECOLORS=true
       - NUGET_FALLBACK_PACKAGES=
     volumes:
-      - D:\MS\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1\BrotherInServicePostponementAPI:/app
-      - D:\MS\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1:/src
-      - C:\Users\mooha\vsdbg\vs2017u5:/remote_debugger:rw
-      - C:\Users\mooha\.nuget\packages\:/root/.nuget/packages:ro
+      - E:\Jun\MilitaryRecruitmentMicroServiceInternal\MilitaryRecruitmentInternalMicroServiceV0.1\BrotherInServicePostponementAPI:/app
+      - E:\Jun\MilitaryRecruitmentMicroServiceInternal\MilitaryRecruitmentInternalMicroServiceV0.1:/src
+      - C:\Users\BeanDady\vsdbg\vs2017u5:/remote_debugger:rw
+      - C:\Users\BeanDady\.nuget\packages\:/root/.nuget/packages:ro
       - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
       - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
 
@@ -69,10 +69,10 @@ services:
       - ASPNETCORE_LOGGING__CONSOLE__DISABLECOLORS=true
       - NUGET_FALLBACK_PACKAGES=
     volumes:
-      - D:\MS\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1\CashAllowanceAPI:/app
-      - D:\MS\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1:/src
-      - C:\Users\mooha\vsdbg\vs2017u5:/remote_debugger:rw
-      - C:\Users\mooha\.nuget\packages\:/root/.nuget/packages:ro
+      - E:\Jun\MilitaryRecruitmentMicroServiceInternal\MilitaryRecruitmentInternalMicroServiceV0.1\CashAllowanceAPI:/app
+      - E:\Jun\MilitaryRecruitmentMicroServiceInternal\MilitaryRecruitmentInternalMicroServiceV0.1:/src
+      - C:\Users\BeanDady\vsdbg\vs2017u5:/remote_debugger:rw
+      - C:\Users\BeanDady\.nuget\packages\:/root/.nuget/packages:ro
       - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
       - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
 
@@ -97,10 +97,10 @@ services:
       - ASPNETCORE_LOGGING__CONSOLE__DISABLECOLORS=true
       - NUGET_FALLBACK_PACKAGES=
     volumes:
-      - D:\MS\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1\CashAllowancLessThan42:/app
-      - D:\MS\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1:/src
-      - C:\Users\mooha\vsdbg\vs2017u5:/remote_debugger:rw
-      - C:\Users\mooha\.nuget\packages\:/root/.nuget/packages:ro
+      - E:\Jun\MilitaryRecruitmentMicroServiceInternal\MilitaryRecruitmentInternalMicroServiceV0.1\CashAllowancLessThan42:/app
+      - E:\Jun\MilitaryRecruitmentMicroServiceInternal\MilitaryRecruitmentInternalMicroServiceV0.1:/src
+      - C:\Users\BeanDady\vsdbg\vs2017u5:/remote_debugger:rw
+      - C:\Users\BeanDady\.nuget\packages\:/root/.nuget/packages:ro
       - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
       - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
 
@@ -108,6 +108,62 @@ services:
     labels:
       com.microsoft.visualstudio.debuggee.program: "dotnet"
       com.microsoft.visualstudio.debuggee.arguments: " --additionalProbingPath /root/.nuget/packages  \"/app/bin/Debug/net5.0/CashAllowancLessThan42.dll\""
+      com.microsoft.visualstudio.debuggee.workingdirectory: "/app"
+      com.microsoft.visualstudio.debuggee.killprogram: "/bin/sh -c \"if PID=$$(pidof dotnet); then kill $$PID; fi\""
+    tty: true
+
+  obligatoryserviceapi:
+    image: obligatoryserviceapi:dev
+    container_name: ObligatoryServiceAPI
+    build:
+      target: base
+      labels:
+        com.microsoft.created-by: "visual-studio"
+        com.microsoft.visual-studio.project-name: "ObligatoryServiceAPI"
+    environment:
+      - DOTNET_USE_POLLING_FILE_WATCHER=1
+      - ASPNETCORE_LOGGING__CONSOLE__DISABLECOLORS=true
+      - NUGET_FALLBACK_PACKAGES=
+    volumes:
+      - E:\Jun\MilitaryRecruitmentMicroServiceInternal\MilitaryRecruitmentInternalMicroServiceV0.1\ObligatoryServiceAPI:/app
+      - E:\Jun\MilitaryRecruitmentMicroServiceInternal\MilitaryRecruitmentInternalMicroServiceV0.1:/src
+      - C:\Users\BeanDady\vsdbg\vs2017u5:/remote_debugger:rw
+      - C:\Users\BeanDady\.nuget\packages\:/root/.nuget/packages:ro
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+
+    entrypoint: tail -f /dev/null
+    labels:
+      com.microsoft.visualstudio.debuggee.program: "dotnet"
+      com.microsoft.visualstudio.debuggee.arguments: " --additionalProbingPath /root/.nuget/packages  \"/app/bin/Debug/net5.0/ObligatoryServiceAPI.dll\""
+      com.microsoft.visualstudio.debuggee.workingdirectory: "/app"
+      com.microsoft.visualstudio.debuggee.killprogram: "/bin/sh -c \"if PID=$$(pidof dotnet); then kill $$PID; fi\""
+    tty: true
+
+  postponementofconvictsapi:
+    image: postponementofconvictsapi:dev
+    container_name: PostponementOfConvictsAPI
+    build:
+      target: base
+      labels:
+        com.microsoft.created-by: "visual-studio"
+        com.microsoft.visual-studio.project-name: "PostponementOfConvictsAPI"
+    environment:
+      - DOTNET_USE_POLLING_FILE_WATCHER=1
+      - ASPNETCORE_LOGGING__CONSOLE__DISABLECOLORS=true
+      - NUGET_FALLBACK_PACKAGES=
+    volumes:
+      - E:\Jun\MilitaryRecruitmentMicroServiceInternal\MilitaryRecruitmentInternalMicroServiceV0.1\PostponementOfConvictsAPI:/app
+      - E:\Jun\MilitaryRecruitmentMicroServiceInternal\MilitaryRecruitmentInternalMicroServiceV0.1:/src
+      - C:\Users\BeanDady\vsdbg\vs2017u5:/remote_debugger:rw
+      - C:\Users\BeanDady\.nuget\packages\:/root/.nuget/packages:ro
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+
+    entrypoint: tail -f /dev/null
+    labels:
+      com.microsoft.visualstudio.debuggee.program: "dotnet"
+      com.microsoft.visualstudio.debuggee.arguments: " --additionalProbingPath /root/.nuget/packages  \"/app/bin/Debug/net5.0/PostponementOfConvictsAPI.dll\""
       com.microsoft.visualstudio.debuggee.workingdirectory: "/app"
       com.microsoft.visualstudio.debuggee.killprogram: "/bin/sh -c \"if PID=$$(pidof dotnet); then kill $$PID; fi\""
     tty: true
@@ -125,10 +181,10 @@ services:
       - ASPNETCORE_LOGGING__CONSOLE__DISABLECOLORS=true
       - NUGET_FALLBACK_PACKAGES=
     volumes:
-      - D:\MS\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1\SchoolPostponementAPI:/app
-      - D:\MS\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1:/src
-      - C:\Users\mooha\vsdbg\vs2017u5:/remote_debugger:rw
-      - C:\Users\mooha\.nuget\packages\:/root/.nuget/packages:ro
+      - E:\Jun\MilitaryRecruitmentMicroServiceInternal\MilitaryRecruitmentInternalMicroServiceV0.1\SchoolPostponementAPI:/app
+      - E:\Jun\MilitaryRecruitmentMicroServiceInternal\MilitaryRecruitmentInternalMicroServiceV0.1:/src
+      - C:\Users\BeanDady\vsdbg\vs2017u5:/remote_debugger:rw
+      - C:\Users\BeanDady\.nuget\packages\:/root/.nuget/packages:ro
       - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
       - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
 
@@ -153,10 +209,10 @@ services:
       - ASPNETCORE_LOGGING__CONSOLE__DISABLECOLORS=true
       - NUGET_FALLBACK_PACKAGES=
     volumes:
-      - D:\MS\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1\TravelApprovalAPI:/app
-      - D:\MS\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1:/src
-      - C:\Users\mooha\vsdbg\vs2017u5:/remote_debugger:rw
-      - C:\Users\mooha\.nuget\packages\:/root/.nuget/packages:ro
+      - E:\Jun\MilitaryRecruitmentMicroServiceInternal\MilitaryRecruitmentInternalMicroServiceV0.1\TravelApprovalAPI:/app
+      - E:\Jun\MilitaryRecruitmentMicroServiceInternal\MilitaryRecruitmentInternalMicroServiceV0.1:/src
+      - C:\Users\BeanDady\vsdbg\vs2017u5:/remote_debugger:rw
+      - C:\Users\BeanDady\.nuget\packages\:/root/.nuget/packages:ro
       - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
       - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
 

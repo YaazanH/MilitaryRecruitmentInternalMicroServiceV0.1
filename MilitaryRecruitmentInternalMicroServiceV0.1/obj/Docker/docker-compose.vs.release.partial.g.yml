@@ -8,7 +8,7 @@ services:
         com.microsoft.created-by: "visual-studio"
         com.microsoft.visual-studio.project-name: "AlonePostponement"
     volumes:
-      - C:\Users\mooha\vsdbg\vs2017u5:/remote_debugger:rw
+      - C:\Users\BeanDady\vsdbg\vs2017u5:/remote_debugger:rw
       - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
       - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
 
@@ -27,7 +27,7 @@ services:
         com.microsoft.created-by: "visual-studio"
         com.microsoft.visual-studio.project-name: "BrotherInServicePostponementAPI"
     volumes:
-      - C:\Users\mooha\vsdbg\vs2017u5:/remote_debugger:rw
+      - C:\Users\BeanDady\vsdbg\vs2017u5:/remote_debugger:rw
       - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
       - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
 
@@ -47,7 +47,7 @@ services:
         com.microsoft.created-by: "visual-studio"
         com.microsoft.visual-studio.project-name: "CashAllowanceAPI"
     volumes:
-      - C:\Users\mooha\vsdbg\vs2017u5:/remote_debugger:rw
+      - C:\Users\BeanDady\vsdbg\vs2017u5:/remote_debugger:rw
       - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
       - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
 
@@ -67,7 +67,7 @@ services:
         com.microsoft.created-by: "visual-studio"
         com.microsoft.visual-studio.project-name: "CashAllowancLessThan42"
     volumes:
-      - C:\Users\mooha\vsdbg\vs2017u5:/remote_debugger:rw
+      - C:\Users\BeanDady\vsdbg\vs2017u5:/remote_debugger:rw
       - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
       - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
 
@@ -80,6 +80,46 @@ services:
       com.microsoft.visual-studio.project-name: "CashAllowancLessThan42"
     tty: true
 
+  obligatoryserviceapi:
+    container_name: ObligatoryServiceAPI
+    build:
+      labels:
+        com.microsoft.created-by: "visual-studio"
+        com.microsoft.visual-studio.project-name: "ObligatoryServiceAPI"
+    volumes:
+      - C:\Users\BeanDady\vsdbg\vs2017u5:/remote_debugger:rw
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+
+    entrypoint: tail -f /dev/null
+    labels:
+      com.microsoft.visualstudio.debuggee.program: "dotnet"
+      com.microsoft.visualstudio.debuggee.arguments: " --additionalProbingPath /root/.nuget/packages  \"/app/ObligatoryServiceAPI.dll\""
+      com.microsoft.visualstudio.debuggee.workingdirectory: "/app"
+      com.microsoft.visualstudio.debuggee.killprogram: "/bin/sh -c \"if PID=$$(pidof dotnet); then kill $$PID; fi\""
+      com.microsoft.visual-studio.project-name: "ObligatoryServiceAPI"
+    tty: true
+
+  postponementofconvictsapi:
+    container_name: PostponementOfConvictsAPI
+    build:
+      labels:
+        com.microsoft.created-by: "visual-studio"
+        com.microsoft.visual-studio.project-name: "PostponementOfConvictsAPI"
+    volumes:
+      - C:\Users\BeanDady\vsdbg\vs2017u5:/remote_debugger:rw
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+
+    entrypoint: tail -f /dev/null
+    labels:
+      com.microsoft.visualstudio.debuggee.program: "dotnet"
+      com.microsoft.visualstudio.debuggee.arguments: " --additionalProbingPath /root/.nuget/packages  \"/app/PostponementOfConvictsAPI.dll\""
+      com.microsoft.visualstudio.debuggee.workingdirectory: "/app"
+      com.microsoft.visualstudio.debuggee.killprogram: "/bin/sh -c \"if PID=$$(pidof dotnet); then kill $$PID; fi\""
+      com.microsoft.visual-studio.project-name: "PostponementOfConvictsAPI"
+    tty: true
+
   schoolpostponementapi:
     container_name: SchoolPostponementAPI
     build:
@@ -87,7 +127,7 @@ services:
         com.microsoft.created-by: "visual-studio"
         com.microsoft.visual-studio.project-name: "SchoolPostponementAPI"
     volumes:
-      - C:\Users\mooha\vsdbg\vs2017u5:/remote_debugger:rw
+      - C:\Users\BeanDady\vsdbg\vs2017u5:/remote_debugger:rw
       - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
       - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
 
@@ -107,7 +147,7 @@ services:
         com.microsoft.created-by: "visual-studio"
         com.microsoft.visual-studio.project-name: "TravelApprovalAPI"
     volumes:
-      - C:\Users\mooha\vsdbg\vs2017u5:/remote_debugger:rw
+      - C:\Users\BeanDady\vsdbg\vs2017u5:/remote_debugger:rw
       - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
       - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
 
