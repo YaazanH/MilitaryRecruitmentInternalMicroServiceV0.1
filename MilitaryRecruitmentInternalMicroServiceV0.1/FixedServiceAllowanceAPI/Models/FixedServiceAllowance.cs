@@ -11,6 +11,9 @@ namespace FixedServiceAllowanceAPI.Models
         [Key]
         public int id { set; get; }
         public string FullName { set; get; }
+      
+        public DateTimeOffset DateOfGiven { get; set; }
+        
 
 
     }

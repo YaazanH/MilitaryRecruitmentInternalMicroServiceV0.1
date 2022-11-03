@@ -95,6 +95,16 @@ services:
       - "51051:80"
       - "50051:443"
 
+  fixedserviceallowanceapi:
+    image: ${DOCKER_REGISTRY-}fixedserviceallowanceapi
+    build:
+      context: .
+      dockerfile: FixedServiceAllowanceAPI/Dockerfile
+    ports:
+      - "51009:80"
+      - "50009:443"
+
 volumes:
   sqlvol2:
+
 

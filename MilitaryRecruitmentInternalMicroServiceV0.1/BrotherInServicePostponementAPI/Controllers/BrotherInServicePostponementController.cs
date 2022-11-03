@@ -95,7 +95,7 @@ namespace BrotherInServicePostponementAPI.Controllers
 
             foreach (int i in id)
             {
-                if (JsonConvert.DeserializeObject<bool>(await APICall("https://host.docker.internal:40013/DefenseAPI/GetById/?id=" + i.ToString())))
+                if (JsonConvert.DeserializeObject<bool>(await APICall("https://host.docker.internal:40013/DefenseAPI/GetIsInService/?id=" + i.ToString())))
                 {
                     AddCert(CUserID);
                     return Ok("cert added");
