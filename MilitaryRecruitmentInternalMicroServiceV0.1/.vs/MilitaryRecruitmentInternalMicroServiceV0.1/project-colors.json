@@ -60,7 +60,27 @@
       "ProjectGuid": "f32c7066-ab7e-4181-a62b-348d17f53ec4",
       "DisplayName": "APIGateway",
       "ColorIndex": 10
+    },
+    "273d5dfa-e852-4c10-937f-4bdcf57809b7": {
+      "ProjectGuid": "273d5dfa-e852-4c10-937f-4bdcf57809b7",
+      "DisplayName": "FixedServiceAllowanceAPI",
+      "ColorIndex": 11
+    },
+    "dfd53e86-a58f-497a-81f7-a6718fa529c8": {
+      "ProjectGuid": "dfd53e86-a58f-497a-81f7-a6718fa529c8",
+      "DisplayName": "ObligatoryServiceAPI",
+      "ColorIndex": 12
+    },
+    "e7d52c6e-fee7-4adb-b6ff-8d5221e9bb26": {
+      "ProjectGuid": "e7d52c6e-fee7-4adb-b6ff-8d5221e9bb26",
+      "DisplayName": "PostponementOfConvictsAPI",
+      "ColorIndex": 13
+    },
+    "c3360102-034a-4b14-9226-51063973425d": {
+      "ProjectGuid": "c3360102-034a-4b14-9226-51063973425d",
+      "DisplayName": "ObligatoryServiceAPI",
+      "ColorIndex": 14
     }
   },
-  "NextColorIndex": 11
+  "NextColorIndex": 15
 }
