@@ -16,7 +16,9 @@ using CashAllowanceAPI.Models;
 namespace CashAllowanceAPI.Controllers
 {
 
-    [ApiController]
+
+
+        [ApiController]
     [Route("CashAllowance")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class CashAllowanceController : Controller
@@ -81,108 +83,101 @@ namespace CashAllowanceAPI.Controllers
             }
         }
 
+
+
         [HttpGet]
         [Route("GetHasCashAllowance/")]
 
-        public async Task<IActionResult> GetAbleToHaveTravelApproval()
+        public async Task<IActionResult> GetAbleToHaveCashAllowance()
         {
             int CUserID = GetCurrentUserID();
-         
+          
+                var User = _context.CashAllowanceDb.Where(x => x.UserID == CUserID).FirstOrDefault();
+                if (User != null)
+                {
+          
+                        return Ok("You aready have vaild cert");
+                    
+                }
 
 
 
-            int Age = JsonConvert.DeserializeObject<int>(await APICall("https://host.docker.internal:40018/RecordsAdminstration/GetAge"));
+
+                int Age = JsonConvert.DeserializeObject<int>(await APICall("https://host.docker.internal:40018/RecordAdminstration/GetAge"));
 
             if (Age == 42)
             {
                 if (JsonConvert.DeserializeObject<bool>(await APICall("https://host.docker.internal:40022/Finance/GetUserTransactions")))
                 {
+                    AddCert(GetCurrentUserID());
                     return Ok("Congratiolations!");
                 }
             }
 
-            switch (JsonConvert.DeserializeObject<string>(await APICall("https://host.docker.internal:40018/RecordsAdminstration/GetAge")))
+                switch (Age)
             {
-                case "2":
-                    if (Age == 43)
-                    {
-
+                case 43:
+                  
+                 
                         return Ok("You Need To Pay Extra 200$");
-                    }
+                    
                     break;
-                case "3":
-                    if (Age == 44)
-                    {
-
+                case 44:
+                  
                         return Ok("You Need To Pay Extra 400$");
-                    }
+                    
                     break;
-                case "4":
-                    if (Age == 45)
-                    {
+                case 45:
+                   
+                    
                         AddCert(CUserID);
                         return Ok("You Need To Pay Extra 600$");
-                    }
+                   
                     break;
-                case "5":
-                    if (Age == 46)
-                    {
+                case 46:
+                    
                         AddCert(CUserID);
                         return Ok("You Need To Pay Extra 800$");
-                    }
+                    
                     break;
-                case "6":
-                    if (Age == 47)
-                    {
+                case 47:
+                    
                         AddCert(CUserID);
                         return Ok("You Need To Pay Extra 1000$");
-                    }
+                    
                     break;
-                case "7":
-                    if (Age == 48)
-                    {
+                case 48:
+                   
                         AddCert(CUserID);
                         return Ok("You Need To Pay Extra 1200$");
-                    }
+                    
                     break;
-                case "8":
-                    if (Age == 49)
-                    {
+                case 49:
+                   
                         AddCert(CUserID);
                         return Ok("You Need To Pay Extra 1400$");
-                    }
+                    
                     break;
-                case "9":
-                    if (Age == 50)
-                    {
+                case 50:
+                   
                         AddCert(CUserID);
                         return Ok("You Need To Pay Extra 1600$");
-                    }
+                    
                     break;
-                case "10":
-                    if (Age == 41)
-                    {
-                        AddCert(CUserID);
+                case 51:
+                      AddCert(CUserID);
                         return Ok("You Need To Pay Extra 1800$");
-                    }
+                    
                     break;
-                case "11":
-                    if (Age >= 52)
-                    {
+                case 52:
+                    
                         AddCert(CUserID);
                         return Ok("You Need To Pay Extra 2000$");
-                    }
+                    
                     break;
 
                 default:
                     return NotFound();
-
-
-
-
-
-
-
             }
 
             return NoContent();

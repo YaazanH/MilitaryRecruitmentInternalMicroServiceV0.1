@@ -50,7 +50,17 @@
       "ProjectGuid": "a8b6af8b-c6d1-4fb2-a6b1-2cf65e885fd6",
       "DisplayName": "FixedServiceAllowanceAPI",
       "ColorIndex": 8
+    },
+    "fd870d47-54ec-4f15-9581-7a809e75c440": {
+      "ProjectGuid": "fd870d47-54ec-4f15-9581-7a809e75c440",
+      "DisplayName": "LoginAPI",
+      "ColorIndex": 9
+    },
+    "f32c7066-ab7e-4181-a62b-348d17f53ec4": {
+      "ProjectGuid": "f32c7066-ab7e-4181-a62b-348d17f53ec4",
+      "DisplayName": "APIGateway",
+      "ColorIndex": 10
     }
   },
-  "NextColorIndex": 9
+  "NextColorIndex": 11
 }

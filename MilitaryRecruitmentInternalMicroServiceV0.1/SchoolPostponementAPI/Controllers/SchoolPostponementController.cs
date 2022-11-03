@@ -95,7 +95,7 @@ namespace SchoolPostponementAPI.Controllers
                 }
             }
 
-            int Age = JsonConvert.DeserializeObject<int>(await APICall("https://host.docker.internal:40006/University/GetStudyYears"));
+            int Age = JsonConvert.DeserializeObject<int>(await APICall("https://host.docker.internal:40006/RecordAdminstration/GetAge"));
 
             if (Age > 37)
             {
@@ -107,7 +107,7 @@ namespace SchoolPostponementAPI.Controllers
                 return Ok("You cant cert because of Cut in UNI");
             }
 
-            if (!JsonConvert.DeserializeObject<bool>(await APICall("https://host.docker.internal:40006/University/GetIsStudyingNow")))
+            if (!JsonConvert.DeserializeObject<bool>(await APICall("https://host.docker.internal:40006/EduMinAPI/GetIsDroppedOut")))
             {
                 return Ok("You cant cert because of Cut in School");
             }

@@ -28,8 +28,8 @@ services:
       context: .
       dockerfile: SchoolPostponementAPI/Dockerfile
     ports:
-      - "41025:80"
-      - "40025:443"
+      - "51012:80"
+      - "50012:443"
 
   travelapprovalapi:
     image: ${DOCKER_REGISTRY-}travelapprovalapi
@@ -37,8 +37,8 @@ services:
       context: .
       dockerfile: TravelApprovalAPI/Dockerfile
     ports:
-      - "41026:80"
-      - "40026:443"
+      - "51000:80"
+      - "50000:443"
 
   cashallowanceapi:
     image: ${DOCKER_REGISTRY-}cashallowanceapi
@@ -46,8 +46,8 @@ services:
       context: .
       dockerfile: CashAllowanceAPI/Dockerfile
     ports:
-      - "41027:80"
-      - "40027:443"
+      - "51001:80"
+      - "50001:443"
 
   cashallowanclessthan42:
     image: ${DOCKER_REGISTRY-}cashallowanclessthan42
@@ -55,8 +55,8 @@ services:
       context: .
       dockerfile: CashAllowancLessThan42/Dockerfile
     ports:
-      - "41028:80"
-      - "40028:443"
+      - "51002:80"
+      - "50002:443"
 
   alonepostponement:
     image: ${DOCKER_REGISTRY-}alonepostponement
@@ -64,8 +64,8 @@ services:
       context: .
       dockerfile: AlonePostponement/Dockerfile
     ports:
-      - "41029:80"
-      - "40029:443"
+      - "51014:80"
+      - "50014:443"
 
   brotherinservicepostponementapi:
     image: ${DOCKER_REGISTRY-}brotherinservicepostponementapi
@@ -76,25 +76,25 @@ services:
       - "41030:80"
       - "40030:443"
 
-  postponementofconvictsapi:
-    image: ${DOCKER_REGISTRY-}postponementofconvictsapi
+  loginapi:
+    image: ${DOCKER_REGISTRY-}loginapi
     build:
       context: .
-      dockerfile: PostponementOfConvictsAPI/Dockerfile
+      dockerfile: LoginAPI/Dockerfile
     ports:
-      - "51004:80"
-      - "50004:443"
+      - "51050:80"
+      - "50050:443"
 
-  obligatoryserviceapi:
-    image: ${DOCKER_REGISTRY-}obligatoryserviceapi
+
+  apigateway:
+    image: ${DOCKER_REGISTRY-}apigateway
     build:
       context: .
-      dockerfile: ObligatoryServiceAPI/Dockerfile
+      dockerfile: APIGateway/Dockerfile
     ports:
-      - "51005:80"
-      - "50005:443"
+      - "51051:80"
+      - "50051:443"
 
 volumes:
   sqlvol2:
-
 

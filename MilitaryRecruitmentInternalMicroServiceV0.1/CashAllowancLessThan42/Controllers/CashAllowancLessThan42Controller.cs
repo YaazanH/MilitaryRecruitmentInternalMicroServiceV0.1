@@ -84,68 +84,72 @@ namespace CashAllowancLessThan42.Controllers
         [HttpGet]
         [Route("GetHasCashAllowanceForLessThan42/")]
 
-        public async Task<IActionResult> GetAbleToHaveTravelApproval()
+        public async Task<IActionResult> GetAbleToHaveCashAllowanceFLT42()
         {
             int CUserID = GetCurrentUserID();
+            var User = _context.CashAllowancLessThan42Db.Where(x => x.UserID == CUserID).FirstOrDefault();
+            if (User != null)
+            {
+
+                return Ok("You aready have vaild cert");
+
+            }
+
+            int Age = JsonConvert.DeserializeObject<int>(await APICall("https://host.docker.internal:40018/RecordAdminstration/GetAge"));
+
+            if (Age >= 42)
+            {
+                return Ok("You Cant Postponement");
+            }
+
+            else
+            {
+                if (!JsonConvert.DeserializeObject<bool>(await APICall("https://host.docker.internal:40011/Passport/GetIstravel")))
+                {
+                    if (JsonConvert.DeserializeObject<bool>(await APICall("https://host.docker.internal:40022/Finance/GetUserTransactions")))
+                    {
+                        AddCert(GetCurrentUserID());
+                        return Ok("Congratiolations!");
+                    }
+                }
+            }
 
 
 
 
             int Days = JsonConvert.DeserializeObject<int>(await APICall("https://host.docker.internal:40011/Passport/GetNumberOfDaysOutsideCoun"));
 
-            switch (Days)
-            {
-                case 1:
+          
                     if (Days >= 1460)
                     {
 
                         return Ok("You Need To Pay  7000$");
                     }
-                    break;
-                case 2:
+                    
+                
                     if (Days > 1095 && Days < 1460)
                     {
 
                         return Ok("You Need To Pay  8000$");
                     }
-                    break;
-                case 3:
+              
                     if (Days > 730 && Days < 1095)
                     {
 
                         return Ok("You Need To Pay 9000$");
                     }
-                    break;
-                case 4:
+              
+           
                     if (Days > 365 && Days < 730)
                     {
-                        AddCert(CUserID);
+                       
                         return Ok("You Need To Pay 10000$");
                     }
-                    break;
+                
 
+           
 
-                default:
-                    return NotFound();
-            }
-
-               int Age = JsonConvert.DeserializeObject<int>(await APICall("https://host.docker.internal:40018/RecordsAdminstration/GetAge"));
-
-                    if (Age >= 42)
-                    {
-                        return Ok("You Cant Postponement");
-                    }
-
-                    else
-            {
-                if (JsonConvert.DeserializeObject<bool>(await APICall("https://host.docker.internal:40011/Passport/GetIstravel")))
-                {
-                    if (JsonConvert.DeserializeObject<bool>(await APICall("https://host.docker.internal:40022/Finance/GetUserTransactions")))
-                    {
-                        return Ok("Congratiolations!");
-                    }
-                }
-            }
+          
             
            
 

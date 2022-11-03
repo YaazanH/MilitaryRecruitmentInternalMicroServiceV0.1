@@ -1,8 +1,8 @@
-name: dockercompose15600665097086400448
+name: dockercompose1791817882577683927
 services:
   alonepostponement:
     build:
-      context: E:\Jun\MilitaryRecruitmentMicroServiceInternal\MilitaryRecruitmentInternalMicroServiceV0.1
+      context: D:\MS\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1
       dockerfile: AlonePostponement/Dockerfile
     environment:
       ASPNETCORE_ENVIRONMENT: Development
@@ -27,20 +27,20 @@ services:
       protocol: tcp
     volumes:
     - type: bind
-      source: C:\Users\BeanDady\AppData\Roaming/Microsoft/UserSecrets
+      source: C:\Users\mooha\AppData\Roaming/Microsoft/UserSecrets
       target: /root/.microsoft/usersecrets
       read_only: true
       bind:
         create_host_path: true
     - type: bind
-      source: C:\Users\BeanDady\AppData\Roaming/ASP.NET/Https
+      source: C:\Users\mooha\AppData\Roaming/ASP.NET/Https
       target: /root/.aspnet/https
       read_only: true
       bind:
         create_host_path: true
   brotherinservicepostponementapi:
     build:
-      context: E:\Jun\MilitaryRecruitmentMicroServiceInternal\MilitaryRecruitmentInternalMicroServiceV0.1
+      context: D:\MS\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1
       dockerfile: BrotherInServicePostponementAPI/Dockerfile
     environment:
       ASPNETCORE_ENVIRONMENT: Development
@@ -65,20 +65,20 @@ services:
       protocol: tcp
     volumes:
     - type: bind
-      source: C:\Users\BeanDady\AppData\Roaming/Microsoft/UserSecrets
+      source: C:\Users\mooha\AppData\Roaming/Microsoft/UserSecrets
       target: /root/.microsoft/usersecrets
       read_only: true
       bind:
         create_host_path: true
     - type: bind
-      source: C:\Users\BeanDady\AppData\Roaming/ASP.NET/Https
+      source: C:\Users\mooha\AppData\Roaming/ASP.NET/Https
       target: /root/.aspnet/https
       read_only: true
       bind:
         create_host_path: true
   cashallowanceapi:
     build:
-      context: E:\Jun\MilitaryRecruitmentMicroServiceInternal\MilitaryRecruitmentInternalMicroServiceV0.1
+      context: D:\MS\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1
       dockerfile: CashAllowanceAPI/Dockerfile
     environment:
       ASPNETCORE_ENVIRONMENT: Development
@@ -92,31 +92,31 @@ services:
       protocol: tcp
     - mode: ingress
       target: 80
-      published: "41027"
+      published: "51001"
       protocol: tcp
     - mode: ingress
       target: 443
       protocol: tcp
     - mode: ingress
       target: 443
-      published: "40027"
+      published: "50001"
       protocol: tcp
     volumes:
     - type: bind
-      source: C:\Users\BeanDady\AppData\Roaming/Microsoft/UserSecrets
+      source: C:\Users\mooha\AppData\Roaming/Microsoft/UserSecrets
       target: /root/.microsoft/usersecrets
       read_only: true
       bind:
         create_host_path: true
     - type: bind
-      source: C:\Users\BeanDady\AppData\Roaming/ASP.NET/Https
+      source: C:\Users\mooha\AppData\Roaming/ASP.NET/Https
       target: /root/.aspnet/https
       read_only: true
       bind:
         create_host_path: true
   cashallowanclessthan42:
     build:
-      context: E:\Jun\MilitaryRecruitmentMicroServiceInternal\MilitaryRecruitmentInternalMicroServiceV0.1
+      context: D:\MS\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1
       dockerfile: CashAllowancLessThan42/Dockerfile
     environment:
       ASPNETCORE_ENVIRONMENT: Development
@@ -141,13 +141,13 @@ services:
       protocol: tcp
     volumes:
     - type: bind
-      source: C:\Users\BeanDady\AppData\Roaming/Microsoft/UserSecrets
+      source: C:\Users\mooha\AppData\Roaming/Microsoft/UserSecrets
       target: /root/.microsoft/usersecrets
       read_only: true
       bind:
         create_host_path: true
     - type: bind
-      source: C:\Users\BeanDady\AppData\Roaming/ASP.NET/Https
+      source: C:\Users\mooha\AppData\Roaming/ASP.NET/Https
       target: /root/.aspnet/https
       read_only: true
       bind:
@@ -174,39 +174,9 @@ services:
       target: 8600
       published: "8601"
       protocol: udp
-  postponementofconvictsapi:
-    build:
-      context: E:\Jun\MilitaryRecruitmentMicroServiceInternal\MilitaryRecruitmentInternalMicroServiceV0.1
-      dockerfile: PostponementOfConvictsAPI/Dockerfile
-    environment:
-      ASPNETCORE_ENVIRONMENT: Development
-      ASPNETCORE_URLS: https://+:443;http://+:80
-    image: postponementofconvictsapi
-    networks:
-      default: null
-    ports:
-    - mode: ingress
-      target: 80
-      protocol: tcp
-    - mode: ingress
-      target: 443
-      protocol: tcp
-    volumes:
-    - type: bind
-      source: C:\Users\BeanDady\AppData\Roaming/Microsoft/UserSecrets
-      target: /root/.microsoft/usersecrets
-      read_only: true
-      bind:
-        create_host_path: true
-    - type: bind
-      source: C:\Users\BeanDady\AppData\Roaming/ASP.NET/Https
-      target: /root/.aspnet/https
-      read_only: true
-      bind:
-        create_host_path: true
   schoolpostponementapi:
     build:
-      context: E:\Jun\MilitaryRecruitmentMicroServiceInternal\MilitaryRecruitmentInternalMicroServiceV0.1
+      context: D:\MS\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1
       dockerfile: SchoolPostponementAPI/Dockerfile
     environment:
       ASPNETCORE_ENVIRONMENT: Development
@@ -231,7 +201,7 @@ services:
       protocol: tcp
     volumes:
     - type: bind
-      source: C:\Users\BeanDady\AppData\Roaming/ASP.NET/Https
+      source: C:\Users\mooha\AppData\Roaming/ASP.NET/Https
       target: /root/.aspnet/https
       read_only: true
       bind:
@@ -256,7 +226,7 @@ services:
       volume: {}
   travelapprovalapi:
     build:
-      context: E:\Jun\MilitaryRecruitmentMicroServiceInternal\MilitaryRecruitmentInternalMicroServiceV0.1
+      context: D:\MS\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1
       dockerfile: TravelApprovalAPI/Dockerfile
     environment:
       ASPNETCORE_ENVIRONMENT: Development
@@ -270,31 +240,31 @@ services:
       protocol: tcp
     - mode: ingress
       target: 80
-      published: "41026"
+      published: "51000"
       protocol: tcp
     - mode: ingress
       target: 443
       protocol: tcp
     - mode: ingress
       target: 443
-      published: "40026"
+      published: "50000"
       protocol: tcp
     volumes:
     - type: bind
-      source: C:\Users\BeanDady\AppData\Roaming/Microsoft/UserSecrets
+      source: C:\Users\mooha\AppData\Roaming/Microsoft/UserSecrets
       target: /root/.microsoft/usersecrets
       read_only: true
       bind:
         create_host_path: true
     - type: bind
-      source: C:\Users\BeanDady\AppData\Roaming/ASP.NET/Https
+      source: C:\Users\mooha\AppData\Roaming/ASP.NET/Https
       target: /root/.aspnet/https
       read_only: true
       bind:
         create_host_path: true
 networks:
   default:
-    name: dockercompose15600665097086400448_default
+    name: dockercompose1791817882577683927_default
 volumes:
   sqlvol2:
-    name: dockercompose15600665097086400448_sqlvol2
+    name: dockercompose1791817882577683927_sqlvol2

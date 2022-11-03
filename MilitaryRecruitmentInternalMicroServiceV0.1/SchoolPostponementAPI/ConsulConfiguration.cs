@@ -55,7 +55,7 @@ namespace SchoolPostponementAPI
                     Interval = TimeSpan.FromSeconds(10)
                     
                 }
-            };
+            }; 
 
             await _consulClient.Agent.ServiceDeregister(_serviceConfiguration.ServiceId, cancellationToken);
             await _consulClient.Agent.ServiceRegister(serviceRegistration, cancellationToken);
