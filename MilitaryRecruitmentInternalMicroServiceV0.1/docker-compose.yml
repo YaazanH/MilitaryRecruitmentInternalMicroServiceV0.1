@@ -104,7 +104,22 @@ services:
       - "51009:80"
       - "50009:443"
 
+  postponementofconvictsapi:
+    image: ${DOCKER_REGISTRY-}postponementofconvictsapi
+    build:
+      context: .
+      dockerfile: PostponementOfConvictsAPI/Dockerfile
+
+  obligatoryserviceapi:
+    image: ${DOCKER_REGISTRY-}obligatoryserviceapi
+    build:
+      context: .
+      dockerfile: ObligatoryServiceAPI/Dockerfile
+
 volumes:
   sqlvol2:
+
+
+
 
 
