@@ -6,6 +6,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using RabbitMQ.Client;
+using RabbitMQ.Client.Events;
+using System.Text;
+using AlonePostponement.Controllers;
 
 namespace AlonePostponement
 {
@@ -13,7 +17,7 @@ namespace AlonePostponement
     {
         public static void Main(string[] args)
         {
-            CreateHostBuilder(args).Build().Run();
+            CreateHostBuilder(args).Build().Run();            
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
@@ -21,6 +25,8 @@ namespace AlonePostponement
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
+                    RabbitMqGetFromUserRequestHandlerconsumer q = new RabbitMqGetFromUserRequestHandlerconsumer("host.docker.internal");
                 });
+        
     }
 }

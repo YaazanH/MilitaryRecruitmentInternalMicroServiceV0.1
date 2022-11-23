@@ -8,5 +8,13 @@ namespace AlonePostponement.Data
         { }
 
         public DbSet<AlonePostponement.Models.AlonePostponement> AlonePostponementDBS { get; set; }
+
+        public DbSet<AlonePostponement.Models.RequestStatues> RequestStatuesDBS { get; set;}
+        public DbSet<AlonePostponement.Models.DeadBrothers> DeadBrothersDBS { get; set;}
+        public DbSet<AlonePostponement.Models.BrotherEill> BrotherEillDBS { get; set;}
+        public DbSet<AlonePostponement.Models.BrothersID> BrothersIDDBS { get; set;}
+        public DbSet<AlonePostponement.Models.HaveBrothers> HaveBrothersDBS { get; set;}
+
+
     }
 }

@@ -184,3 +184,4 @@ E:\Jun\MilitaryRecruitmentMicroServiceInternal\MilitaryRecruitmentInternalMicroS
 E:\Jun\MilitaryRecruitmentMicroServiceInternal\MilitaryRecruitmentInternalMicroServiceV0.1\AlonePostponement\obj\Debug\net5.0\AlonePostponement.pdb
 E:\Jun\MilitaryRecruitmentMicroServiceInternal\MilitaryRecruitmentInternalMicroServiceV0.1\AlonePostponement\obj\Debug\net5.0\AlonePostponement.genruntimeconfig.cache
 E:\Jun\MilitaryRecruitmentMicroServiceInternal\MilitaryRecruitmentInternalMicroServiceV0.1\AlonePostponement\obj\Debug\net5.0\ref\AlonePostponement.dll
+D:\jounier\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1\AlonePostponement\bin\Debug\net5.0\RabbitMQ.Client.dll

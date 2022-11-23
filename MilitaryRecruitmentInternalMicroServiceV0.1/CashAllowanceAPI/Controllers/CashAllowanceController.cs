@@ -15,10 +15,7 @@ using CashAllowanceAPI.Models;
 
 namespace CashAllowanceAPI.Controllers
 {
-
-
-
-        [ApiController]
+    [ApiController]
     [Route("CashAllowance")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class CashAllowanceController : Controller
@@ -96,12 +93,9 @@ namespace CashAllowanceAPI.Controllers
                 if (User != null)
                 {
           
-                        return Ok("You aready have vaild cert");
-                    
+                return Ok("You aready have vaild cert");
+
                 }
-
-
-
 
                 int Age = JsonConvert.DeserializeObject<int>(await APICall("https://host.docker.internal:40018/RecordAdminstration/GetAge"));
 
@@ -117,16 +111,11 @@ namespace CashAllowanceAPI.Controllers
                 switch (Age)
             {
                 case 43:
-                  
-                 
-                        return Ok("You Need To Pay Extra 200$");
-                    
-                    break;
-                case 44:
-                  
-                        return Ok("You Need To Pay Extra 400$");
-                    
-                    break;
+                 return Ok("You Need To Pay Extra 200$");
+
+                case 44:                  
+                return Ok("You Need To Pay Extra 400$");
+
                 case 45:
                    
                     

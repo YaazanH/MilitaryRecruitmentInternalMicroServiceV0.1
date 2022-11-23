@@ -19,6 +19,7 @@ using System.Threading.Tasks;
 using AlonePostponement.Data;
 using AlonePostponement.Models;
 
+
 namespace AlonePostponement
 {
     public class Startup
@@ -64,6 +65,7 @@ namespace AlonePostponement
 
             services.AddDbContext<AlonePostponementContext>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("AlonePostponementContext")));
+            services.AddSingleton<RabbitMqGetFromUserRequestHandlerconsumer>(provider => new RabbitMqGetFromUserRequestHandlerconsumer("host.docker.internal"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -75,17 +77,21 @@ namespace AlonePostponement
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "AlonePostponement v1"));
             }
-
+            
             app.UseHttpsRedirection();
 
             app.UseRouting();
 
             app.UseAuthorization();
 
+   
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
             });
         }
+
+        
     }
 }
