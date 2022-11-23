@@ -60,7 +60,32 @@
       "ProjectGuid": "f32c7066-ab7e-4181-a62b-348d17f53ec4",
       "DisplayName": "APIGateway",
       "ColorIndex": 10
+    },
+    "273d5dfa-e852-4c10-937f-4bdcf57809b7": {
+      "ProjectGuid": "273d5dfa-e852-4c10-937f-4bdcf57809b7",
+      "DisplayName": "FixedServiceAllowanceAPI",
+      "ColorIndex": 11
+    },
+    "5d49929a-dbd0-4e6e-954a-b8e0e06d44a6": {
+      "ProjectGuid": "5d49929a-dbd0-4e6e-954a-b8e0e06d44a6",
+      "DisplayName": "WebApplication1",
+      "ColorIndex": 12
+    },
+    "be77d78f-989f-46b2-bf5c-9e46ad79b8c1": {
+      "ProjectGuid": "be77d78f-989f-46b2-bf5c-9e46ad79b8c1",
+      "DisplayName": "UserRequestHandler",
+      "ColorIndex": 13
+    },
+    "17843a31-65c2-40a1-9267-30ea81f485f6": {
+      "ProjectGuid": "17843a31-65c2-40a1-9267-30ea81f485f6",
+      "DisplayName": "UserRequestHandler",
+      "ColorIndex": 14
+    },
+    "0a4c1432-95b3-4d8a-9277-e4ddeedc91cc": {
+      "ProjectGuid": "0a4c1432-95b3-4d8a-9277-e4ddeedc91cc",
+      "DisplayName": "ExternalAPICaller",
+      "ColorIndex": 15
     }
   },
-  "NextColorIndex": 11
+  "NextColorIndex": 0
 }

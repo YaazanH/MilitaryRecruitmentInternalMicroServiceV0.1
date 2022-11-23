@@ -22,14 +22,22 @@ services:
       -  "8601:8600/udp"
     command:  consul agent -dev -server -ui -node=server-1 -bootstrap-expect=1 -client="0.0.0.0"
 
+
+  RabbitMQ:
+    image: rabbitmq:3.9-management
+    container_name: RabbitMQ
+    ports:
+      -  "5672:5672" 
+      -  "15672:15672"
+
   schoolpostponementapi:
     image: ${DOCKER_REGISTRY-}schoolpostponementapi
     build:
       context: .
       dockerfile: SchoolPostponementAPI/Dockerfile
     ports:
-      - "51012:80"
-      - "50012:443"
+      - "61012:80"
+      - "60012:443"
 
   travelapprovalapi:
     image: ${DOCKER_REGISTRY-}travelapprovalapi
@@ -37,8 +45,8 @@ services:
       context: .
       dockerfile: TravelApprovalAPI/Dockerfile
     ports:
-      - "51000:80"
-      - "50000:443"
+      - "61000:80"
+      - "60000:443"
 
   cashallowanceapi:
     image: ${DOCKER_REGISTRY-}cashallowanceapi
@@ -46,8 +54,8 @@ services:
       context: .
       dockerfile: CashAllowanceAPI/Dockerfile
     ports:
-      - "51001:80"
-      - "50001:443"
+      - "61001:80"
+      - "60001:443"
 
   cashallowanclessthan42:
     image: ${DOCKER_REGISTRY-}cashallowanclessthan42
@@ -55,8 +63,8 @@ services:
       context: .
       dockerfile: CashAllowancLessThan42/Dockerfile
     ports:
-      - "51002:80"
-      - "50002:443"
+      - "61002:80"
+      - "60002:443"
 
   alonepostponement:
     image: ${DOCKER_REGISTRY-}alonepostponement
@@ -64,8 +72,8 @@ services:
       context: .
       dockerfile: AlonePostponement/Dockerfile
     ports:
-      - "51014:80"
-      - "50014:443"
+      - "61014:80"
+      - "60014:443"
 
   brotherinservicepostponementapi:
     image: ${DOCKER_REGISTRY-}brotherinservicepostponementapi
@@ -73,8 +81,8 @@ services:
       context: .
       dockerfile: BrotherInServicePostponementAPI/Dockerfile
     ports:
-      - "41030:80"
-      - "40030:443"
+      - "61030:80"
+      - "60030:443"
 
   loginapi:
     image: ${DOCKER_REGISTRY-}loginapi
@@ -82,8 +90,8 @@ services:
       context: .
       dockerfile: LoginAPI/Dockerfile
     ports:
-      - "51050:80"
-      - "50050:443"
+      - "61050:80"
+      - "60050:443"
 
 
   apigateway:
@@ -92,8 +100,8 @@ services:
       context: .
       dockerfile: APIGateway/Dockerfile
     ports:
-      - "51051:80"
-      - "50051:443"
+      - "61051:80"
+      - "60051:443"
 
   fixedserviceallowanceapi:
     image: ${DOCKER_REGISTRY-}fixedserviceallowanceapi
@@ -101,10 +109,17 @@ services:
       context: .
       dockerfile: FixedServiceAllowanceAPI/Dockerfile
     ports:
-      - "51009:80"
-      - "50009:443"
+      - "61009:80"
+      - "60009:443"
+
+  userrequesthandler:
+    image: ${DOCKER_REGISTRY-}userrequesthandler
+    build:
+      context: .
+      dockerfile: UserRequestHandler/Dockerfile
+    ports:
+      - "61049:80"
+      - "60049:443"
 
 volumes:
   sqlvol2:
-
-

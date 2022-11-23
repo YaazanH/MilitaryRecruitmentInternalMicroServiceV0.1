@@ -23,6 +23,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "APIGateway", "APIGateway\AP
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FixedServiceAllowanceAPI", "FixedServiceAllowanceAPI\FixedServiceAllowanceAPI.csproj", "{273D5DFA-E852-4C10-937F-4BDCF57809B7}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UserRequestHandler", "UserRequestHandler\UserRequestHandler.csproj", "{17843A31-65C2-40A1-9267-30EA81F485F6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExternalAPICaller", "ExternalAPICaller\ExternalAPICaller.csproj", "{0A4C1432-95B3-4D8A-9277-E4DDEEDC91CC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -69,6 +73,14 @@ Global
 		{273D5DFA-E852-4C10-937F-4BDCF57809B7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{273D5DFA-E852-4C10-937F-4BDCF57809B7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{273D5DFA-E852-4C10-937F-4BDCF57809B7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{17843A31-65C2-40A1-9267-30EA81F485F6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{17843A31-65C2-40A1-9267-30EA81F485F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{17843A31-65C2-40A1-9267-30EA81F485F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{17843A31-65C2-40A1-9267-30EA81F485F6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0A4C1432-95B3-4D8A-9277-E4DDEEDC91CC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0A4C1432-95B3-4D8A-9277-E4DDEEDC91CC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0A4C1432-95B3-4D8A-9277-E4DDEEDC91CC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0A4C1432-95B3-4D8A-9277-E4DDEEDC91CC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
