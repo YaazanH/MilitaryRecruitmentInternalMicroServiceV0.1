@@ -1,19 +1,5 @@
 name: dockercompose5144703731817758637
 services:
-  RabbitMQ:
-    container_name: RabbitMQ
-    image: rabbitmq:3.9-management
-    networks:
-      default: null
-    ports:
-    - mode: ingress
-      target: 5672
-      published: "5672"
-      protocol: tcp
-    - mode: ingress
-      target: 15672
-      published: "15672"
-      protocol: tcp
   alonepostponement:
     build:
       context: D:\jounier\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1
@@ -631,6 +617,159 @@ services:
       target: /src
       bind:
         create_host_path: true
+  obligatoryserviceapi:
+    build:
+      context: D:\jounier\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1
+      dockerfile: ObligatoryServiceAPI/Dockerfile
+      labels:
+        com.microsoft.created-by: visual-studio
+        com.microsoft.visual-studio.project-name: ObligatoryServiceAPI
+    container_name: ObligatoryServiceAPI
+    entrypoint:
+    - tail
+    - -f
+    - /dev/null
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_LOGGING__CONSOLE__DISABLECOLORS: "true"
+      ASPNETCORE_URLS: https://+:443;http://+:80
+      DOTNET_USE_POLLING_FILE_WATCHER: "1"
+      NUGET_FALLBACK_PACKAGES: /root/.nuget/fallbackpackages
+    image: obligatoryserviceapi:dev
+    labels:
+      com.microsoft.visualstudio.debuggee.arguments: ' --additionalProbingPath /root/.nuget/packages
+        --additionalProbingPath /root/.nuget/fallbackpackages  "/app/bin/Debug/net5.0/ObligatoryServiceAPI.dll"'
+      com.microsoft.visualstudio.debuggee.killprogram: /bin/sh -c "if PID=$$(pidof
+        dotnet); then kill $$PID; fi"
+      com.microsoft.visualstudio.debuggee.program: dotnet
+      com.microsoft.visualstudio.debuggee.workingdirectory: /app
+    networks:
+      default: null
+    ports:
+    - mode: ingress
+      target: 80
+      protocol: tcp
+    - mode: ingress
+      target: 443
+      protocol: tcp
+    tty: true
+    volumes:
+    - type: bind
+      source: D:\jounier\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1\ObligatoryServiceAPI
+      target: /app
+      bind:
+        create_host_path: true
+    - type: bind
+      source: C:\Users\yazon\vsdbg\vs2017u5
+      target: /remote_debugger
+      bind:
+        create_host_path: true
+    - type: bind
+      source: C:\Users\yazon\AppData\Roaming/ASP.NET/Https
+      target: /root/.aspnet/https
+      read_only: true
+      bind:
+        create_host_path: true
+    - type: bind
+      source: C:\Users\yazon\AppData\Roaming/Microsoft/UserSecrets
+      target: /root/.microsoft/usersecrets
+      read_only: true
+      bind:
+        create_host_path: true
+    - type: bind
+      source: C:\Program Files (x86)\Microsoft Visual Studio\Shared\NuGetPackages
+      target: /root/.nuget/fallbackpackages
+      read_only: true
+      bind:
+        create_host_path: true
+    - type: bind
+      source: C:\Users\yazon\.nuget\packages\
+      target: /root/.nuget/packages
+      read_only: true
+      bind:
+        create_host_path: true
+    - type: bind
+      source: D:\jounier\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1
+      target: /src
+      bind:
+        create_host_path: true
+  postponementofconvictsapi:
+    build:
+      context: D:\jounier\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1
+      dockerfile: PostponementOfConvictsAPI/Dockerfile
+      labels:
+        com.microsoft.created-by: visual-studio
+        com.microsoft.visual-studio.project-name: PostponementOfConvictsAPI
+      target: base
+    container_name: PostponementOfConvictsAPI
+    entrypoint:
+    - tail
+    - -f
+    - /dev/null
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_LOGGING__CONSOLE__DISABLECOLORS: "true"
+      ASPNETCORE_URLS: https://+:443;http://+:80
+      DOTNET_USE_POLLING_FILE_WATCHER: "1"
+      NUGET_FALLBACK_PACKAGES: /root/.nuget/fallbackpackages
+    image: postponementofconvictsapi:dev
+    labels:
+      com.microsoft.visualstudio.debuggee.arguments: ' --additionalProbingPath /root/.nuget/packages
+        --additionalProbingPath /root/.nuget/fallbackpackages  "/app/bin/Debug/net5.0/PostponementOfConvictsAPI.dll"'
+      com.microsoft.visualstudio.debuggee.killprogram: /bin/sh -c "if PID=$$(pidof
+        dotnet); then kill $$PID; fi"
+      com.microsoft.visualstudio.debuggee.program: dotnet
+      com.microsoft.visualstudio.debuggee.workingdirectory: /app
+    networks:
+      default: null
+    ports:
+    - mode: ingress
+      target: 80
+      protocol: tcp
+    - mode: ingress
+      target: 443
+      protocol: tcp
+    tty: true
+    volumes:
+    - type: bind
+      source: D:\jounier\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1\PostponementOfConvictsAPI
+      target: /app
+      bind:
+        create_host_path: true
+    - type: bind
+      source: C:\Users\yazon\vsdbg\vs2017u5
+      target: /remote_debugger
+      bind:
+        create_host_path: true
+    - type: bind
+      source: C:\Users\yazon\AppData\Roaming/ASP.NET/Https
+      target: /root/.aspnet/https
+      read_only: true
+      bind:
+        create_host_path: true
+    - type: bind
+      source: C:\Users\yazon\AppData\Roaming/Microsoft/UserSecrets
+      target: /root/.microsoft/usersecrets
+      read_only: true
+      bind:
+        create_host_path: true
+    - type: bind
+      source: C:\Program Files (x86)\Microsoft Visual Studio\Shared\NuGetPackages
+      target: /root/.nuget/fallbackpackages
+      read_only: true
+      bind:
+        create_host_path: true
+    - type: bind
+      source: C:\Users\yazon\.nuget\packages\
+      target: /root/.nuget/packages
+      read_only: true
+      bind:
+        create_host_path: true
+    - type: bind
+      source: D:\jounier\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1
+      target: /src
+      bind:
+        create_host_path: true
   schoolpostponementapi:
     build:
       context: D:\jounier\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1
@@ -817,30 +956,6 @@ services:
     - type: bind
       source: D:\jounier\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1
       target: /src
-      bind:
-        create_host_path: true
-  userrequesthandler:
-    build:
-      context: D:\jounier\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1
-      dockerfile: UserRequestHandler/Dockerfile
-    environment:
-      ASPNETCORE_ENVIRONMENT: Development
-      ASPNETCORE_URLS: https://+:443;http://+:80
-    image: userrequesthandler
-    networks:
-      default: null
-    ports:
-    - mode: ingress
-      target: 80
-      protocol: tcp
-    - mode: ingress
-      target: 443
-      protocol: tcp
-    volumes:
-    - type: bind
-      source: C:\Users\yazon\AppData\Roaming/ASP.NET/Https
-      target: /root/.aspnet/https
-      read_only: true
       bind:
         create_host_path: true
 networks:

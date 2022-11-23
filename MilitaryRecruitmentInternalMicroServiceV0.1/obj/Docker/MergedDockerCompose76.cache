@@ -1,19 +1,5 @@
 name: dockercompose5144703731817758637
 services:
-  RabbitMQ:
-    container_name: RabbitMQ
-    image: rabbitmq:3.9-management
-    networks:
-      default: null
-    ports:
-    - mode: ingress
-      target: 5672
-      published: "5672"
-      protocol: tcp
-    - mode: ingress
-      target: 15672
-      published: "15672"
-      protocol: tcp
   alonepostponement:
     build:
       context: D:\jounier\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1
@@ -296,6 +282,36 @@ services:
       read_only: true
       bind:
         create_host_path: true
+  postponementofconvictsapi:
+    build:
+      context: D:\jounier\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1
+      dockerfile: PostponementOfConvictsAPI/Dockerfile
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_URLS: https://+:443;http://+:80
+    image: postponementofconvictsapi
+    networks:
+      default: null
+    ports:
+    - mode: ingress
+      target: 80
+      protocol: tcp
+    - mode: ingress
+      target: 443
+      protocol: tcp
+    volumes:
+    - type: bind
+      source: C:\Users\yazon\AppData\Roaming/Microsoft/UserSecrets
+      target: /root/.microsoft/usersecrets
+      read_only: true
+      bind:
+        create_host_path: true
+    - type: bind
+      source: C:\Users\yazon\AppData\Roaming/ASP.NET/Https
+      target: /root/.aspnet/https
+      read_only: true
+      bind:
+        create_host_path: true
   schoolpostponementapi:
     build:
       context: D:\jounier\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1
@@ -378,38 +394,6 @@ services:
       read_only: true
       bind:
         create_host_path: true
-    - type: bind
-      source: C:\Users\yazon\AppData\Roaming/ASP.NET/Https
-      target: /root/.aspnet/https
-      read_only: true
-      bind:
-        create_host_path: true
-  userrequesthandler:
-    build:
-      context: D:\jounier\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1
-      dockerfile: UserRequestHandler/Dockerfile
-    environment:
-      ASPNETCORE_ENVIRONMENT: Development
-      ASPNETCORE_URLS: https://+:443;http://+:80
-    image: userrequesthandler
-    networks:
-      default: null
-    ports:
-    - mode: ingress
-      target: 80
-      protocol: tcp
-    - mode: ingress
-      target: 80
-      published: "51049"
-      protocol: tcp
-    - mode: ingress
-      target: 443
-      protocol: tcp
-    - mode: ingress
-      target: 443
-      published: "50049"
-      protocol: tcp
-    volumes:
     - type: bind
       source: C:\Users\yazon\AppData\Roaming/ASP.NET/Https
       target: /root/.aspnet/https

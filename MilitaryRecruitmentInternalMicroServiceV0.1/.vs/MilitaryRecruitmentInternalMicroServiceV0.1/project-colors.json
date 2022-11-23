@@ -66,26 +66,21 @@
       "DisplayName": "FixedServiceAllowanceAPI",
       "ColorIndex": 11
     },
-    "5d49929a-dbd0-4e6e-954a-b8e0e06d44a6": {
-      "ProjectGuid": "5d49929a-dbd0-4e6e-954a-b8e0e06d44a6",
-      "DisplayName": "WebApplication1",
+    "dfd53e86-a58f-497a-81f7-a6718fa529c8": {
+      "ProjectGuid": "dfd53e86-a58f-497a-81f7-a6718fa529c8",
+      "DisplayName": "ObligatoryServiceAPI",
       "ColorIndex": 12
     },
-    "be77d78f-989f-46b2-bf5c-9e46ad79b8c1": {
-      "ProjectGuid": "be77d78f-989f-46b2-bf5c-9e46ad79b8c1",
-      "DisplayName": "UserRequestHandler",
+    "e7d52c6e-fee7-4adb-b6ff-8d5221e9bb26": {
+      "ProjectGuid": "e7d52c6e-fee7-4adb-b6ff-8d5221e9bb26",
+      "DisplayName": "PostponementOfConvictsAPI",
       "ColorIndex": 13
     },
-    "17843a31-65c2-40a1-9267-30ea81f485f6": {
-      "ProjectGuid": "17843a31-65c2-40a1-9267-30ea81f485f6",
-      "DisplayName": "UserRequestHandler",
+    "c3360102-034a-4b14-9226-51063973425d": {
+      "ProjectGuid": "c3360102-034a-4b14-9226-51063973425d",
+      "DisplayName": "ObligatoryServiceAPI",
       "ColorIndex": 14
-    },
-    "0a4c1432-95b3-4d8a-9277-e4ddeedc91cc": {
-      "ProjectGuid": "0a4c1432-95b3-4d8a-9277-e4ddeedc91cc",
-      "DisplayName": "ExternalAPICaller",
-      "ColorIndex": 15
     }
   },
-  "NextColorIndex": 0
+  "NextColorIndex": 15
 }
