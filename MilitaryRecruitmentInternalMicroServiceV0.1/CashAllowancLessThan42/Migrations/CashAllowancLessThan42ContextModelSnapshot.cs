@@ -19,6 +19,110 @@ namespace CashAllowancLessThan42.Migrations
                 .HasAnnotation("ProductVersion", "5.0.17")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+            modelBuilder.Entity("CashAllowancLessThan42.Models.AsyncAge", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("Age")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("RequestReciveTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("RequestSendTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("RequestStatuesIDReqStatuesID")
+                        .HasColumnType("int");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("RequestStatuesIDReqStatuesID");
+
+                    b.ToTable("AsyncAgeDBS");
+                });
+
+            modelBuilder.Entity("CashAllowancLessThan42.Models.AsyncDaysOutsideCoun", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("DaysOutsideCoun")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("RequestReciveTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("RequestSendTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("RequestStatuesIDReqStatuesID")
+                        .HasColumnType("int");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("RequestStatuesIDReqStatuesID");
+
+                    b.ToTable("AsyncDaysOutsideCounDBS");
+                });
+
+            modelBuilder.Entity("CashAllowancLessThan42.Models.AsyncUserTransactions", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("RequestReciveTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("RequestSendTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("RequestStatuesIDReqStatuesID")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("UserTransactions")
+                        .HasColumnType("bit");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("RequestStatuesIDReqStatuesID");
+
+                    b.ToTable("AsyncUserTransactionsDBS");
+                });
+
+            modelBuilder.Entity("CashAllowancLessThan42.Models.Asynctravel", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("RequestReciveTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("RequestSendTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("RequestStatuesIDReqStatuesID")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("travel")
+                        .HasColumnType("bit");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("RequestStatuesIDReqStatuesID");
+
+                    b.ToTable("AsynctravelDBS");
+                });
+
             modelBuilder.Entity("CashAllowancLessThan42.Models.CashAllowancLessThan42Model", b =>
                 {
                     b.Property<int>("ID")
@@ -35,6 +139,66 @@ namespace CashAllowancLessThan42.Migrations
                     b.HasKey("ID");
 
                     b.ToTable("CashAllowancLessThan42Db");
+                });
+
+            modelBuilder.Entity("CashAllowancLessThan42.Models.RequestStatues", b =>
+                {
+                    b.Property<int>("ReqStatuesID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("DateOfDone")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DateOfRecive")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Statues")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("UserID")
+                        .HasColumnType("int");
+
+                    b.HasKey("ReqStatuesID");
+
+                    b.ToTable("RequestStatuesDBS");
+                });
+
+            modelBuilder.Entity("CashAllowancLessThan42.Models.AsyncAge", b =>
+                {
+                    b.HasOne("CashAllowancLessThan42.Models.RequestStatues", "RequestStatuesID")
+                        .WithMany()
+                        .HasForeignKey("RequestStatuesIDReqStatuesID");
+
+                    b.Navigation("RequestStatuesID");
+                });
+
+            modelBuilder.Entity("CashAllowancLessThan42.Models.AsyncDaysOutsideCoun", b =>
+                {
+                    b.HasOne("CashAllowancLessThan42.Models.RequestStatues", "RequestStatuesID")
+                        .WithMany()
+                        .HasForeignKey("RequestStatuesIDReqStatuesID");
+
+                    b.Navigation("RequestStatuesID");
+                });
+
+            modelBuilder.Entity("CashAllowancLessThan42.Models.AsyncUserTransactions", b =>
+                {
+                    b.HasOne("CashAllowancLessThan42.Models.RequestStatues", "RequestStatuesID")
+                        .WithMany()
+                        .HasForeignKey("RequestStatuesIDReqStatuesID");
+
+                    b.Navigation("RequestStatuesID");
+                });
+
+            modelBuilder.Entity("CashAllowancLessThan42.Models.Asynctravel", b =>
+                {
+                    b.HasOne("CashAllowancLessThan42.Models.RequestStatues", "RequestStatuesID")
+                        .WithMany()
+                        .HasForeignKey("RequestStatuesIDReqStatuesID");
+
+                    b.Navigation("RequestStatuesID");
                 });
 #pragma warning restore 612, 618
         }

@@ -10,14 +10,14 @@ namespace AlonePostponement.Models
 
         public int ID { get; set; }
 
-        public virtual RequestStatues RequestStatues { get; set; }
+        public virtual RequestStatues RequestStatuesID { get; set; }
 
         public DateTime RequestSendTime { get; set; }
 
         //check if all brothers are dead
         public bool AllDeadBrothers { get; set; }
 
-        public IActionResult Result { get; set; }
+        //public IActionResult Result { get; set; }
 
         public DateTime RequestReciveTime { get; set; }
     }

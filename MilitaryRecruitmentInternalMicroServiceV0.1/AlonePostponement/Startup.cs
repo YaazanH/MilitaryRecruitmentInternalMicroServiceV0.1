@@ -18,7 +18,8 @@ using System.Text;
 using System.Threading.Tasks;
 using AlonePostponement.Data;
 using AlonePostponement.Models;
-
+using AlonePostponement.Controllers;
+using AlonePostponement.BackgroundServices;
 
 namespace AlonePostponement
 {
@@ -55,6 +56,7 @@ namespace AlonePostponement
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "AlonePostponement", Version = "v1" });
             });
             services.AddSingleton<IHostedService, ConsulRegisterService>();
+            
             services.Configure<ServiceConfiguration>(Configuration.GetSection("Service"));
             services.Configure<ConsulConfiguration>(Configuration.GetSection("Consul"));
 
@@ -65,7 +67,8 @@ namespace AlonePostponement
 
             services.AddDbContext<AlonePostponementContext>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("AlonePostponementContext")));
-            services.AddSingleton<RabbitMqGetFromUserRequestHandlerconsumer>(provider => new RabbitMqGetFromUserRequestHandlerconsumer("host.docker.internal"));
+
+            services.AddHostedService<RabbitMQserv>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

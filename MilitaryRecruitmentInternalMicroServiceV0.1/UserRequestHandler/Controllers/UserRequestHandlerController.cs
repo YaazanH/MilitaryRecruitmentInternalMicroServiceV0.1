@@ -74,21 +74,49 @@ namespace UserRequestHandler.Controllers
 
                 switch (Int32.Parse(dataObject["ID"].ToString()))
                 {
-                    case 1:
-                        RoueKey = "AlonePostponement";
-                        break;
+                case 1:
+                    RoueKey = "AlonePostponement";
+                    break;
 
-                    case 2:
-                        RoueKey = "";
-                        break;
+                case 2:
+                    RoueKey = "BrotherInServicePostponement";
+                    break;
 
-                    default:
-                        return NotFound();
+                case 3:
+                    RoueKey = "CashAllowance";
+                    break;
+
+                case 4:
+                    RoueKey = "CashAllowancLessThan42";
+                    break;
+
+                case 5:
+                    RoueKey = "FixedServiceAllowance";
+                    break;
+
+                case 6:
+                    RoueKey = "ObligatoryService";
+                    break;
+
+                case 7:
+                    RoueKey = "PostponementOfConvicts";
+                    break;
+
+                case 8:
+                    RoueKey = "SchoolPostponement";
+                    break;
+
+                case 9:
+                    RoueKey = "TravelApproval";
+                    break;
+
+                default:
+                    return NotFound();
 
                 }
                 channel.BasicPublish("UserRequestExch", RoueKey, null, body);
 
-                return Ok("تم استلام طلبك و قيد المعالجة ");
+                return Ok("The request has been received and is now being processed");
         }
     }
 }

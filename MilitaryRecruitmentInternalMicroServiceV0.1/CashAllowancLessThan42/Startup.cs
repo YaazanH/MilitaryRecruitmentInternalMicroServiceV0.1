@@ -1,3 +1,4 @@
+using CashAllowancLessThan42.BackgroundServices;
 using CashAllowancLessThan42.Data;
 using Consul;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -66,6 +67,9 @@ namespace CashAllowancLessThan42
 
             services.AddDbContext<CashAllowancLessThan42Context>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("CashAllowancLessThan42Context")));
+
+
+            services.AddHostedService<RabbitMQserv>();
 
         }
 

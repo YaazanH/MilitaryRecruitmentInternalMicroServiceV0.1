@@ -80,7 +80,22 @@
       "ProjectGuid": "c3360102-034a-4b14-9226-51063973425d",
       "DisplayName": "ObligatoryServiceAPI",
       "ColorIndex": 14
+    },
+    "b9a13798-897a-4e01-b8b6-7a6bdd116354": {
+      "ProjectGuid": "b9a13798-897a-4e01-b8b6-7a6bdd116354",
+      "DisplayName": "ExternalAPICaller",
+      "ColorIndex": 15
+    },
+    "03a841d7-8935-4834-97bf-8e8eb340e103": {
+      "ProjectGuid": "03a841d7-8935-4834-97bf-8e8eb340e103",
+      "DisplayName": "UserRequestHandler",
+      "ColorIndex": 0
+    },
+    "9f659ec2-3828-406c-a9c0-31f540e2549e": {
+      "ProjectGuid": "9f659ec2-3828-406c-a9c0-31f540e2549e",
+      "DisplayName": "ObligatoryServiceAPI",
+      "ColorIndex": 1
     }
   },
-  "NextColorIndex": 15
+  "NextColorIndex": 2
 }

@@ -7,5 +7,13 @@ namespace TravelApprovalAPI.Data
         { }
 
         public DbSet<TravelApprovalAPI.Models.TravelApproval> TravelApprovalDb { get; set; }
+
+        public DbSet<TravelApprovalAPI.Models.RequestStatues> RequestStatuesDBS { get; set; }
+
+        public DbSet<TravelApprovalAPI.Models.AsyncAge> AsyncAgeDBS { get; set; }
+
+        public DbSet<TravelApprovalAPI.Models.Asynctravel> AsynctravelDBS { get; set; }
+        public DbSet<TravelApprovalAPI.Models.AsyncUserTransactions> AsyncUserTransactionsDBS { get; set; }
+        public DbSet<TravelApprovalAPI.Models.AsynLabor> AsynLaborDBS { get; set; }
     }
 }

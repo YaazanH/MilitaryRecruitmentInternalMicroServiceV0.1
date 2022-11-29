@@ -1,3 +1,4 @@
+using CashAllowancLessThan42.Data;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
@@ -11,6 +12,8 @@ namespace CashAllowancLessThan42
 {
     public class Program
     {
+        private static CashAllowancLessThan42Context context;
+
         public static void Main(string[] args)
         {
             CreateHostBuilder(args).Build().Run();
@@ -21,6 +24,7 @@ namespace CashAllowancLessThan42
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
+                  
                 });
     }
 }
