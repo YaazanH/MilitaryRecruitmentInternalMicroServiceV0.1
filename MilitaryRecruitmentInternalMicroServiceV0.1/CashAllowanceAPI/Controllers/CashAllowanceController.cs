@@ -37,7 +37,7 @@ namespace CashAllowanceAPI.Controllers
 
         private void AddCert(int CUserID)
         {
-            CashAllowance tra = new CashAllowance { UserID = CUserID, DateOfGiven = DateTime.Now };
+            Models.CashAllowance tra = new Models.CashAllowance { UserID = CUserID, DateOfGiven = DateTime.Now };
             _context.CashAllowanceDb.Add(tra);
             _context.SaveChanges();
 

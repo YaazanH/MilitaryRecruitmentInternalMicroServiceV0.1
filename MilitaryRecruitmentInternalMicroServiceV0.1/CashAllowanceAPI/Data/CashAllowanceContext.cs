@@ -7,5 +7,7 @@ namespace CashAllowanceAPI.Data
         { }
 
         public DbSet<CashAllowanceAPI.Models.CashAllowance> CashAllowanceDb { get; set; }
+
+       
     }
 }
