@@ -1,4 +1,4 @@
-﻿namespace CashAllowancLessThan42.Models
+﻿namespace PostponementOfConvictsAPI.Models
 {
     public class RabbitMQResponce
     {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace CashAllowancLessThan42.Models
+namespace FixedServiceAllowanceAPI.Models
 {
     public class RequestStatues
     {

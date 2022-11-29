@@ -1,4 +1,4 @@
-﻿namespace CashAllowancLessThan42.Models
+﻿namespace TravelApprovalAPI.Models
 {
     public class RabbitMQobj
     {

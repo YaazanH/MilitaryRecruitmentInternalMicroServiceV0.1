@@ -2,7 +2,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace CashAllowancLessThan42.Models
+namespace SchoolPostponementAPI.Models
 {
     public class AsyncAge
     {

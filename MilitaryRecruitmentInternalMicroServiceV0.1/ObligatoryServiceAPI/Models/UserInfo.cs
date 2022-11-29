@@ -1,4 +1,4 @@
-﻿namespace PostponementOfConvictsAPI.Models
+﻿namespace ObligatoryServiceAPI.Models
 {
     public class UserInfo
     {

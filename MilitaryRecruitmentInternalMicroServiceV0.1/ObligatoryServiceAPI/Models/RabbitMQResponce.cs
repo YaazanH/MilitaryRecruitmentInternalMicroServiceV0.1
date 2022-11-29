@@ -1,4 +1,4 @@
-﻿namespace CashAllowancLessThan42.Models
+﻿namespace ObligatoryServiceAPI.Models
 {
     public class RabbitMQResponce
     {

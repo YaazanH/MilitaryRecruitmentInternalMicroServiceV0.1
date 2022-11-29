@@ -1,4 +1,4 @@
-﻿namespace CashAllowancLessThan42.Models
+﻿namespace SchoolPostponementAPI.Models
 {
     public class RabbitMQobj
     {

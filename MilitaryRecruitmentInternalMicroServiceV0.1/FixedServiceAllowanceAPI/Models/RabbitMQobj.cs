@@ -1,4 +1,4 @@
-﻿namespace CashAllowancLessThan42.Models
+﻿namespace FixedServiceAllowanceAPI.Models
 {
     public class RabbitMQobj
     {

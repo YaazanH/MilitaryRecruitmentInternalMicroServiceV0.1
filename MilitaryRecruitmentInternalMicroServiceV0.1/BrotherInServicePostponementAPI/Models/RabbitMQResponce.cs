@@ -1,4 +1,4 @@
-﻿namespace CashAllowancLessThan42.Models
+﻿namespace BrotherInServicePostponementAPI.Models
 {
     public class RabbitMQResponce
     {
