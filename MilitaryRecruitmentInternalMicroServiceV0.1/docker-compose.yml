@@ -22,6 +22,13 @@ services:
       -  "8601:8600/udp"
     command:  consul agent -dev -server -ui -node=server-1 -bootstrap-expect=1 -client="0.0.0.0"
 
+  RabbitMQ:
+    image: rabbitmq:3.9-management
+    container_name: RabbitMQ
+    ports:
+      -  "5672:5672" 
+      -  "15672:15672"
+
   schoolpostponementapi:
     image: ${DOCKER_REGISTRY-}schoolpostponementapi
     build:
@@ -116,8 +123,25 @@ services:
       context: .
       dockerfile: ObligatoryServiceAPI/Dockerfile
 
+  userrequesthandler:
+    image: ${DOCKER_REGISTRY-}userrequesthandler
+    build:
+      context: .
+      dockerfile: UserRequestHandler/Dockerfile
+    ports:
+      - "51052:80"
+      - "50052:443"
+
+  externalapicaller:
+    image: ${DOCKER_REGISTRY-}externalapicaller
+    build:
+      context: .
+      dockerfile: ExternalAPICaller/Dockerfile
+
 volumes:
   sqlvol2:
+
+
 
 
 

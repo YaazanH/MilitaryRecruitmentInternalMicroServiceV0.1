@@ -1,16 +1,16 @@
 {
   "Routes": [
-    // Alone Web API
+    // User Request Exchange
     {
-      "DownstreamPathTemplate": "/AlonePostponement/{everything}",
+      "DownstreamPathTemplate": "/UserRequestHandler/{everything}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
           "Host": "host.docker.internal",
-          "Port": 51014
+          "Port": 51052
         }
       ],
-      "UpstreamPathTemplate": "/AlonePostponement/{everything}",
+      "UpstreamPathTemplate": "/UserRequestHandler/{everything}",
       "UpstreamHttpMethod": [ "Get" ]
     },
     {

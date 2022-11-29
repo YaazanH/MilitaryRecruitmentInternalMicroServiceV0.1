@@ -25,7 +25,7 @@ namespace AlonePostponement
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
-                    RabbitMqGetFromUserRequestHandlerconsumer q = new RabbitMqGetFromUserRequestHandlerconsumer("host.docker.internal");
+                    
                 });
         
     }

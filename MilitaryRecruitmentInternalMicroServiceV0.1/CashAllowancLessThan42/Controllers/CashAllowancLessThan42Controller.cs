@@ -122,14 +122,12 @@ namespace CashAllowancLessThan42.Controllers
           
                     if (Days >= 1460)
                     {
-
                         return Ok("You Need To Pay  7000$");
                     }
                     
                 
                     if (Days > 1095 && Days < 1460)
                     {
-
                         return Ok("You Need To Pay  8000$");
                     }
               
@@ -144,14 +142,7 @@ namespace CashAllowancLessThan42.Controllers
                     {
                        
                         return Ok("You Need To Pay 10000$");
-                    }
-                
-
-           
-
-          
-            
-           
+                    }               
 
             return NoContent();
         }

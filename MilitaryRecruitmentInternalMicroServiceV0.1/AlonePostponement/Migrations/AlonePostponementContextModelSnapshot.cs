@@ -39,6 +39,170 @@ namespace AlonePostponement.Migrations
 
                     b.ToTable("AlonePostponementDBS");
                 });
+
+            modelBuilder.Entity("AlonePostponement.Models.BrotherEill", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<bool>("AllBrotherEill")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("RequestReciveTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("RequestSendTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("RequestStatuesIDReqStatuesID")
+                        .HasColumnType("int");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("RequestStatuesIDReqStatuesID");
+
+                    b.ToTable("BrotherEillDBS");
+                });
+
+            modelBuilder.Entity("AlonePostponement.Models.BrothersID", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("BrotherID")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("RequestReciveTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("RequestSendTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("RequestStatuesIDReqStatuesID")
+                        .HasColumnType("int");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("RequestStatuesIDReqStatuesID");
+
+                    b.ToTable("BrothersIDDBS");
+                });
+
+            modelBuilder.Entity("AlonePostponement.Models.DeadBrothers", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<bool>("AllDeadBrothers")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("RequestReciveTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("RequestSendTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("RequestStatuesIDReqStatuesID")
+                        .HasColumnType("int");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("RequestStatuesIDReqStatuesID");
+
+                    b.ToTable("DeadBrothersDBS");
+                });
+
+            modelBuilder.Entity("AlonePostponement.Models.HaveBrothers", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<bool>("HaveBrother")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("RequestReciveTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("RequestSendTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("RequestStatuesIDReqStatuesID")
+                        .HasColumnType("int");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("RequestStatuesIDReqStatuesID");
+
+                    b.ToTable("HaveBrothersDBS");
+                });
+
+            modelBuilder.Entity("AlonePostponement.Models.RequestStatues", b =>
+                {
+                    b.Property<int>("ReqStatuesID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("DateOfDone")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DateOfRecive")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Statues")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("UserID")
+                        .HasColumnType("int");
+
+                    b.HasKey("ReqStatuesID");
+
+                    b.ToTable("RequestStatuesDBS");
+                });
+
+            modelBuilder.Entity("AlonePostponement.Models.BrotherEill", b =>
+                {
+                    b.HasOne("AlonePostponement.Models.RequestStatues", "RequestStatuesID")
+                        .WithMany()
+                        .HasForeignKey("RequestStatuesIDReqStatuesID");
+
+                    b.Navigation("RequestStatuesID");
+                });
+
+            modelBuilder.Entity("AlonePostponement.Models.BrothersID", b =>
+                {
+                    b.HasOne("AlonePostponement.Models.RequestStatues", "RequestStatuesID")
+                        .WithMany()
+                        .HasForeignKey("RequestStatuesIDReqStatuesID");
+
+                    b.Navigation("RequestStatuesID");
+                });
+
+            modelBuilder.Entity("AlonePostponement.Models.DeadBrothers", b =>
+                {
+                    b.HasOne("AlonePostponement.Models.RequestStatues", "RequestStatuesID")
+                        .WithMany()
+                        .HasForeignKey("RequestStatuesIDReqStatuesID");
+
+                    b.Navigation("RequestStatuesID");
+                });
+
+            modelBuilder.Entity("AlonePostponement.Models.HaveBrothers", b =>
+                {
+                    b.HasOne("AlonePostponement.Models.RequestStatues", "RequestStatuesID")
+                        .WithMany()
+                        .HasForeignKey("RequestStatuesIDReqStatuesID");
+
+                    b.Navigation("RequestStatuesID");
+                });
 #pragma warning restore 612, 618
         }
     }

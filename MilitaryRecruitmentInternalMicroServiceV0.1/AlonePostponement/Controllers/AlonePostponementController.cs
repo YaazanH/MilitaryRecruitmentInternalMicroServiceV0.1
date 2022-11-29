@@ -13,7 +13,7 @@ using System.Security.Claims;
 using System.Linq;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
-
+using AlonePostponement.Models;
 
 namespace AlonePostponement.Controllers
 {
@@ -26,8 +26,6 @@ namespace AlonePostponement.Controllers
         public AlonePostponementController(AlonePostponementContext context)
         {
             _context = context;
-            
-           
         }
         private int GetCurrentUserID()
         {
@@ -41,8 +39,8 @@ namespace AlonePostponement.Controllers
 
         private void AddCert(int CUserID)
         {
-            
-           Models.AlonePostponement st = new Models.AlonePostponement { UserID = CUserID, DateOfGiven = DateTime.Now, DateOfEnd = DateTime.Now.AddYears(3) };
+
+            Models.AlonePostponement st = new Models.AlonePostponement { UserID = CUserID, DateOfGiven = DateTime.Now, DateOfEnd = DateTime.Now.AddYears(3) };
             _context.AlonePostponementDBS.Add(st);
             _context.SaveChanges();
 
@@ -50,8 +48,6 @@ namespace AlonePostponement.Controllers
         private async Task<string> APICall(string GURI)
         {
             var authorization = Request.Headers[HeaderNames.Authorization];
-
-            
 
             AuthenticationHeaderValue.TryParse(authorization, out var authentication);
 
@@ -87,9 +83,9 @@ namespace AlonePostponement.Controllers
         }
         [HttpGet]
         [Route("GetIsAlonePostponement/")]
-        public async Task<IActionResult> GetIsAlonePostponement(int id)
+        public async Task<IActionResult> GetIsAlonePostponement()
         {
-            int CUserID = id;// GetCurrentUserID();
+            int CUserID = GetCurrentUserID();
             var User = _context.AlonePostponementDBS.Where(x => x.UserID == CUserID).FirstOrDefault();
             if (User != null)
             {
@@ -98,60 +94,32 @@ namespace AlonePostponement.Controllers
                     return Ok("You aready have vaild cert");
                 }
             }
-            /*
-
-            consume (que)
-            {
-            insert into main database 
-            insde que body =>id
-            
-            call external service api  async que 
-            (jwt,url)
-            insert date of call 
-
-            }
-
-
-
-            consume2(que form external services)
-            (id,responce)
-
-            insert responce into external database 
-
-            if all rxternal are filled with data 
-            start تاجيل process
-
-
-
-            */
-
-
             //check have boy brothers
-            if(JsonConvert.DeserializeObject<bool>(await APICall("https://host.docker.internal:40006/RecordAdminstration/GetIfHasMaleBrothers")))
+            if (JsonConvert.DeserializeObject<bool>(await APICall("https://host.docker.internal:40006/University/GetStudyYears")))
             {
                 List<int> BrotherNotDied = new List<int>();
                 //add brother id 
-                List<int> BrothersID = JsonConvert.DeserializeObject<List<int>>(await APICall("https://host.docker.internal:40006/RecordAdminstration/GetListOfBros"));
+                List<int> BrothersID = JsonConvert.DeserializeObject<List<int>>(await APICall("https://host.docker.internal:40006/University/GetStudyYears"));
                 foreach (var item in BrothersID)
                 {
                     //if any brother death
-                    if (!JsonConvert.DeserializeObject<bool>(await APICall("https://host.docker.internal:40006/RecordAdminstration/GetDeath?id=" + item.ToString())))
+                    if (!JsonConvert.DeserializeObject<bool>(await APICall("https://host.docker.internal:40006/University/GetStudyYears?id=" + item.ToString())))
                     {
                         BrotherNotDied.Add(item);
                     }
                 }
-                if (BrotherNotDied.Count>0)
+                if (BrotherNotDied.Count > 0)
                 {
                     foreach (var item in BrotherNotDied)
                     {
                         //check if one of the brother not eill
-                        if (!JsonConvert.DeserializeObject<bool>(await APICall("https://host.docker.internal:40006/HealthMin/GetHaveProb?id=" + item.ToString())))
+                        if (!JsonConvert.DeserializeObject<bool>(await APICall("https://host.docker.internal:40006/University/GetStudyYears?id=" + item.ToString())))
                         {
                             return Ok("you cant because you have brothers");
                         }
                     }
                 }
-                
+
             }
 
             AddCert(CUserID);

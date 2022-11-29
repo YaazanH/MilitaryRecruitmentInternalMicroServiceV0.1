@@ -21,7 +21,7 @@ namespace ExternalAPICaller
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
-                    RabbitMqAPIRequestConsumer q = new RabbitMqAPIRequestConsumer("host.docker.internal");
+                   
                 });
     }
 }

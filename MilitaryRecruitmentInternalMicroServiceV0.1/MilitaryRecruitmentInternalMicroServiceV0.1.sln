@@ -27,6 +27,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PostponementOfConvictsAPI",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ObligatoryServiceAPI", "ObligatoryServiceAPI\ObligatoryServiceAPI.csproj", "{9F659EC2-3828-406C-A9C0-31F540E2549E}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UserRequestHandler", "UserRequestHandler\UserRequestHandler.csproj", "{03A841D7-8935-4834-97BF-8E8EB340E103}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExternalAPICaller", "ExternalAPICaller\ExternalAPICaller.csproj", "{B9A13798-897A-4E01-B8B6-7A6BDD116354}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -81,6 +85,14 @@ Global
 		{9F659EC2-3828-406C-A9C0-31F540E2549E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9F659EC2-3828-406C-A9C0-31F540E2549E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9F659EC2-3828-406C-A9C0-31F540E2549E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{03A841D7-8935-4834-97BF-8E8EB340E103}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{03A841D7-8935-4834-97BF-8E8EB340E103}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{03A841D7-8935-4834-97BF-8E8EB340E103}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{03A841D7-8935-4834-97BF-8E8EB340E103}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B9A13798-897A-4E01-B8B6-7A6BDD116354}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B9A13798-897A-4E01-B8B6-7A6BDD116354}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B9A13798-897A-4E01-B8B6-7A6BDD116354}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B9A13798-897A-4E01-B8B6-7A6BDD116354}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
