@@ -8,6 +8,8 @@ namespace TravelApprovalAPI.Models
         [Key]
         public int ReqStatuesID { get; set; }
 
+        public string PostponmentType { get; set; }
+
         public int UserID { get; set; }
 
         public DateTime DateOfRecive { get; set; }

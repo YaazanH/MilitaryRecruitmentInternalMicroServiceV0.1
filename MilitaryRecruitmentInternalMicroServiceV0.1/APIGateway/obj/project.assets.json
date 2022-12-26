@@ -847,19 +847,24 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\mooha\\.nuget\\packages\\": {}
+    "C:\\Users\\yazon\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\MS\\MilitaryRecruitmentInternalMicroServiceV0.1\\MilitaryRecruitmentInternalMicroServiceV0.1\\APIGateway\\APIGateway.csproj",
+      "projectUniqueName": "D:\\jounier\\MilitaryRecruitmentInternalMicroServiceV0.1\\MilitaryRecruitmentInternalMicroServiceV0.1\\APIGateway\\APIGateway.csproj",
       "projectName": "APIGateway",
-      "projectPath": "D:\\MS\\MilitaryRecruitmentInternalMicroServiceV0.1\\MilitaryRecruitmentInternalMicroServiceV0.1\\APIGateway\\APIGateway.csproj",
-      "packagesPath": "C:\\Users\\mooha\\.nuget\\packages\\",
-      "outputPath": "D:\\MS\\MilitaryRecruitmentInternalMicroServiceV0.1\\MilitaryRecruitmentInternalMicroServiceV0.1\\APIGateway\\obj\\",
+      "projectPath": "D:\\jounier\\MilitaryRecruitmentInternalMicroServiceV0.1\\MilitaryRecruitmentInternalMicroServiceV0.1\\APIGateway\\APIGateway.csproj",
+      "packagesPath": "C:\\Users\\yazon\\.nuget\\packages\\",
+      "outputPath": "D:\\jounier\\MilitaryRecruitmentInternalMicroServiceV0.1\\MilitaryRecruitmentInternalMicroServiceV0.1\\APIGateway\\obj\\",
       "projectStyle": "PackageReference",
+      "fallbackFolders": [
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+      ],
       "configFilePaths": [
-        "C:\\Users\\mooha\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\yazon\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -867,8 +872,7 @@
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-        "https://api.nuget.org/v3/index.json": {},
-        "https://www.nuget.org/api/v2": {}
+        "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
         "net6.0": {
@@ -909,8 +913,7 @@
           "net47",
           "net471",
           "net472",
-          "net48",
-          "net481"
+          "net48"
         ],
         "assetTargetFallback": true,
         "warn": true,
@@ -922,7 +925,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.401\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.112\\RuntimeIdentifierGraph.json"
       }
     }
   }

@@ -16,7 +16,9 @@ namespace AlonePostponement.Models
 
         public String BrotherID { get; set; }
 
-       // public IActionResult Result { get; set; }
+        public int NumbersOfBrothers { get; set; }
+
+        // public IActionResult Result { get; set; }
 
         public DateTime RequestReciveTime { get; set; }
 

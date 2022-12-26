@@ -81,6 +81,25 @@ namespace SchoolPostponementAPI.Controllers
                 }
             }
         }
+
+        [HttpGet]
+        [Route("GetAllUserTransactions")]
+        public List<RequestStatues> GetAllUserTransactions()
+        {
+            int CUserID = GetCurrentUserID();
+            List<RequestStatues> result = _context.RequestStatuesDBS.Where(x => x.UserID == CUserID).OrderByDescending(x => x.DateOfRecive).Take(10).ToList<RequestStatues>();
+            return result;
+        }
+
+        [HttpGet]
+        [Route("GetAUserTransactions")]
+        public RequestStatues GetAUserTransactions(int Reqid)
+        {
+            RequestStatues result = _context.RequestStatuesDBS.Where(x => x.ReqStatuesID == Reqid).FirstOrDefault();
+            return result;
+        }
+
+        /*
         [HttpGet]
         [Route("GetIsAStudent/")]
         public async Task<IActionResult> GetIsAStudent()
@@ -153,6 +172,6 @@ namespace SchoolPostponementAPI.Controllers
                     return NotFound();
             }
             return NoContent();
-        }
+        }*/
     }
 }

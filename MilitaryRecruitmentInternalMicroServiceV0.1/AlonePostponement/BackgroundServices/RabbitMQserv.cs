@@ -12,6 +12,7 @@ using AlonePostponement.Models;
 using RabbitMQ.Client.Events;
 using System.Text.Json;
 using Microsoft.Extensions.DependencyInjection;
+using System.Linq;
 
 namespace AlonePostponement.BackgroundServices
 {
@@ -21,17 +22,24 @@ namespace AlonePostponement.BackgroundServices
         ConnectionFactory factory { get; set; }
         IConnection connection { get; set; }
         IModel channel { get; set; }
-        
+
+        bool HaveBrothersID = false;
+
 
         public RabbitMQserv(IServiceScopeFactory factory)
         {
             _context = factory.CreateScope().ServiceProvider.GetRequiredService<AlonePostponementContext>();
-            
         }
 
         protected override Task ExecuteAsync(CancellationToken stoppingToken)
         {
             stoppingToken.ThrowIfCancellationRequested();
+            startrabbitMQ();
+            return Task.CompletedTask;
+        }
+
+        private void startrabbitMQ()
+        {
             factory = new ConnectionFactory() { HostName = "host.docker.internal" };
             connection = factory.CreateConnection();
             channel = connection.CreateModel();
@@ -46,18 +54,23 @@ namespace AlonePostponement.BackgroundServices
 
             consumer.Received += (model, ea) =>
             {
+
                 var recbody = ea.Body.ToArray();
 
                 var recmess = Encoding.UTF8.GetString(recbody);
 
                 UserInfo userInfo = JsonSerializer.Deserialize<UserInfo>(recmess);
 
-                int processID = InsertRequestToDB(userInfo.UserID);
-                SendToExternalAPI(userInfo.JWT, processID);
+                var User = _context.AlonePostponementDBS.Where(x => x.UserID == userInfo.UserID).FirstOrDefault();
+                if (User == null)
+                {
+                    int ReqStatuesID = InsertRequestToDB(userInfo.UserID);
+                    SendToExternalAPI(userInfo.JWT, ReqStatuesID);
+                }
             };
             channel.BasicConsume(queue: queName, autoAck: true, consumer: consumer);
-            //System.Console.ReadLine();
-            return Task.CompletedTask;
+            System.Console.Read();
+
         }
 
         private int InsertRequestToDB(int userID)
@@ -72,9 +85,7 @@ namespace AlonePostponement.BackgroundServices
             return rs.ReqStatuesID;
         }
 
-
-
-        public void SendToExternalAPI(String Token, int processID)
+        public void SendToExternalAPI(String Token, int ReqStatuesID)
         {
 
             var factory = new ConnectionFactory() { HostName = "host.docker.internal" };
@@ -102,7 +113,7 @@ namespace AlonePostponement.BackgroundServices
                 string CorrelationId = ea.BasicProperties.CorrelationId;
 
 
-                UpdateRequestToDB(ExternalAPIResponce, CorrelationId);
+                UpdateRequestToDB(ExternalAPIResponce, CorrelationId, ReqStatuesID);
             };
 
             channel.BasicConsume(queue: replyQueue.QueueName, autoAck: true, consumer: consumer);
@@ -111,29 +122,51 @@ namespace AlonePostponement.BackgroundServices
             var properties = channel.CreateBasicProperties();
 
             properties.ReplyTo = replyQueue.QueueName;
-            for (int i = 0; i < 4; i++)
+            RequestStatues requestStatues = _context.RequestStatuesDBS.Find(ReqStatuesID);
+            RabbitMQobj rabbitMQobj = new RabbitMQobj() { JWT = Token };
+            int i =0;
+            while (i<3)
             {
-                RabbitMQobj rabbitMQobj = new RabbitMQobj() { ProcID = processID, JWT = Token };
                 if (i == 0)
                 {
-                    rabbitMQobj.URL = "";
+                    BrothersID brothersID = new BrothersID() { RequestStatuesID = requestStatues, RequestSendTime = DateTime.Now };
+                    _context.BrothersIDDBS.Add(brothersID);
+                    _context.SaveChanges();
+                    rabbitMQobj.URL = "https://host.docker.internal:40011/Passport/GetIstravel";
                     properties.CorrelationId = "AlonepostmentBrothersID";
+                    rabbitMQobj.ProcID = brothersID.ID;
+                    i++;
                 }
+                if (HaveBrothersID)
+                {
+                    if (i == 1)
+                    {
+                        for (int j = 0; j < 4/*brothers numbers*/; j++)
+                        {
+                            BrotherEill brotherEill = new BrotherEill() { RequestStatuesID = requestStatues, RequestSendTime = DateTime.Now };
+                            _context.BrotherEillDBS.Add(brotherEill);
+                            _context.SaveChanges();
+                            rabbitMQobj.URL = "https://host.docker.internal:40022/Finance/GetUserTransactions";
+                            properties.CorrelationId = "AlonepostmentBrothersEill";
+                            rabbitMQobj.ProcID = brotherEill.ID;
+                        }
 
-                if (i == 1)
-                {
-                    rabbitMQobj.URL = "";
-                    properties.CorrelationId = "AlonepostmentBrothersEill";
-                }
-                if (i == 2)
-                {
-                    rabbitMQobj.URL = "";
-                    properties.CorrelationId = "AlonepostmentDeadBrothers";
-                }
-                if (i == 3)
-                {
-                    rabbitMQobj.URL = "";
-                    properties.CorrelationId = "AlonepostmentHaveBrothers";
+                        i++;
+                    }
+                    if (i == 2)
+                    {
+                        for (int j = 0; j < 4/*brothers numbers*/; j++)
+                        {
+                            DeadBrothers deadBrothers = new DeadBrothers() { RequestStatuesID = requestStatues, RequestSendTime = DateTime.Now };
+                            _context.DeadBrothersDBS.Add(deadBrothers);
+                            _context.SaveChanges();
+                            rabbitMQobj.ProcID = deadBrothers.ID;
+                            rabbitMQobj.URL = "https://host.docker.internal:40011/Passport/GetNumberOfDaysOutsideCoun";
+                            properties.CorrelationId = "AlonepostmentDeadBrothers";
+                        }
+                        i++;
+                    }
+               
                 }
 
                 var mess = JsonSerializer.Serialize(rabbitMQobj);
@@ -142,23 +175,101 @@ namespace AlonePostponement.BackgroundServices
                 channel.BasicPublish("", "requestQueue", properties, body);
             }
             System.Console.ReadLine();
-
+            
         }
 
-        private void UpdateRequestToDB(RabbitMQResponce externalAPIResponce, string correlationId)
+        private void UpdateRequestToDB(RabbitMQResponce externalAPIResponce, string correlationId, int processID)
         {
-            RequestStatues requestStatues = _context.RequestStatuesDBS.Find(externalAPIResponce.ProcID);
-
-            switch (correlationId)
+           /* switch (correlationId)
             {
-                case "AlonepostmentBrothersID":
-                    
-                    BrothersID brothersID = new BrothersID() { RequestStatuesID = requestStatues, BrotherID = externalAPIResponce.Responce, RequestReciveTime = DateTime.Now };
-                    _context.BrothersIDDBS.Add(brothersID);
+                case "GetIstravel":
+
+                    Asynctravel asynctravel = _context.AsynctravelDBS.Find(externalAPIResponce.ProcID);
+
+                    asynctravel.travel = true;// bool.Parse(externalAPIResponce.Responce);
+                    asynctravel.RequestReciveTime = DateTime.Now;
+                    _context.AsynctravelDBS.Update(asynctravel);
+                    _context.SaveChanges();
+
+                    break;
+                case "GetUserTransactions":
+
+                    AsyncUserTransactions asyncUserTransactions = _context.AsyncUserTransactionsDBS.Find(externalAPIResponce.ProcID);
+
+                    asyncUserTransactions.UserTransactions = true;// bool.Parse(externalAPIResponce.Responce);
+                    asyncUserTransactions.RequestReciveTime = DateTime.Now;
+                    _context.AsyncUserTransactionsDBS.Update(asyncUserTransactions);
+                    _context.SaveChanges();
+
+                    break;
+                case "GetNumberOfDaysOutsideCoun":
+
+                    AsyncDaysOutsideCoun asyncDaysOutsideCoun = _context.AsyncDaysOutsideCounDBS.Find(externalAPIResponce.ProcID);
+
+                    asyncDaysOutsideCoun.DaysOutsideCoun = 1;// Int32.Parse(externalAPIResponce.Responce);
+                    asyncDaysOutsideCoun.RequestReciveTime = DateTime.Now;
+                    _context.AsyncDaysOutsideCounDBS.Update(asyncDaysOutsideCoun);
+                    _context.SaveChanges();
+
+                    break;
+                case "GetAge":
+
+                    AsyncAge asyncAge = _context.AsyncAgeDBS.Find(externalAPIResponce.ProcID);
+                    asyncAge.Age = 1;// Int32.Parse(externalAPIResponce.Responce);
+                    asyncAge.RequestReciveTime = DateTime.Now;
+                    _context.AsyncAgeDBS.Update(asyncAge);
                     _context.SaveChanges();
 
                     break;
             }
+           */
+            CheckIfFinish(processID);
+        }
+
+        private void CheckIfFinish(int procID)
+        {
+            /*RequestStatues requestStatues = _context.RequestStatuesDBS.Find(procID);
+            Asynctravel asynctravel = _context.AsynctravelDBS.Where(x => x.RequestStatuesID == requestStatues).FirstOrDefault();
+            AsyncUserTransactions asyncUserTransactions = _context.AsyncUserTransactionsDBS.Where(x => x.RequestStatuesID == requestStatues).FirstOrDefault();
+            AsyncDaysOutsideCoun asyncDaysOutsideCoun = _context.AsyncDaysOutsideCounDBS.Where(x => x.RequestStatuesID == requestStatues).FirstOrDefault();
+            AsyncAge asyncAge = _context.AsyncAgeDBS.Where(x => x.RequestStatuesID == requestStatues).FirstOrDefault();
+
+            //in gov process request canceled after certain time
+            int NumberOfDaystoAllow = -15;
+
+            if (asynctravel.RequestReciveTime > DateTime.Today.AddDays(NumberOfDaystoAllow) && asyncUserTransactions.RequestReciveTime > DateTime.Today.AddDays(NumberOfDaystoAllow) && asyncDaysOutsideCoun.RequestReciveTime > DateTime.Today.AddDays(NumberOfDaystoAllow) && asyncAge.RequestReciveTime > DateTime.Today.AddDays(NumberOfDaystoAllow))
+            {
+                requestStatues.DateOfDone = DateTime.Now;
+                requestStatues.Statues = "Done";
+                _context.RequestStatuesDBS.Update(requestStatues);
+                _context.SaveChanges();
+
+                if (asyncAge.Age <= 42)
+                {
+                    if (asynctravel.travel)
+                    {
+                        if (asyncUserTransactions.UserTransactions)
+                        {
+
+                            AddCert(requestStatues.UserID);
+
+                        }
+                    }
+                }
+            }
+            else
+            {
+
+            }
+            */
+        }
+
+        private void AddCert(int CUserID)
+        {
+            AlonePostponement.Models.AlonePostponement tra = new AlonePostponement.Models.AlonePostponement { UserID = CUserID, DateOfGiven = DateTime.Now };
+            _context.AlonePostponementDBS.Add(tra);
+            _context.SaveChanges();
+
         }
 
         public Task StopAsync(CancellationToken cancellationToken)

@@ -10,6 +10,8 @@ namespace AlonePostponement.Models
 
         public int UserID { get; set; }
 
+        public string PostponmentType { get; set; }
+
         public DateTime DateOfRecive { get; set; }
 
         public DateTime DateOfDone { get; set; }

@@ -12,8 +12,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using PostponementOfConvictsAPI.Data;
 using PostponementOfConvictsAPI.Models;
-
-
+using System.Collections.Generic;
 
 namespace PostponementOfConvictsAPI.Controllers
 {
@@ -36,7 +35,28 @@ namespace PostponementOfConvictsAPI.Controllers
                 }
                 return 0;
             }
-            private void AddCert(int CUserID)
+        /*
+            [HttpGet]
+            [Route("GetAllUserTransactions")]
+            public List<RequestStatues> GetAllUserTransactions()
+            {
+                int CUserID = GetCurrentUserID();
+                List<RequestStatues> result = _context.RequestStatuesDBS.Where(x => x.UserID == CUserID).OrderByDescending(x => x.DateOfRecive).Take(10).ToList<RequestStatues>();
+                return result;
+            }
+
+            [HttpGet]
+            [Route("GetAUserTransactions")]
+            public RequestStatues GetAUserTransactions(int Reqid)
+            {
+                RequestStatues result = _context.RequestStatuesDBS.Where(x => x.ReqStatuesID == Reqid).FirstOrDefault();
+                return result;
+            }
+        */
+
+
+        /*
+        private void AddCert(int CUserID)
             {
                 PostponementOfConvicts tra = new PostponementOfConvicts { UserID = CUserID, DateOfGiven = DateTime.Now, DateOfEnd = DateTime.Now.AddMonths(6) };
                 _context.PostponementOfConvictsDb.Add(tra);
@@ -121,7 +141,7 @@ namespace PostponementOfConvictsAPI.Controllers
             var User = _context.PostponementOfConvictsDb.Where(x => x.UserID == CUserID).FirstOrDefault();
             DateTimeOffset Confined = JsonConvert.DeserializeObject<DateTimeOffset>(await APICall("https://host.docker.internal:40016/CompetentAuthority/GetEntryDate"));
             return Ok(Confined);
-        }
+        }*/
     }
 }
 

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Net.Http.Headers;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -36,7 +37,36 @@ namespace TravelApprovalAPI.Controllers
             return 0;
         }
 
-        private void AddCert(int CUserID)
+        [HttpGet]
+        [Route("GetAllUserTransactions")]
+        public List<RequestStatues> GetAllUserTransactions()
+        {
+           int CUserID = GetCurrentUserID();
+            List<RequestStatues> result = _context.RequestStatuesDBS.Where(x => x.UserID == CUserID).OrderByDescending(x=>x.DateOfRecive).Take(10).ToList<RequestStatues>();
+            return result;
+        }
+
+        [HttpGet]
+        [Route("GetAUserTransactions")]
+        public Dictionary<string, string> GetAUserTransactions(int Reqid)
+        {
+           RequestStatues requestStatues = _context.RequestStatuesDBS.Where(x => x.ReqStatuesID == Reqid).FirstOrDefault();
+            Asynctravel asynctravel = _context.AsynctravelDBS.Where(x => x.RequestStatuesID == requestStatues).FirstOrDefault();
+            AsyncUserTransactions asyncUserTransactions = _context.AsyncUserTransactionsDBS.Where(x => x.RequestStatuesID == requestStatues).FirstOrDefault();
+            AsynLabor asynLabor = _context.AsynLaborDBS.Where(x => x.RequestStatuesID == requestStatues).FirstOrDefault();
+            AsyncAge asyncAge = _context.AsyncAgeDBS.Where(x => x.RequestStatuesID == requestStatues).FirstOrDefault();
+
+            Dictionary<string, string> result = new Dictionary<string, string>();
+
+            result.Add("asynctravel", asynctravel.travel.ToString());
+            result.Add("asyncUserTransactions", asynctravel.travel.ToString());
+            result.Add("asynLabor", asynctravel.travel.ToString());
+            result.Add("asyncAge", asynctravel.travel.ToString());
+
+            return result;
+        }
+
+        /*private void AddCert(int CUserID)
         {
             TravelApproval tra = new TravelApproval { UserID = CUserID, DateOfGiven = DateTime.Now, DateOfEnd = DateTime.Now.AddMonths(6) };
             _context.TravelApprovalDb.Add(tra);
@@ -106,7 +136,7 @@ namespace TravelApprovalAPI.Controllers
             }
             else
             {
-               
+
                     //is worker
                     if (JsonConvert.DeserializeObject<bool>(await APICall("https://host.docker.internal:40024/LaborMinAPI/GetIsAWorker")))
                      {
@@ -138,6 +168,6 @@ namespace TravelApprovalAPI.Controllers
 
 
 
-        }
+        }*/
     }
 }

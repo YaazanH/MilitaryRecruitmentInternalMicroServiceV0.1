@@ -14,6 +14,7 @@ using System.Linq;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using AlonePostponement.Models;
+using System.Collections;
 
 namespace AlonePostponement.Controllers
 {
@@ -37,93 +38,24 @@ namespace AlonePostponement.Controllers
             return 0;
         }
 
-        private void AddCert(int CUserID)
-        {
-
-            Models.AlonePostponement st = new Models.AlonePostponement { UserID = CUserID, DateOfGiven = DateTime.Now, DateOfEnd = DateTime.Now.AddYears(3) };
-            _context.AlonePostponementDBS.Add(st);
-            _context.SaveChanges();
-
-        }
-        private async Task<string> APICall(string GURI)
-        {
-            var authorization = Request.Headers[HeaderNames.Authorization];
-
-            AuthenticationHeaderValue.TryParse(authorization, out var authentication);
-
-            string Token = "";
-
-
-            if (AuthenticationHeaderValue.TryParse(authorization, out var headerValue))
-            {
-                Token = headerValue.Parameter;
-            }
-
-            Uri uri = new Uri(GURI);
-
-            HttpClientHandler clientHandler = new HttpClientHandler();
-            clientHandler.ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => { return true; };
-
-            using (var Client = new HttpClient(clientHandler))
-            {
-                Client.BaseAddress = uri;
-                Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Token);
-                using (HttpResponseMessage response = await Client.GetAsync(Client.BaseAddress))
-                {
-                    if (response.IsSuccessStatusCode)
-                    {
-                        return response.Content.ReadAsStringAsync().Result;
-                    }
-                    else
-                    {
-                        return null;
-                    }
-                }
-            }
-        }
         [HttpGet]
-        [Route("GetIsAlonePostponement/")]
-        public async Task<IActionResult> GetIsAlonePostponement()
+        [Route("GetAllUserTransactions")]
+        public List<RequestStatues> GetAllUserTransactions()
         {
             int CUserID = GetCurrentUserID();
-            var User = _context.AlonePostponementDBS.Where(x => x.UserID == CUserID).FirstOrDefault();
-            if (User != null)
-            {
-                if (User.DateOfEnd.DateTime > DateTime.Now)
-                {
-                    return Ok("You aready have vaild cert");
-                }
-            }
-            //check have boy brothers
-            if (JsonConvert.DeserializeObject<bool>(await APICall("https://host.docker.internal:40006/University/GetStudyYears")))
-            {
-                List<int> BrotherNotDied = new List<int>();
-                //add brother id 
-                List<int> BrothersID = JsonConvert.DeserializeObject<List<int>>(await APICall("https://host.docker.internal:40006/University/GetStudyYears"));
-                foreach (var item in BrothersID)
-                {
-                    //if any brother death
-                    if (!JsonConvert.DeserializeObject<bool>(await APICall("https://host.docker.internal:40006/University/GetStudyYears?id=" + item.ToString())))
-                    {
-                        BrotherNotDied.Add(item);
-                    }
-                }
-                if (BrotherNotDied.Count > 0)
-                {
-                    foreach (var item in BrotherNotDied)
-                    {
-                        //check if one of the brother not eill
-                        if (!JsonConvert.DeserializeObject<bool>(await APICall("https://host.docker.internal:40006/University/GetStudyYears?id=" + item.ToString())))
-                        {
-                            return Ok("you cant because you have brothers");
-                        }
-                    }
-                }
-
-            }
-
-            AddCert(CUserID);
-            return Ok();
+            List<RequestStatues> result = _context.RequestStatuesDBS.Where(x => x.UserID == CUserID).OrderByDescending(x => x.DateOfRecive).Take(10).ToList<RequestStatues>();
+            return result;
         }
+
+        [HttpGet]
+        [Route("GetAUserTransactions")]
+        public IDictionary GetAUserTransactions(int Reqid)
+        {
+            IDictionary result = new Dictionary<string, object>();
+            RequestStatues requestStatues = _context.RequestStatuesDBS.Find(Reqid);
+            result.Add("BrotherEill", _context.BrotherEillDBS.Where(x => x.RequestStatuesID == requestStatues).FirstOrDefault());
+
+            return result;
+        } 
     }
 }

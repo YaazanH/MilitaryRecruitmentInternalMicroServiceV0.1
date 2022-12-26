@@ -12,6 +12,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using CashAllowanceAPI.Data;
 using CashAllowanceAPI.Models;
+using System.Collections.Generic;
 
 namespace CashAllowanceAPI.Controllers
 {
@@ -34,7 +35,28 @@ namespace CashAllowanceAPI.Controllers
             }
             return 0;
         }
+        /*
+        [HttpGet]
+        [Route("GetAllUserTransactions")]
+        public List<RequestStatues> GetAllUserTransactions()
+        {
+            int CUserID = GetCurrentUserID();
+            List<RequestStatues> result = _context.RequestStatuesDBS.Where(x => x.UserID == CUserID).OrderByDescending(x => x.DateOfRecive).Take(10).ToList<RequestStatues>();
+            return result;
+        }
 
+        [HttpGet]
+        [Route("GetAUserTransactions")]
+        public RequestStatues GetAUserTransactions(int Reqid)
+        {
+            RequestStatues result = _context.RequestStatuesDBS.Where(x => x.ReqStatuesID == Reqid).FirstOrDefault();
+            return result;
+        }
+*/
+
+
+
+        /*
         private void AddCert(int CUserID)
         {
             Models.CashAllowance tra = new Models.CashAllowance { UserID = CUserID, DateOfGiven = DateTime.Now };
@@ -170,6 +192,6 @@ namespace CashAllowanceAPI.Controllers
             }
 
             return NoContent();
-        }
+        }*/
     }
 }

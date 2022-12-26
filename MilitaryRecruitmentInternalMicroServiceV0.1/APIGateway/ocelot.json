@@ -4,33 +4,31 @@
     {
       "DownstreamPathTemplate": "/UserRequestHandler/{everything}",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "host.docker.internal",
-          "Port": 51052
-        }
-      ],
+      "ServiceName": "orders",
       "UpstreamPathTemplate": "/UserRequestHandler/{everything}",
       "UpstreamHttpMethod": [ "Get" ]
     },
     {
-      "DownstreamPathTemplate": "/SchoolPostponement/{everything}",
+      "DownstreamPathTemplate": "/login/{everything}",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "host.docker.internal",
-          "Port": 51012
-        }
-      ],
-      "UpstreamPathTemplate": "/SchoolPostponement/{everything}",
+      "ServiceName": "loginapi",
+      "UpstreamPathTemplate": "/login/{everything}",
+      "UpstreamHttpMethod": [ "Post", "Get" ]
+    },
+    {
+      "DownstreamPathTemplate": "/UserTransactions/{everything}",
+      "DownstreamScheme": "http",
+      "ServiceName": "orders",
+      "UpstreamPathTemplate": "/UserTransactions/{everything}",
       "UpstreamHttpMethod": [ "Get" ]
     }
   ],
   "GlobalConfiguration": {
-    "BaseUrl": "http://host.docker.internal:50051",
-    "RateLimitOptions": {
-      "QuotaExceededMessage": "Request not allowed",
-      "HttpStatusCode": 909
+    "ServiceDiscoveryProvider": {
+      "Scheme": "https",
+      "Host": "localhost",
+      "Port": 8501,
+      "Type": "Consul"
     }
   }
 }
