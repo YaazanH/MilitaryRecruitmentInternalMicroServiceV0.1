@@ -109,7 +109,6 @@ D:\jounier\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentIntern
 D:\jounier\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1\TravelApprovalAPI\bin\Debug\net5.0\runtimes\win-x86\native\Microsoft.Data.SqlClient.SNI.pdb
 D:\jounier\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1\TravelApprovalAPI\bin\Debug\net5.0\runtimes\win\lib\netstandard2.0\System.Runtime.Caching.dll
 D:\jounier\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1\TravelApprovalAPI\bin\Debug\net5.0\runtimes\win\lib\netstandard2.0\System.Security.Cryptography.ProtectedData.dll
-D:\jounier\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1\TravelApprovalAPI\obj\Debug\net5.0\TravelApprovalAPI.csproj.AssemblyReference.cache
 D:\jounier\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1\TravelApprovalAPI\obj\Debug\net5.0\TravelApprovalAPI.GeneratedMSBuildEditorConfig.editorconfig
 D:\jounier\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1\TravelApprovalAPI\obj\Debug\net5.0\TravelApprovalAPI.AssemblyInfoInputs.cache
 D:\jounier\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1\TravelApprovalAPI\obj\Debug\net5.0\TravelApprovalAPI.AssemblyInfo.cs
@@ -187,3 +186,5 @@ E:\Jun\MilitaryRecruitmentMicroServiceInternal\MilitaryRecruitmentInternalMicroS
 E:\Jun\MilitaryRecruitmentMicroServiceInternal\MilitaryRecruitmentInternalMicroServiceV0.1\TravelApprovalAPI\obj\Debug\net5.0\TravelApprovalAPI.pdb
 E:\Jun\MilitaryRecruitmentMicroServiceInternal\MilitaryRecruitmentInternalMicroServiceV0.1\TravelApprovalAPI\obj\Debug\net5.0\TravelApprovalAPI.genruntimeconfig.cache
 E:\Jun\MilitaryRecruitmentMicroServiceInternal\MilitaryRecruitmentInternalMicroServiceV0.1\TravelApprovalAPI\obj\Debug\net5.0\ref\TravelApprovalAPI.dll
+D:\jounier\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1\TravelApprovalAPI\bin\Debug\net5.0\RabbitMQ.Client.dll
+D:\jounier\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1\TravelApprovalAPI\obj\Debug\net5.0\TravelApprovalAPI.csproj.AssemblyReference.cache

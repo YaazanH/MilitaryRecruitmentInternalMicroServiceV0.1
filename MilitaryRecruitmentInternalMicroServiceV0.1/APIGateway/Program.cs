@@ -13,7 +13,7 @@ builder.Configuration.SetBasePath(builder.Environment.ContentRootPath)
     .AddEnvironmentVariables();
 
 
-builder.Services.AddOcelot(builder.Configuration);
+builder.Services.AddOcelot(/*builder.Configuration*/).AddConsul();
 
 
 var app = builder.Build();

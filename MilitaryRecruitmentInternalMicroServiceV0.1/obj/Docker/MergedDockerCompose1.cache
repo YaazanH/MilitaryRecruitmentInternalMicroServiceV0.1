@@ -495,7 +495,15 @@ services:
       target: 80
       protocol: tcp
     - mode: ingress
+      target: 80
+      published: "51052"
+      protocol: tcp
+    - mode: ingress
       target: 443
+      protocol: tcp
+    - mode: ingress
+      target: 443
+      published: "50052"
       protocol: tcp
     tty: true
     volumes:
@@ -1084,15 +1092,7 @@ services:
       target: 80
       protocol: tcp
     - mode: ingress
-      target: 80
-      published: "51052"
-      protocol: tcp
-    - mode: ingress
       target: 443
-      protocol: tcp
-    - mode: ingress
-      target: 443
-      published: "50052"
       protocol: tcp
     tty: true
     volumes:

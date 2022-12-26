@@ -95,7 +95,32 @@
       "ProjectGuid": "9f659ec2-3828-406c-a9c0-31f540e2549e",
       "DisplayName": "ObligatoryServiceAPI",
       "ColorIndex": 1
+    },
+    "e66e5d90-bf29-4c3b-a64a-81e08d6d42dd": {
+      "ProjectGuid": "e66e5d90-bf29-4c3b-a64a-81e08d6d42dd",
+      "DisplayName": "ExternalAPICaller",
+      "ColorIndex": 2
+    },
+    "30ff7c04-1170-4d84-a7bf-e69758a08131": {
+      "ProjectGuid": "30ff7c04-1170-4d84-a7bf-e69758a08131",
+      "DisplayName": "UserRequestHandler",
+      "ColorIndex": 3
+    },
+    "f7bf0a81-30e1-4306-9701-119f07bbd9b9": {
+      "ProjectGuid": "f7bf0a81-30e1-4306-9701-119f07bbd9b9",
+      "DisplayName": "UserTransactions",
+      "ColorIndex": 4
+    },
+    "1b7dd38a-bcec-4d5e-ac13-4a85bd9b5747": {
+      "ProjectGuid": "1b7dd38a-bcec-4d5e-ac13-4a85bd9b5747",
+      "DisplayName": "FinanceAPI",
+      "ColorIndex": 5
+    },
+    "52492a69-b465-45e8-9694-4144ac98f788": {
+      "ProjectGuid": "52492a69-b465-45e8-9694-4144ac98f788",
+      "DisplayName": "FinanceAPI",
+      "ColorIndex": 6
     }
   },
-  "NextColorIndex": 2
+  "NextColorIndex": 7
 }

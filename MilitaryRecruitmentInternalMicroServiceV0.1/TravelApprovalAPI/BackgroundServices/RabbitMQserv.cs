@@ -69,7 +69,7 @@ namespace CashAllowancLessThan42.BackgroundServices
                     }                  
                 };
                 channel.BasicConsume(queue: queName, autoAck: true, consumer: consumer);
-                //Console.ReadLine(); 
+                System.Console.Read();
 
         }
 
@@ -252,6 +252,13 @@ namespace CashAllowancLessThan42.BackgroundServices
                         }
                     }
                 }
+            }
+            else
+            {
+                requestStatues.DateOfDone = DateTime.Now;
+                requestStatues.Statues = "Faild to creat cerf pls re do it";
+                _context.RequestStatuesDBS.Update(requestStatues);
+                _context.SaveChanges();
             }
         }
 

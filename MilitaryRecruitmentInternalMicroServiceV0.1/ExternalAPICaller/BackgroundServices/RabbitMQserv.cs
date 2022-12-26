@@ -52,7 +52,7 @@ namespace ExternalAPICaller.BackgroundServices
                         }
                         else
                         {
-                            return System.Text.Json.JsonSerializer.Serialize("not avalible");
+                            return System.Text.Json.JsonSerializer.Serialize("no response");
                         }
                     }
                 }
@@ -60,7 +60,7 @@ namespace ExternalAPICaller.BackgroundServices
             catch (Exception e)
             {
                 
-                return System.Text.Json.JsonSerializer.Serialize("not avalible") ;
+                return System.Text.Json.JsonSerializer.Serialize("no response") ;
             }
             
             
@@ -88,18 +88,29 @@ namespace ExternalAPICaller.BackgroundServices
                 var recmess = Encoding.UTF8.GetString(recbody);
 
                 RabbitMQobj rabbitMQobj = System.Text.Json.JsonSerializer.Deserialize<RabbitMQobj>(recmess);
-                                
+                
                 var resp = JsonConvert.DeserializeObject<string>(await APICall(rabbitMQobj.URL, rabbitMQobj.JWT));
-                RabbitMQResponce rabbitMQResponce = new RabbitMQResponce();
+                if (resp== "no response")
+                {
+                    properties.ReplyTo = ea.BasicProperties.ReplyTo;
 
-                rabbitMQResponce.ProcID = rabbitMQobj.ProcID;
-                rabbitMQResponce.Responce = resp;
+                    var mess2 = System.Text.Json.JsonSerializer.Serialize(rabbitMQobj);
+                    var body2 = Encoding.UTF8.GetBytes(mess2);
 
-                var mess = System.Text.Json.JsonSerializer.Serialize(rabbitMQResponce);
-                var body = Encoding.UTF8.GetBytes(mess);
+                    channel.BasicPublish("", "requestQueue", properties, body2);
+                }
+                else
+                {
+                    RabbitMQResponce rabbitMQResponce = new RabbitMQResponce();
 
-                channel.BasicPublish("", ea.BasicProperties.ReplyTo, properties, body);
+                    rabbitMQResponce.ProcID = rabbitMQobj.ProcID;
+                    rabbitMQResponce.Responce = resp;
 
+                    var mess = System.Text.Json.JsonSerializer.Serialize(rabbitMQResponce);
+                    var body = Encoding.UTF8.GetBytes(mess);
+
+                    channel.BasicPublish("", ea.BasicProperties.ReplyTo, properties, body);
+                }
             };
             channel.BasicConsume(queue: "requestQueue", autoAck: true, consumer: consumer);
 

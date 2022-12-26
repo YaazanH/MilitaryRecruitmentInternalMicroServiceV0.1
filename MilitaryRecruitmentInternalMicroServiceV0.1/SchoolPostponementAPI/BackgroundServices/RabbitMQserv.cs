@@ -69,7 +69,8 @@ namespace CashAllowancLessThan42.BackgroundServices
                     }                  
                 };
                 channel.BasicConsume(queue: queName, autoAck: true, consumer: consumer);
-                //Console.ReadLine(); 
+                System.Console.Read();
+
 
         }
 
@@ -288,9 +289,11 @@ namespace CashAllowancLessThan42.BackgroundServices
                     }
                 }
             }
+
+            //cant postmant and close all calls
             else
             {
-                //resend call
+                //resend call   
             }
         }
 

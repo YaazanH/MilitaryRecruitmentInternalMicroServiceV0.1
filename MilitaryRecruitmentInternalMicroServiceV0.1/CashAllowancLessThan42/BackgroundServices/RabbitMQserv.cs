@@ -59,14 +59,15 @@ namespace CashAllowancLessThan42.BackgroundServices
                     UserInfo userInfo = JsonSerializer.Deserialize<UserInfo>(recmess);
 
                     var User = _context.CashAllowancLessThan42Db.Where(x => x.UserID == userInfo.UserID).FirstOrDefault();
-                    if (User == null)
+                   //have to change to ==  bec != for test
+                    if (User != null)
                     {
                         int ReqStatuesID = InsertRequestToDB(userInfo.UserID);
                         SendToExternalAPI(userInfo.JWT, ReqStatuesID);
                     }                    
                 };
                 channel.BasicConsume(queue: queName, autoAck: true, consumer: consumer);
-                //Console.ReadLine(); 
+                System.Console.Read(); 
 
         }
 
@@ -140,7 +141,7 @@ namespace CashAllowancLessThan42.BackgroundServices
                     AsyncUserTransactions asyncUserTransactions = new AsyncUserTransactions() { RequestStatuesID = requestStatues, RequestSendTime = DateTime.Now };
                     _context.AsyncUserTransactionsDBS.Add(asyncUserTransactions);
                     _context.SaveChanges();
-                    rabbitMQobj.URL = "https://host.docker.internal:40022/Finance/GetUserTransactions";
+                    rabbitMQobj.URL = "";// "https://host.docker.internal:40022/Finance/GetUserTransactions";
                     properties.CorrelationId = "GetUserTransactions";
                     rabbitMQobj.ProcID = asyncUserTransactions.ID;
                 }
@@ -150,7 +151,7 @@ namespace CashAllowancLessThan42.BackgroundServices
                     _context.AsyncDaysOutsideCounDBS.Add(asyncDaysOutsideCoun);
                     _context.SaveChanges();
                     rabbitMQobj.ProcID = asyncDaysOutsideCoun.ID;
-                    rabbitMQobj.URL = "https://host.docker.internal:40011/Passport/GetNumberOfDaysOutsideCoun";
+                    rabbitMQobj.URL = "";// "https://host.docker.internal:40011/Passport/GetNumberOfDaysOutsideCoun";
                     properties.CorrelationId = "GetNumberOfDaysOutsideCoun";
                 }
                 if (i == 3)
@@ -159,7 +160,7 @@ namespace CashAllowancLessThan42.BackgroundServices
                     _context.AsyncAgeDBS.Add(asyncAge);
                     _context.SaveChanges();
                     rabbitMQobj.ProcID = asyncAge.ID;
-                    rabbitMQobj.URL = "https://host.docker.internal:40018/RecordAdminstration/GetAge";
+                    rabbitMQobj.URL = "";//"https://host.docker.internal:40018/RecordAdminstration/GetAge";
                     properties.CorrelationId = "GetAge";
                 }
 
@@ -180,7 +181,7 @@ namespace CashAllowancLessThan42.BackgroundServices
 
                     Asynctravel asynctravel = _context.AsynctravelDBS.Find(externalAPIResponce.ProcID);
 
-                    asynctravel.travel = true;// bool.Parse(externalAPIResponce.Responce);
+                    asynctravel.travel =  bool.Parse(externalAPIResponce.Responce);
                     asynctravel.RequestReciveTime = DateTime.Now;
                     _context.AsynctravelDBS.Update(asynctravel);
                     _context.SaveChanges();
@@ -209,7 +210,7 @@ namespace CashAllowancLessThan42.BackgroundServices
                 case "GetAge":
 
                     AsyncAge asyncAge = _context.AsyncAgeDBS.Find(externalAPIResponce.ProcID);
-                    asyncAge.Age = 1;// Int32.Parse(externalAPIResponce.Responce);
+                    asyncAge.Age = 1;//  Int32.Parse(externalAPIResponce.Responce);
                     asyncAge.RequestReciveTime = DateTime.Now;
                     _context.AsyncAgeDBS.Update(asyncAge);
                     _context.SaveChanges();
@@ -249,6 +250,10 @@ namespace CashAllowancLessThan42.BackgroundServices
                         }
                     }
                 }
+            }
+            else
+            {
+
             }
         }
 

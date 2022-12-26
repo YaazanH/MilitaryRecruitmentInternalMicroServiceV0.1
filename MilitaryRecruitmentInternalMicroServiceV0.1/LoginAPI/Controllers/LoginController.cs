@@ -26,7 +26,7 @@ namespace LoginAPI.Controller
             _context = context;
         }
         [AllowAnonymous]
-        [HttpPost]
+        [HttpGet]
         public IActionResult LogIn([FromBody] Login userLogin)
         {
             var User = Authenticate(userLogin);
@@ -35,16 +35,20 @@ namespace LoginAPI.Controller
                 var token = Generate(User);
                 return Ok(token);
 
+
             }
             return NotFound("User not found");
         }
-
+        [AllowAnonymous]
+        [HttpPost]
         public IActionResult SignUp([FromBody] Login userLogin)
         {
-            var User = Authenticate(userLogin);
+            var User = _context.LoginDBS.FirstOrDefault(o=>o.Username==userLogin.Username||o.UserID==userLogin.UserID);
             if (User == null)
             {
-                var token = Generate(User);
+                _context.LoginDBS.Add(userLogin);
+                _context.SaveChanges();
+                var token = Generate(userLogin);
                 return Ok(token);
 
             }
@@ -57,7 +61,7 @@ namespace LoginAPI.Controller
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
             var claims = new[]
             {
-                new Claim(ClaimTypes.PrimarySid,user.ID.ToString()),
+                new Claim(ClaimTypes.PrimarySid,user.UserID.ToString()),
 
             };
             var token = new JwtSecurityToken(_config["jwt:Issuer"],
