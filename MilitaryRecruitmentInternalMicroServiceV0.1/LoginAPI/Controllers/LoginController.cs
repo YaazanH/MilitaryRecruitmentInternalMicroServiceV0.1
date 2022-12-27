@@ -14,7 +14,7 @@ using LoginAPI.Data;
 namespace LoginAPI.Controller
 {
     [ApiController]
-    [Route("Login")]
+    [Route("LoginAPI")]
     public class LoginController : ControllerBase
     {
         private IConfiguration _config;
@@ -26,7 +26,8 @@ namespace LoginAPI.Controller
             _context = context;
         }
         [AllowAnonymous]
-        [HttpGet]
+        [HttpPost]
+        [Route("Login")]
         public IActionResult LogIn([FromBody] Login userLogin)
         {
             var User = Authenticate(userLogin);
@@ -34,18 +35,18 @@ namespace LoginAPI.Controller
             {
                 var token = Generate(User);
                 return Ok(token);
-
-
             }
             return NotFound("User not found");
         }
         [AllowAnonymous]
         [HttpPost]
+        [Route("SignUp")]
         public IActionResult SignUp([FromBody] Login userLogin)
         {
             var User = _context.LoginDBS.FirstOrDefault(o=>o.Username==userLogin.Username||o.UserID==userLogin.UserID);
             if (User == null)
             {
+                userLogin.Role = "User";
                 _context.LoginDBS.Add(userLogin);
                 _context.SaveChanges();
                 var token = Generate(userLogin);
@@ -62,7 +63,7 @@ namespace LoginAPI.Controller
             var claims = new[]
             {
                 new Claim(ClaimTypes.PrimarySid,user.UserID.ToString()),
-
+                new Claim(ClaimTypes.Role,user.Role),
             };
             var token = new JwtSecurityToken(_config["jwt:Issuer"],
                 _config["jwt:Audience"],
@@ -82,6 +83,15 @@ namespace LoginAPI.Controller
                 return currentUser;
             }
             return null;
+        }
+        [Authorize(Roles = "Admin")]
+        [HttpPost]
+        [Route("AdminToken")]
+        public string GetUserToken(int UserID)
+        {
+            Login CurrentUser = new Login();
+            CurrentUser.UserID = UserID;
+            return Generate(CurrentUser);
         }
     }
 }

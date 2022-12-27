@@ -93,16 +93,6 @@ services:
       - "61050:80"
       - "60050:443"
 
-
-  apigateway:
-    image: ${DOCKER_REGISTRY-}apigateway
-    build:
-      context: .
-      dockerfile: APIGateway/Dockerfile
-    ports:
-      - "61051:80"
-      - "60051:443"
-
   fixedserviceallowanceapi:
     image: ${DOCKER_REGISTRY-}fixedserviceallowanceapi
     build:

@@ -15,7 +15,7 @@ namespace SchoolPostponementAPI.Models
 
         public string StudyYears { get; set; }
 
-        //public IActionResult Result { get; set; }
+        public string statuse { get; set; }
 
         public DateTime RequestReciveTime { get; set; }
     }

@@ -93,11 +93,24 @@ namespace SchoolPostponementAPI.Controllers
 
         [HttpGet]
         [Route("GetAUserTransactions")]
-        public RequestStatues GetAUserTransactions(int Reqid)
+        public Dictionary<string, string> GetAUserTransactions(int Reqid)
         {
-            RequestStatues result = _context.RequestStatuesDBS.Where(x => x.ReqStatuesID == Reqid).FirstOrDefault();
+            RequestStatues requestStatues = _context.RequestStatuesDBS.Where(x => x.ReqStatuesID == Reqid).FirstOrDefault();
+            AsyncDroppedOut asyncDroppedOut = _context.AsyncDroppedOutDBS.Where(x => x.RequestStatuesID == requestStatues).FirstOrDefault();
+            AsyncStudyingNow asyncStudyingNow = _context.AsyncStudyingNowDBS.Where(x => x.RequestStatuesID == requestStatues).FirstOrDefault();
+            AsyncStudyYears asyncStudyYears = _context.AsyncStudyYearsDBS.Where(x => x.RequestStatuesID == requestStatues).FirstOrDefault();
+            AsyncAge asyncAge = _context.AsyncAgeDBS.Where(x => x.RequestStatuesID == requestStatues).FirstOrDefault();
+
+            Dictionary<string, string> result = new Dictionary<string, string>();
+
+            result.Add("asynctravel", asyncDroppedOut.statuse);
+            result.Add("asyncUserTransactions", asyncStudyingNow.statuse);
+            result.Add("asynLabor", asyncStudyYears.statuse);
+            result.Add("asyncAge", asyncAge.statuse);
+
             return result;
         }
+
 
         /*
         [HttpGet]

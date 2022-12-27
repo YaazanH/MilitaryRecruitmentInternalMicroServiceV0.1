@@ -16,7 +16,7 @@ namespace TravelApprovalAPI.Models
 
         public bool travel { get; set; }
 
-       // public IActionResult Result { get; set; }
+        public string statuse { get; set; }
 
         public DateTime RequestReciveTime { get; set; }
     }
