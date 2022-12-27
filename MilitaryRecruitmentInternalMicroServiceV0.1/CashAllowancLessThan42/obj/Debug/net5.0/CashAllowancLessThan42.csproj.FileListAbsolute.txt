@@ -185,3 +185,4 @@ E:\Jun\MilitaryRecruitmentMicroServiceInternal\MilitaryRecruitmentInternalMicroS
 E:\Jun\MilitaryRecruitmentMicroServiceInternal\MilitaryRecruitmentInternalMicroServiceV0.1\CashAllowancLessThan42\obj\Debug\net5.0\ref\CashAllowancLessThan42.dll
 D:\jounier\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1\CashAllowancLessThan42\bin\Debug\net5.0\RabbitMQ.Client.dll
 D:\jounier\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1\CashAllowancLessThan42\obj\Debug\net5.0\CashAllowancLessThan42.csproj.AssemblyReference.cache
+D:\MS\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1\CashAllowancLessThan42\bin\Debug\net5.0\RabbitMQ.Client.dll

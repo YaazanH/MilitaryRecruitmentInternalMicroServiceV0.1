@@ -12,7 +12,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using ObligatoryServiceAPI.Data;
 using ObligatoryServiceAPI.Models;
-
+using System.Collections.Generic;
 
 namespace ObligatoryServiceAPI.Controllers
 {
@@ -35,24 +35,82 @@ namespace ObligatoryServiceAPI.Controllers
             }
             return 0;
         }
-/*
         [HttpGet]
-        [Route("GetAllUserTransactions")]
-        public List<RequestStatues> GetAllUserTransactions()
+        [Route("GetNumberOfRequests")]
+        public int GetNumberOfRequests()
         {
-            int CUserID = GetCurrentUserID();
-            List<RequestStatues> result = _context.RequestStatuesDBS.Where(x => x.UserID == CUserID).OrderByDescending(x => x.DateOfRecive).Take(10).ToList<RequestStatues>();
+            int result = _context.ObligatoryServiceDB.Count();
+
             return result;
         }
 
         [HttpGet]
-        [Route("GetAUserTransactions")]
-        public RequestStatues GetAUserTransactions(int Reqid)
+        [Route("GetNumberOfRequestsApproved")]
+        public int GetNumberOfRequestsApproved()
         {
-            RequestStatues result = _context.RequestStatuesDBS.Where(x => x.ReqStatuesID == Reqid).FirstOrDefault();
+            int result = _context.RequestStatuesDBS.Where(x => x.Statues == "wrong").Count();
+
             return result;
         }
-*/
+
+        [HttpGet]
+        [Route("GetNumberOfRequestsProcessing")]
+        public int GetNumberOfRequestsProcessing()
+        {
+            int result = _context.RequestStatuesDBS.Where(x => x.Statues == "wating").Count();
+
+            return result;
+        }
+
+        [HttpGet]
+        [Route("GetNumberOfRequestsDeleted")]
+        public int GetNumberOfRequestsDeleted()
+        {
+            int result = _context.RequestStatuesDBS.Where(x => x.Statues == "deleted").Count();
+
+            return result;
+        }
+
+
+        [HttpGet]
+        [Route("SearchUserPostponment")]
+        public Models.ObligatoryService GetUserPostponment(int id)
+        {
+
+            Models.ObligatoryService result = _context.ObligatoryServiceDB.Where(x => x.UserID == id).FirstOrDefault();
+
+
+            return result;
+        }
+
+        [HttpGet]
+        [Route("SearchAllPostponment")]
+        public List<Models.ObligatoryService> GetAllUsersPostponments()
+        {
+
+            List<Models.ObligatoryService> result = _context.ObligatoryServiceDB.ToList();
+
+
+            return result;
+        }
+        /*
+                [HttpGet]
+                [Route("GetAllUserTransactions")]
+                public List<RequestStatues> GetAllUserTransactions()
+                {
+                    int CUserID = GetCurrentUserID();
+                    List<RequestStatues> result = _context.RequestStatuesDBS.Where(x => x.UserID == CUserID).OrderByDescending(x => x.DateOfRecive).Take(10).ToList<RequestStatues>();
+                    return result;
+                }
+
+                [HttpGet]
+                [Route("GetAUserTransactions")]
+                public RequestStatues GetAUserTransactions(int Reqid)
+                {
+                    RequestStatues result = _context.RequestStatuesDBS.Where(x => x.ReqStatuesID == Reqid).FirstOrDefault();
+                    return result;
+                }
+        */
 
         /*
 

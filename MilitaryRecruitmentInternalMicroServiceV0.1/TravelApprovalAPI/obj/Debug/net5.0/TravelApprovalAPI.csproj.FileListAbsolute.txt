@@ -188,3 +188,4 @@ E:\Jun\MilitaryRecruitmentMicroServiceInternal\MilitaryRecruitmentInternalMicroS
 E:\Jun\MilitaryRecruitmentMicroServiceInternal\MilitaryRecruitmentInternalMicroServiceV0.1\TravelApprovalAPI\obj\Debug\net5.0\ref\TravelApprovalAPI.dll
 D:\jounier\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1\TravelApprovalAPI\bin\Debug\net5.0\RabbitMQ.Client.dll
 D:\jounier\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1\TravelApprovalAPI\obj\Debug\net5.0\TravelApprovalAPI.csproj.AssemblyReference.cache
+D:\MS\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1\TravelApprovalAPI\bin\Debug\net5.0\RabbitMQ.Client.dll

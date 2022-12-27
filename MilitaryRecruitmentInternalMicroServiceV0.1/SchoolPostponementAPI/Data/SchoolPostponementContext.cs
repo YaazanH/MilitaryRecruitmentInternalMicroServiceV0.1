@@ -8,7 +8,7 @@ namespace SchoolPostponementAPI.Data
 
         public DbSet<SchoolPostponementAPI.Models.SchoolPostponement> schoolDBS { get; set; }
 
-        public DbSet<SchoolPostponementAPI.Models.RequestStatues> RequestStatuesDBS { get; set; }
+        
 
         public DbSet<SchoolPostponementAPI.Models.AsyncAge> AsyncAgeDBS { get; set; }
 
@@ -17,5 +17,14 @@ namespace SchoolPostponementAPI.Data
         public DbSet<SchoolPostponementAPI.Models.AsyncStudyingNow> AsyncStudyingNowDBS { get; set; }
 
         public DbSet<SchoolPostponementAPI.Models.AsyncStudyYears> AsyncStudyYearsDBS { get; set; }
+
+        public DbSet<SchoolPostponementAPI.Models.RabbitMQResponce> RabbitMQResponceDBS { get; set; }
+
+        public DbSet<SchoolPostponementAPI.Models.UserInfo> UserInfoDBS { get; set; }
+
+        public DbSet<SchoolPostponementAPI.Models.RequestStatues> RequestStatuesDBS { get; set; }
+
+        public DbSet<SchoolPostponementAPI.Models.RabbitMQobj> RabbitMQobjDBS { get; set; }
+
     }
 }

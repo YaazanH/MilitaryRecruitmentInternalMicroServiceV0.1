@@ -56,6 +56,65 @@ namespace AlonePostponement.Controllers
             result.Add("BrotherEill", _context.BrotherEillDBS.Where(x => x.RequestStatuesID == requestStatues).FirstOrDefault());
 
             return result;
-        } 
+        }
+
+        [HttpGet]
+        [Route("GetNumberOfRequests")]
+        public int GetNumberOfRequests()
+        {
+            int result = _context.AlonePostponementDBS.Count();
+
+            return result;
+        }
+
+        [HttpGet]
+        [Route("GetNumberOfRequestsApproved")]
+        public int GetNumberOfRequestsApproved()
+        {
+            int result = _context.RequestStatuesDBS.Where(x => x.Statues == "wrong").Count();
+
+            return result;
+        }
+        
+        [HttpGet]
+        [Route("GetNumberOfRequestsProcessing")]
+        public int GetNumberOfRequestsProcessing()
+        {
+            int result = _context.RequestStatuesDBS.Where(x => x.Statues == "wating").Count();
+
+            return result;
+        }
+
+        [HttpGet]
+        [Route("GetNumberOfRequestsDeleted")]
+        public int GetNumberOfRequestsDeleted()
+        {
+            int result = _context.RequestStatuesDBS.Where(x => x.Statues == "deleted").Count();
+
+            return result;
+        }
+
+
+        [HttpGet]
+        [Route("SearchUserPostponment")]
+        public Models.AlonePostponement GetUserPostponment(int id)
+        {
+            
+            Models.AlonePostponement result = _context.AlonePostponementDBS.Where(x => x.UserID == id).FirstOrDefault();
+           
+
+            return result;
+        }
+
+        [HttpGet]
+        [Route("SearchAllPostponment")]
+        public List<Models.AlonePostponement> GetAllUsersPostponments()
+        {
+
+            List<Models.AlonePostponement> result = _context.AlonePostponementDBS.ToList();
+
+
+            return result;
+        }
     }
 }

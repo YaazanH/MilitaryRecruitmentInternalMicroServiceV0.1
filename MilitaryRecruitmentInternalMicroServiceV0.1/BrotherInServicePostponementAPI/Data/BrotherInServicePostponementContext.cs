@@ -7,5 +7,12 @@ namespace SchoolPostponementAPI.Data
         { }
 
         public DbSet<BrotherInServicePostponementAPI.Models.BrotherInServicePostponement> BrotherInServicePostponementDBS { get; set; }
+        public DbSet<BrotherInServicePostponementAPI.Models.RabbitMQobj> RabbitMQobjDBS { get; set; }
+
+        public DbSet<BrotherInServicePostponementAPI.Models.RabbitMQResponce> RabbitMQResponceDBS { get; set; }
+
+        public DbSet<BrotherInServicePostponementAPI.Models.UserInfo> UserInfoDBS { get; set; }
+
+        public DbSet<BrotherInServicePostponementAPI.Models.RequestStatues> RequestStatuesDBS { get; set; }
     }
 }

@@ -149,6 +149,13 @@ services:
       - "61054:80"
       - "60054:443"
 
+  admindashboard:
+    image: ${DOCKER_REGISTRY-}admindashboard
+    build:
+      context: .
+      dockerfile: AdminDashboard/Dockerfile
+
 volumes:
   sqlvol2:
+
 

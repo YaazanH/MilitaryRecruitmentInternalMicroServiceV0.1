@@ -35,24 +35,83 @@ namespace FixedServiceAllowanceAPI.Controllers
             }
             return 0;
         }
-/*
+
         [HttpGet]
-        [Route("GetAllUserTransactions")]
-        public List<RequestStatues> GetAllUserTransactions()
+        [Route("GetNumberOfRequests")]
+        public int GetNumberOfRequests()
         {
-            int CUserID = GetCurrentUserID();
-            List<RequestStatues> result = _context.RequestStatuesDBS.Where(x => x.UserID == CUserID).OrderByDescending(x => x.DateOfRecive).Take(10).ToList<RequestStatues>();
+            int result = _context.FixedServiceAllowanceContextDBS.Count();
+
             return result;
         }
 
         [HttpGet]
-        [Route("GetAUserTransactions")]
-        public RequestStatues GetAUserTransactions(int Reqid)
+        [Route("GetNumberOfRequestsApproved")]
+        public int GetNumberOfRequestsApproved()
         {
-            RequestStatues result = _context.RequestStatuesDBS.Where(x => x.ReqStatuesID == Reqid).FirstOrDefault();
+            int result = _context.RequestStatuesDBS.Where(x => x.Statues == "wrong").Count();
+
             return result;
         }
-*/
+
+        [HttpGet]
+        [Route("GetNumberOfRequestsProcessing")]
+        public int GetNumberOfRequestsProcessing()
+        {
+            int result = _context.RequestStatuesDBS.Where(x => x.Statues == "wating").Count();
+
+            return result;
+        }
+
+        [HttpGet]
+        [Route("GetNumberOfRequestsDeleted")]
+        public int GetNumberOfRequestsDeleted()
+        {
+            int result = _context.RequestStatuesDBS.Where(x => x.Statues == "deleted").Count();
+
+            return result;
+        }
+
+
+        [HttpGet]
+        [Route("SearchUserPostponment")]
+        public Models.FixedServiceAllowance GetUserPostponment(int id)
+        {
+
+            Models.FixedServiceAllowance result = _context.FixedServiceAllowanceContextDBS.Where(x => x.UserId == id).FirstOrDefault();
+
+
+            return result;
+        }
+
+        [HttpGet]
+        [Route("SearchAllPostponment")]
+        public List<Models.FixedServiceAllowance> GetAllUsersPostponments()
+        {
+
+            List<Models.FixedServiceAllowance> result = _context.FixedServiceAllowanceContextDBS.ToList();
+
+
+            return result;
+        }
+        /*
+                [HttpGet]
+                [Route("GetAllUserTransactions")]
+                public List<RequestStatues> GetAllUserTransactions()
+                {
+                    int CUserID = GetCurrentUserID();
+                    List<RequestStatues> result = _context.RequestStatuesDBS.Where(x => x.UserID == CUserID).OrderByDescending(x => x.DateOfRecive).Take(10).ToList<RequestStatues>();
+                    return result;
+                }
+
+                [HttpGet]
+                [Route("GetAUserTransactions")]
+                public RequestStatues GetAUserTransactions(int Reqid)
+                {
+                    RequestStatues result = _context.RequestStatuesDBS.Where(x => x.ReqStatuesID == Reqid).FirstOrDefault();
+                    return result;
+                }
+        */
 
 
         /*

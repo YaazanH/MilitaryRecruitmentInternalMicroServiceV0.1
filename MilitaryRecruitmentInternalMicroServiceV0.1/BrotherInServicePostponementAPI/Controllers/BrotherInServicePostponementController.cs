@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 namespace BrotherInServicePostponementAPI.Controllers
 {
     [ApiController]
-    [Route("SchoolPostponement")]
+    [Route("BrotherInServicePostponement")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class BrotherInServicePostponementController : Controller
     {
@@ -35,24 +35,83 @@ namespace BrotherInServicePostponementAPI.Controllers
             }
             return 0;
         }
-/*
+
         [HttpGet]
-        [Route("GetAllUserTransactions")]
-        public List<RequestStatues> GetAllUserTransactions()
+        [Route("GetNumberOfRequests")]
+        public int GetNumberOfRequests()
         {
-            int CUserID = GetCurrentUserID();
-            List<RequestStatues> result = _context.RequestStatuesDBS.Where(x => x.UserID == CUserID).OrderByDescending(x => x.DateOfRecive).Take(10).ToList<RequestStatues>();
+            int result = _context.BrotherInServicePostponementDBS.Count();
+
             return result;
         }
 
         [HttpGet]
-        [Route("GetAUserTransactions")]
-        public RequestStatues GetAUserTransactions(int Reqid)
+        [Route("GetNumberOfRequestsApproved")]
+        public int GetNumberOfRequestsApproved()
         {
-            RequestStatues result = _context.RequestStatuesDBS.Where(x => x.ReqStatuesID == Reqid).FirstOrDefault();
+            int result = _context.RequestStatuesDBS.Where(x => x.Statues == "wrong").Count();
+
             return result;
         }
-*/
+
+        [HttpGet]
+        [Route("GetNumberOfRequestsProcessing")]
+        public int GetNumberOfRequestsProcessing()
+        {
+            int result = _context.RequestStatuesDBS.Where(x => x.Statues == "wating").Count();
+
+            return result;
+        }
+
+        [HttpGet]
+        [Route("GetNumberOfRequestsDeleted")]
+        public int GetNumberOfRequestsDeleted()
+        {
+            int result = _context.RequestStatuesDBS.Where(x => x.Statues == "deleted").Count();
+
+            return result;
+        }
+
+
+        [HttpGet]
+        [Route("SearchUserPostponment")]
+        public Models.BrotherInServicePostponement GetUserPostponment(int id)
+        {
+
+            Models.BrotherInServicePostponement result = _context.BrotherInServicePostponementDBS.Where(x => x.UserID == id).FirstOrDefault();
+
+
+            return result;
+        }
+
+        [HttpGet]
+        [Route("SearchAllPostponment")]
+        public List<Models.BrotherInServicePostponement> GetAllUsersPostponments()
+        {
+
+            List<Models.BrotherInServicePostponement> result = _context.BrotherInServicePostponementDBS.ToList();
+
+
+            return result;
+        }
+        /*
+                [HttpGet]
+                [Route("GetAllUserTransactions")]
+                public List<RequestStatues> GetAllUserTransactions()
+                {
+                    int CUserID = GetCurrentUserID();
+                    List<RequestStatues> result = _context.RequestStatuesDBS.Where(x => x.UserID == CUserID).OrderByDescending(x => x.DateOfRecive).Take(10).ToList<RequestStatues>();
+                    return result;
+                }
+
+                [HttpGet]
+                [Route("GetAUserTransactions")]
+                public RequestStatues GetAUserTransactions(int Reqid)
+                {
+                    RequestStatues result = _context.RequestStatuesDBS.Where(x => x.ReqStatuesID == Reqid).FirstOrDefault();
+                    return result;
+                }
+        */
 
 
 
