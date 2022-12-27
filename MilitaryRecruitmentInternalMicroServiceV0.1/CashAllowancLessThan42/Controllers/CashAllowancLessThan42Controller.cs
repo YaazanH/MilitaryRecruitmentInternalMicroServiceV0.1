@@ -48,68 +48,23 @@ namespace CashAllowancLessThan42.Controllers
 
         [HttpGet]
         [Route("GetAUserTransactions")]
-        public RequestStatues GetAUserTransactions(int Reqid)
+        public Dictionary<string, string> GetAUserTransactions(int Reqid)
         {
-            RequestStatues result = _context.RequestStatuesDBS.Where(x => x.ReqStatuesID == Reqid).FirstOrDefault();
-            return result;
-        }
-        [HttpGet]
-        [Route("GetNumberOfRequests")]
-        public int GetNumberOfRequests()
-        {
-            int result = _context.CashAllowancLessThan42Db.Count();
+            RequestStatues requestStatues = _context.RequestStatuesDBS.Where(x => x.ReqStatuesID == Reqid).FirstOrDefault();
+            Asynctravel asynctravel = _context.AsynctravelDBS.Where(x => x.RequestStatuesID == requestStatues).FirstOrDefault();
+            AsyncUserTransactions asyncUserTransactions = _context.AsyncUserTransactionsDBS.Where(x => x.RequestStatuesID == requestStatues).FirstOrDefault();
+            AsyncDaysOutsideCoun asyncDaysOutsideCoun = _context.AsyncDaysOutsideCounDBS.Where(x => x.RequestStatuesID == requestStatues).FirstOrDefault();
+            AsyncAge asyncAge = _context.AsyncAgeDBS.Where(x => x.RequestStatuesID == requestStatues).FirstOrDefault();
 
-            return result;
-        }
+            Dictionary<string, string> result = new Dictionary<string, string>();
 
-        [HttpGet]
-        [Route("GetNumberOfRequestsApproved")]
-        public int GetNumberOfRequestsApproved()
-        {
-            int result = _context.RequestStatuesDBS.Where(x => x.Statues == "wrong").Count();
+            result.Add("asynctravel", asynctravel.statuse);
+            result.Add("asyncUserTransactions", asyncUserTransactions.statuse);
+            result.Add("asynLabor", asyncDaysOutsideCoun.statuse);
+            result.Add("asyncAge", asyncAge.statuse);
 
             return result;
         }
 
-        [HttpGet]
-        [Route("GetNumberOfRequestsProcessing")]
-        public int GetNumberOfRequestsProcessing()
-        {
-            int result = _context.RequestStatuesDBS.Where(x => x.Statues == "wating").Count();
-
-            return result;
-        }
-
-        [HttpGet]
-        [Route("GetNumberOfRequestsDeleted")]
-        public int GetNumberOfRequestsDeleted()
-        {
-            int result = _context.RequestStatuesDBS.Where(x => x.Statues == "deleted").Count();
-
-            return result;
-        }
-
-
-        [HttpGet]
-        [Route("SearchUserPostponment")]
-        public Models.CashAllowancLessThan42Model GetUserPostponment(int id)
-        {
-
-            Models.CashAllowancLessThan42Model result = _context.CashAllowancLessThan42Db.Where(x => x.UserID == id).FirstOrDefault();
-
-
-            return result;
-        }
-
-        [HttpGet]
-        [Route("SearchAllPostponment")]
-        public List<Models.CashAllowancLessThan42Model> GetAllUsersPostponments()
-        {
-
-            List<Models.CashAllowancLessThan42Model> result = _context.CashAllowancLessThan42Db.ToList();
-
-
-            return result;
-        }
     }
 }

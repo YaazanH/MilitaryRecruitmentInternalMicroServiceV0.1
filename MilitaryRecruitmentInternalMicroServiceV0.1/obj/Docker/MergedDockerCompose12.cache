@@ -1,4 +1,4 @@
-name: dockercompose1791817882577683927
+name: dockercompose5144703731817758637
 services:
   RabbitMQ:
     container_name: RabbitMQ
@@ -16,7 +16,7 @@ services:
       protocol: tcp
   alonepostponement:
     build:
-      context: D:\MS\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1
+      context: D:\jounier\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1
       dockerfile: AlonePostponement/Dockerfile
     environment:
       ASPNETCORE_ENVIRONMENT: Development
@@ -41,52 +41,20 @@ services:
       protocol: tcp
     volumes:
     - type: bind
-      source: C:\Users\mooha\AppData\Roaming/Microsoft/UserSecrets
+      source: C:\Users\yazon\AppData\Roaming/Microsoft/UserSecrets
       target: /root/.microsoft/usersecrets
       read_only: true
       bind:
         create_host_path: true
     - type: bind
-      source: C:\Users\mooha\AppData\Roaming/ASP.NET/Https
-      target: /root/.aspnet/https
-      read_only: true
-      bind:
-        create_host_path: true
-  apigateway:
-    build:
-      context: D:\MS\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1
-      dockerfile: APIGateway/Dockerfile
-    environment:
-      ASPNETCORE_ENVIRONMENT: Development
-      ASPNETCORE_URLS: https://+:443;http://+:80
-    image: apigateway
-    networks:
-      default: null
-    ports:
-    - mode: ingress
-      target: 80
-      protocol: tcp
-    - mode: ingress
-      target: 80
-      published: "61051"
-      protocol: tcp
-    - mode: ingress
-      target: 443
-      protocol: tcp
-    - mode: ingress
-      target: 443
-      published: "60051"
-      protocol: tcp
-    volumes:
-    - type: bind
-      source: C:\Users\mooha\AppData\Roaming/ASP.NET/Https
+      source: C:\Users\yazon\AppData\Roaming/ASP.NET/Https
       target: /root/.aspnet/https
       read_only: true
       bind:
         create_host_path: true
   brotherinservicepostponementapi:
     build:
-      context: D:\MS\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1
+      context: D:\jounier\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1
       dockerfile: BrotherInServicePostponementAPI/Dockerfile
     environment:
       ASPNETCORE_ENVIRONMENT: Development
@@ -111,20 +79,20 @@ services:
       protocol: tcp
     volumes:
     - type: bind
-      source: C:\Users\mooha\AppData\Roaming/Microsoft/UserSecrets
+      source: C:\Users\yazon\AppData\Roaming/Microsoft/UserSecrets
       target: /root/.microsoft/usersecrets
       read_only: true
       bind:
         create_host_path: true
     - type: bind
-      source: C:\Users\mooha\AppData\Roaming/ASP.NET/Https
+      source: C:\Users\yazon\AppData\Roaming/ASP.NET/Https
       target: /root/.aspnet/https
       read_only: true
       bind:
         create_host_path: true
   cashallowanceapi:
     build:
-      context: D:\MS\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1
+      context: D:\jounier\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1
       dockerfile: CashAllowanceAPI/Dockerfile
     environment:
       ASPNETCORE_ENVIRONMENT: Development
@@ -149,20 +117,20 @@ services:
       protocol: tcp
     volumes:
     - type: bind
-      source: C:\Users\mooha\AppData\Roaming/Microsoft/UserSecrets
+      source: C:\Users\yazon\AppData\Roaming/Microsoft/UserSecrets
       target: /root/.microsoft/usersecrets
       read_only: true
       bind:
         create_host_path: true
     - type: bind
-      source: C:\Users\mooha\AppData\Roaming/ASP.NET/Https
+      source: C:\Users\yazon\AppData\Roaming/ASP.NET/Https
       target: /root/.aspnet/https
       read_only: true
       bind:
         create_host_path: true
   cashallowanclessthan42:
     build:
-      context: D:\MS\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1
+      context: D:\jounier\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1
       dockerfile: CashAllowancLessThan42/Dockerfile
     environment:
       ASPNETCORE_ENVIRONMENT: Development
@@ -187,13 +155,13 @@ services:
       protocol: tcp
     volumes:
     - type: bind
-      source: C:\Users\mooha\AppData\Roaming/Microsoft/UserSecrets
+      source: C:\Users\yazon\AppData\Roaming/Microsoft/UserSecrets
       target: /root/.microsoft/usersecrets
       read_only: true
       bind:
         create_host_path: true
     - type: bind
-      source: C:\Users\mooha\AppData\Roaming/ASP.NET/Https
+      source: C:\Users\yazon\AppData\Roaming/ASP.NET/Https
       target: /root/.aspnet/https
       read_only: true
       bind:
@@ -222,7 +190,7 @@ services:
       protocol: udp
   externalapicaller:
     build:
-      context: D:\MS\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1
+      context: D:\jounier\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1
       dockerfile: ExternalAPICaller/Dockerfile
     environment:
       ASPNETCORE_ENVIRONMENT: Development
@@ -247,20 +215,20 @@ services:
       protocol: tcp
     volumes:
     - type: bind
-      source: C:\Users\mooha\AppData\Roaming/Microsoft/UserSecrets
+      source: C:\Users\yazon\AppData\Roaming/Microsoft/UserSecrets
       target: /root/.microsoft/usersecrets
       read_only: true
       bind:
         create_host_path: true
     - type: bind
-      source: C:\Users\mooha\AppData\Roaming/ASP.NET/Https
+      source: C:\Users\yazon\AppData\Roaming/ASP.NET/Https
       target: /root/.aspnet/https
       read_only: true
       bind:
         create_host_path: true
   fixedserviceallowanceapi:
     build:
-      context: D:\MS\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1
+      context: D:\jounier\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1
       dockerfile: FixedServiceAllowanceAPI/Dockerfile
     environment:
       ASPNETCORE_ENVIRONMENT: Development
@@ -285,20 +253,20 @@ services:
       protocol: tcp
     volumes:
     - type: bind
-      source: C:\Users\mooha\AppData\Roaming/Microsoft/UserSecrets
+      source: C:\Users\yazon\AppData\Roaming/Microsoft/UserSecrets
       target: /root/.microsoft/usersecrets
       read_only: true
       bind:
         create_host_path: true
     - type: bind
-      source: C:\Users\mooha\AppData\Roaming/ASP.NET/Https
+      source: C:\Users\yazon\AppData\Roaming/ASP.NET/Https
       target: /root/.aspnet/https
       read_only: true
       bind:
         create_host_path: true
   loginapi:
     build:
-      context: D:\MS\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1
+      context: D:\jounier\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1
       dockerfile: LoginAPI/Dockerfile
     environment:
       ASPNETCORE_ENVIRONMENT: Development
@@ -323,20 +291,20 @@ services:
       protocol: tcp
     volumes:
     - type: bind
-      source: C:\Users\mooha\AppData\Roaming/Microsoft/UserSecrets
+      source: C:\Users\yazon\AppData\Roaming/Microsoft/UserSecrets
       target: /root/.microsoft/usersecrets
       read_only: true
       bind:
         create_host_path: true
     - type: bind
-      source: C:\Users\mooha\AppData\Roaming/ASP.NET/Https
+      source: C:\Users\yazon\AppData\Roaming/ASP.NET/Https
       target: /root/.aspnet/https
       read_only: true
       bind:
         create_host_path: true
   obligatoryserviceapi:
     build:
-      context: D:\MS\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1
+      context: D:\jounier\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1
       dockerfile: ObligatoryServiceAPI/Dockerfile
     environment:
       ASPNETCORE_ENVIRONMENT: Development
@@ -353,20 +321,20 @@ services:
       protocol: tcp
     volumes:
     - type: bind
-      source: C:\Users\mooha\AppData\Roaming/Microsoft/UserSecrets
+      source: C:\Users\yazon\AppData\Roaming/Microsoft/UserSecrets
       target: /root/.microsoft/usersecrets
       read_only: true
       bind:
         create_host_path: true
     - type: bind
-      source: C:\Users\mooha\AppData\Roaming/ASP.NET/Https
+      source: C:\Users\yazon\AppData\Roaming/ASP.NET/Https
       target: /root/.aspnet/https
       read_only: true
       bind:
         create_host_path: true
   postponementofconvictsapi:
     build:
-      context: D:\MS\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1
+      context: D:\jounier\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1
       dockerfile: PostponementOfConvictsAPI/Dockerfile
     environment:
       ASPNETCORE_ENVIRONMENT: Development
@@ -383,20 +351,20 @@ services:
       protocol: tcp
     volumes:
     - type: bind
-      source: C:\Users\mooha\AppData\Roaming/Microsoft/UserSecrets
+      source: C:\Users\yazon\AppData\Roaming/Microsoft/UserSecrets
       target: /root/.microsoft/usersecrets
       read_only: true
       bind:
         create_host_path: true
     - type: bind
-      source: C:\Users\mooha\AppData\Roaming/ASP.NET/Https
+      source: C:\Users\yazon\AppData\Roaming/ASP.NET/Https
       target: /root/.aspnet/https
       read_only: true
       bind:
         create_host_path: true
   schoolpostponementapi:
     build:
-      context: D:\MS\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1
+      context: D:\jounier\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1
       dockerfile: SchoolPostponementAPI/Dockerfile
     environment:
       ASPNETCORE_ENVIRONMENT: Development
@@ -421,7 +389,7 @@ services:
       protocol: tcp
     volumes:
     - type: bind
-      source: C:\Users\mooha\AppData\Roaming/ASP.NET/Https
+      source: C:\Users\yazon\AppData\Roaming/ASP.NET/Https
       target: /root/.aspnet/https
       read_only: true
       bind:
@@ -446,7 +414,7 @@ services:
       volume: {}
   travelapprovalapi:
     build:
-      context: D:\MS\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1
+      context: D:\jounier\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1
       dockerfile: TravelApprovalAPI/Dockerfile
     environment:
       ASPNETCORE_ENVIRONMENT: Development
@@ -471,13 +439,13 @@ services:
       protocol: tcp
     volumes:
     - type: bind
-      source: C:\Users\mooha\AppData\Roaming/Microsoft/UserSecrets
+      source: C:\Users\yazon\AppData\Roaming/Microsoft/UserSecrets
       target: /root/.microsoft/usersecrets
       read_only: true
       bind:
         create_host_path: true
     - type: bind
-      source: C:\Users\mooha\AppData\Roaming/ASP.NET/Https
+      source: C:\Users\yazon\AppData\Roaming/ASP.NET/Https
       target: /root/.aspnet/https
       read_only: true
       bind:
@@ -500,7 +468,7 @@ services:
         create_host_path: true
   userrequesthandler:
     build:
-      context: D:\MS\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1
+      context: D:\jounier\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1
       dockerfile: UserRequestHandler/Dockerfile
     environment:
       ASPNETCORE_ENVIRONMENT: Development
@@ -525,20 +493,20 @@ services:
       protocol: tcp
     volumes:
     - type: bind
-      source: C:\Users\mooha\AppData\Roaming/Microsoft/UserSecrets
+      source: C:\Users\yazon\AppData\Roaming/Microsoft/UserSecrets
       target: /root/.microsoft/usersecrets
       read_only: true
       bind:
         create_host_path: true
     - type: bind
-      source: C:\Users\mooha\AppData\Roaming/ASP.NET/Https
+      source: C:\Users\yazon\AppData\Roaming/ASP.NET/Https
       target: /root/.aspnet/https
       read_only: true
       bind:
         create_host_path: true
   usertransactions:
     build:
-      context: D:\MS\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1
+      context: D:\jounier\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1
       dockerfile: UserTransactions/Dockerfile
     environment:
       ASPNETCORE_ENVIRONMENT: Development
@@ -563,14 +531,14 @@ services:
       protocol: tcp
     volumes:
     - type: bind
-      source: C:\Users\mooha\AppData\Roaming/ASP.NET/Https
+      source: C:\Users\yazon\AppData\Roaming/ASP.NET/Https
       target: /root/.aspnet/https
       read_only: true
       bind:
         create_host_path: true
 networks:
   default:
-    name: dockercompose1791817882577683927_default
+    name: dockercompose5144703731817758637_default
 volumes:
   sqlvol2:
-    name: dockercompose1791817882577683927_sqlvol2
+    name: dockercompose5144703731817758637_sqlvol2

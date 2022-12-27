@@ -93,70 +93,24 @@ namespace SchoolPostponementAPI.Controllers
 
         [HttpGet]
         [Route("GetAUserTransactions")]
-        public RequestStatues GetAUserTransactions(int Reqid)
+        public Dictionary<string, string> GetAUserTransactions(int Reqid)
         {
-            RequestStatues result = _context.RequestStatuesDBS.Where(x => x.ReqStatuesID == Reqid).FirstOrDefault();
-            return result;
-        }
+            RequestStatues requestStatues = _context.RequestStatuesDBS.Where(x => x.ReqStatuesID == Reqid).FirstOrDefault();
+            AsyncDroppedOut asyncDroppedOut = _context.AsyncDroppedOutDBS.Where(x => x.RequestStatuesID == requestStatues).FirstOrDefault();
+            AsyncStudyingNow asyncStudyingNow = _context.AsyncStudyingNowDBS.Where(x => x.RequestStatuesID == requestStatues).FirstOrDefault();
+            AsyncStudyYears asyncStudyYears = _context.AsyncStudyYearsDBS.Where(x => x.RequestStatuesID == requestStatues).FirstOrDefault();
+            AsyncAge asyncAge = _context.AsyncAgeDBS.Where(x => x.RequestStatuesID == requestStatues).FirstOrDefault();
 
-        [HttpGet]
-        [Route("GetNumberOfRequests")]
-        public int GetNumberOfRequests()
-        {
-            int result = _context.schoolDBS.Count();
+            Dictionary<string, string> result = new Dictionary<string, string>();
 
-            return result;
-        }
-
-        [HttpGet]
-        [Route("GetNumberOfRequestsApproved")]
-        public int GetNumberOfRequestsApproved()
-        {
-            int result = _context.RequestStatuesDBS.Where(x => x.Statues == "wrong").Count();
+            result.Add("asynctravel", asyncDroppedOut.statuse);
+            result.Add("asyncUserTransactions", asyncStudyingNow.statuse);
+            result.Add("asynLabor", asyncStudyYears.statuse);
+            result.Add("asyncAge", asyncAge.statuse);
 
             return result;
         }
 
-        [HttpGet]
-        [Route("GetNumberOfRequestsProcessing")]
-        public int GetNumberOfRequestsProcessing()
-        {
-            int result = _context.RequestStatuesDBS.Where(x => x.Statues == "wating").Count();
-
-            return result;
-        }
-
-        [HttpGet]
-        [Route("GetNumberOfRequestsDeleted")]
-        public int GetNumberOfRequestsDeleted()
-        {
-            int result = _context.RequestStatuesDBS.Where(x => x.Statues == "deleted").Count();
-
-            return result;
-        }
-
-
-        [HttpGet]
-        [Route("SearchUserPostponment")]
-        public Models.SchoolPostponement GetUserPostponment(int id)
-        {
-
-            Models.SchoolPostponement result = _context.schoolDBS.Where(x => x.UserID == id).FirstOrDefault();
-
-
-            return result;
-        }
-
-        [HttpGet]
-        [Route("SearchAllPostponment")]
-        public List<Models.SchoolPostponement> GetAllUsersPostponments()
-        {
-
-            List<Models.SchoolPostponement> result = _context.schoolDBS.ToList();
-
-
-            return result;
-        }
 
         /*
         [HttpGet]

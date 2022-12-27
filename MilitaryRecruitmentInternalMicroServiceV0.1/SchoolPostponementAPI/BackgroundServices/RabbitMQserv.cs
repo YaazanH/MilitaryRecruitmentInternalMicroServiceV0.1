@@ -293,7 +293,10 @@ namespace CashAllowancLessThan42.BackgroundServices
             //cant postmant and close all calls
             else
             {
-                //resend call   
+                requestStatues.DateOfDone = DateTime.Now;
+                requestStatues.Statues = "Faild";
+                _context.RequestStatuesDBS.Update(requestStatues);
+                _context.SaveChanges();
             }
         }
 

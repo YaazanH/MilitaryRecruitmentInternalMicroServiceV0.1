@@ -58,10 +58,10 @@ namespace TravelApprovalAPI.Controllers
 
             Dictionary<string, string> result = new Dictionary<string, string>();
 
-            result.Add("asynctravel", asynctravel.travel.ToString());
-            result.Add("asyncUserTransactions", asynctravel.travel.ToString());
-            result.Add("asynLabor", asynctravel.travel.ToString());
-            result.Add("asyncAge", asynctravel.travel.ToString());
+            result.Add("asynctravel", asynctravel.statuse);
+            result.Add("asyncUserTransactions", asyncUserTransactions.statuse);
+            result.Add("asynLabor", asynLabor.statuse);
+            result.Add("asyncAge", asyncAge.statuse);
 
             return result;
         }

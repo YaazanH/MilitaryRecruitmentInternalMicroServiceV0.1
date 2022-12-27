@@ -253,7 +253,10 @@ namespace CashAllowancLessThan42.BackgroundServices
             }
             else
             {
-
+                requestStatues.DateOfDone = DateTime.Now;
+                requestStatues.Statues = "Faild";
+                _context.RequestStatuesDBS.Update(requestStatues);
+                _context.SaveChanges();
             }
         }
 

@@ -1,4 +1,4 @@
-name: dockercompose1791817882577683927
+name: dockercompose5144703731817758637
 services:
   RabbitMQ:
     container_name: RabbitMQ
@@ -16,31 +16,12 @@ services:
       protocol: tcp
   alonepostponement:
     build:
-      context: D:\MS\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1
+      context: D:\jounier\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1
       dockerfile: AlonePostponement/Dockerfile
-      labels:
-        com.microsoft.created-by: visual-studio
-        com.microsoft.visual-studio.project-name: AlonePostponement
-      target: base
-    container_name: AlonePostponement
-    entrypoint:
-    - tail
-    - -f
-    - /dev/null
     environment:
       ASPNETCORE_ENVIRONMENT: Development
-      ASPNETCORE_LOGGING__CONSOLE__DISABLECOLORS: "true"
       ASPNETCORE_URLS: https://+:443;http://+:80
-      DOTNET_USE_POLLING_FILE_WATCHER: "1"
-      NUGET_FALLBACK_PACKAGES: /root/.nuget/fallbackpackages
-    image: alonepostponement:dev
-    labels:
-      com.microsoft.visualstudio.debuggee.arguments: ' --additionalProbingPath /root/.nuget/packages
-        --additionalProbingPath /root/.nuget/fallbackpackages  "/app/bin/Debug/net5.0/AlonePostponement.dll"'
-      com.microsoft.visualstudio.debuggee.killprogram: /bin/sh -c "if PID=$$(pidof
-        dotnet); then kill $$PID; fi"
-      com.microsoft.visualstudio.debuggee.program: dotnet
-      com.microsoft.visualstudio.debuggee.workingdirectory: /app
+    image: alonepostponement
     networks:
       default: null
     ports:
@@ -58,159 +39,27 @@ services:
       target: 443
       published: "60014"
       protocol: tcp
-    tty: true
     volumes:
     - type: bind
-      source: D:\jounier\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1\AlonePostponement
-      target: /app
-      bind:
-        create_host_path: true
-    - type: bind
-      source: C:\Users\yazon\vsdbg\vs2017u5
-      target: /remote_debugger
-      bind:
-        create_host_path: true
-    - type: bind
-      source: C:\Users\mooha\AppData\Roaming/ASP.NET/Https
-      target: /root/.aspnet/https
-      read_only: true
-      bind:
-        create_host_path: true
-    - type: bind
-      source: C:\Users\mooha\AppData\Roaming/Microsoft/UserSecrets
+      source: C:\Users\yazon\AppData\Roaming/Microsoft/UserSecrets
       target: /root/.microsoft/usersecrets
       read_only: true
       bind:
         create_host_path: true
     - type: bind
-      source: C:\Program Files (x86)\Microsoft Visual Studio\Shared\NuGetPackages
-      target: /root/.nuget/fallbackpackages
-      read_only: true
-      bind:
-        create_host_path: true
-    - type: bind
-      source: C:\Users\yazon\.nuget\packages\
-      target: /root/.nuget/packages
-      read_only: true
-      bind:
-        create_host_path: true
-    - type: bind
-      source: D:\jounier\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1
-      target: /src
-      bind:
-        create_host_path: true
-  apigateway:
-    build:
-      context: D:\MS\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1
-      dockerfile: APIGateway/Dockerfile
-      labels:
-        com.microsoft.created-by: visual-studio
-        com.microsoft.visual-studio.project-name: APIGateway
-      target: base
-    container_name: APIGateway
-    entrypoint:
-    - tail
-    - -f
-    - /dev/null
-    environment:
-      ASPNETCORE_ENVIRONMENT: Development
-      ASPNETCORE_LOGGING__CONSOLE__DISABLECOLORS: "true"
-      ASPNETCORE_URLS: https://+:443;http://+:80
-      DOTNET_USE_POLLING_FILE_WATCHER: "1"
-      NUGET_FALLBACK_PACKAGES: /root/.nuget/fallbackpackages
-    image: apigateway:dev
-    labels:
-      com.microsoft.visualstudio.debuggee.arguments: ' --additionalProbingPath /root/.nuget/packages
-        --additionalProbingPath /root/.nuget/fallbackpackages  "/app/bin/Debug/net6.0/APIGateway.dll"'
-      com.microsoft.visualstudio.debuggee.killprogram: /bin/sh -c "if PID=$$(pidof
-        dotnet); then kill $$PID; fi"
-      com.microsoft.visualstudio.debuggee.program: dotnet
-      com.microsoft.visualstudio.debuggee.workingdirectory: /app
-    networks:
-      default: null
-    ports:
-    - mode: ingress
-      target: 80
-      protocol: tcp
-    - mode: ingress
-      target: 80
-      published: "61051"
-      protocol: tcp
-    - mode: ingress
-      target: 443
-      protocol: tcp
-    - mode: ingress
-      target: 443
-      published: "60051"
-      protocol: tcp
-    tty: true
-    volumes:
-    - type: bind
-      source: D:\jounier\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1\APIGateway
-      target: /app
-      bind:
-        create_host_path: true
-    - type: bind
-      source: C:\Users\yazon\vsdbg\vs2017u5
-      target: /remote_debugger
-      bind:
-        create_host_path: true
-    - type: bind
-      source: C:\Users\mooha\AppData\Roaming/ASP.NET/Https
+      source: C:\Users\yazon\AppData\Roaming/ASP.NET/Https
       target: /root/.aspnet/https
       read_only: true
-      bind:
-        create_host_path: true
-    - type: bind
-      source: C:\Users\mooha\AppData\Roaming/Microsoft/UserSecrets
-      target: /root/.microsoft/usersecrets
-      read_only: true
-      bind:
-        create_host_path: true
-    - type: bind
-      source: C:\Program Files (x86)\Microsoft Visual Studio\Shared\NuGetPackages
-      target: /root/.nuget/fallbackpackages
-      read_only: true
-      bind:
-        create_host_path: true
-    - type: bind
-      source: C:\Users\yazon\.nuget\packages\
-      target: /root/.nuget/packages
-      read_only: true
-      bind:
-        create_host_path: true
-    - type: bind
-      source: D:\jounier\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1
-      target: /src
       bind:
         create_host_path: true
   brotherinservicepostponementapi:
     build:
-      context: D:\MS\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1
+      context: D:\jounier\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1
       dockerfile: BrotherInServicePostponementAPI/Dockerfile
-      labels:
-        com.microsoft.created-by: visual-studio
-        com.microsoft.visual-studio.project-name: BrotherInServicePostponementAPI
-      target: base
-    container_name: BrotherInServicePostponementAPI
-    entrypoint:
-    - tail
-    - -f
-    - /dev/null
     environment:
       ASPNETCORE_ENVIRONMENT: Development
-      ASPNETCORE_LOGGING__CONSOLE__DISABLECOLORS: "true"
       ASPNETCORE_URLS: https://+:443;http://+:80
-      DOTNET_USE_POLLING_FILE_WATCHER: "1"
-      NUGET_FALLBACK_PACKAGES: /root/.nuget/fallbackpackages
-    image: brotherinservicepostponementapi:dev
-    labels:
-      com.microsoft.visualstudio.debuggee.arguments: ' --additionalProbingPath /root/.nuget/packages
-        --additionalProbingPath /root/.nuget/fallbackpackages  "/app/bin/Debug/net5.0/BrotherInServicePostponementAPI.dll"'
-      com.microsoft.visualstudio.debuggee.killprogram: /bin/sh -c "if PID=$$(pidof
-        dotnet); then kill $$PID; fi"
-      com.microsoft.visualstudio.debuggee.program: dotnet
-      com.microsoft.visualstudio.debuggee.workingdirectory: /app
+    image: brotherinservicepostponementapi
     networks:
       default: null
     ports:
@@ -228,74 +77,27 @@ services:
       target: 443
       published: "60030"
       protocol: tcp
-    tty: true
     volumes:
     - type: bind
-      source: D:\jounier\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1\BrotherInServicePostponementAPI
-      target: /app
-      bind:
-        create_host_path: true
-    - type: bind
-      source: C:\Users\yazon\vsdbg\vs2017u5
-      target: /remote_debugger
-      bind:
-        create_host_path: true
-    - type: bind
-      source: C:\Users\mooha\AppData\Roaming/ASP.NET/Https
-      target: /root/.aspnet/https
-      read_only: true
-      bind:
-        create_host_path: true
-    - type: bind
-      source: C:\Users\mooha\AppData\Roaming/Microsoft/UserSecrets
+      source: C:\Users\yazon\AppData\Roaming/Microsoft/UserSecrets
       target: /root/.microsoft/usersecrets
       read_only: true
       bind:
         create_host_path: true
     - type: bind
-      source: C:\Program Files (x86)\Microsoft Visual Studio\Shared\NuGetPackages
-      target: /root/.nuget/fallbackpackages
+      source: C:\Users\yazon\AppData\Roaming/ASP.NET/Https
+      target: /root/.aspnet/https
       read_only: true
-      bind:
-        create_host_path: true
-    - type: bind
-      source: C:\Users\yazon\.nuget\packages\
-      target: /root/.nuget/packages
-      read_only: true
-      bind:
-        create_host_path: true
-    - type: bind
-      source: D:\jounier\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1
-      target: /src
       bind:
         create_host_path: true
   cashallowanceapi:
     build:
-      context: D:\MS\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1
+      context: D:\jounier\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1
       dockerfile: CashAllowanceAPI/Dockerfile
-      labels:
-        com.microsoft.created-by: visual-studio
-        com.microsoft.visual-studio.project-name: CashAllowanceAPI
-      target: base
-    container_name: CashAllowanceAPI
-    entrypoint:
-    - tail
-    - -f
-    - /dev/null
     environment:
       ASPNETCORE_ENVIRONMENT: Development
-      ASPNETCORE_LOGGING__CONSOLE__DISABLECOLORS: "true"
       ASPNETCORE_URLS: https://+:443;http://+:80
-      DOTNET_USE_POLLING_FILE_WATCHER: "1"
-      NUGET_FALLBACK_PACKAGES: /root/.nuget/fallbackpackages
-    image: cashallowanceapi:dev
-    labels:
-      com.microsoft.visualstudio.debuggee.arguments: ' --additionalProbingPath /root/.nuget/packages
-        --additionalProbingPath /root/.nuget/fallbackpackages  "/app/bin/Debug/net5.0/CashAllowanceAPI.dll"'
-      com.microsoft.visualstudio.debuggee.killprogram: /bin/sh -c "if PID=$$(pidof
-        dotnet); then kill $$PID; fi"
-      com.microsoft.visualstudio.debuggee.program: dotnet
-      com.microsoft.visualstudio.debuggee.workingdirectory: /app
+    image: cashallowanceapi
     networks:
       default: null
     ports:
@@ -313,74 +115,27 @@ services:
       target: 443
       published: "60001"
       protocol: tcp
-    tty: true
     volumes:
     - type: bind
-      source: D:\jounier\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1\CashAllowanceAPI
-      target: /app
-      bind:
-        create_host_path: true
-    - type: bind
-      source: C:\Users\yazon\vsdbg\vs2017u5
-      target: /remote_debugger
-      bind:
-        create_host_path: true
-    - type: bind
-      source: C:\Users\mooha\AppData\Roaming/ASP.NET/Https
-      target: /root/.aspnet/https
-      read_only: true
-      bind:
-        create_host_path: true
-    - type: bind
-      source: C:\Users\mooha\AppData\Roaming/Microsoft/UserSecrets
+      source: C:\Users\yazon\AppData\Roaming/Microsoft/UserSecrets
       target: /root/.microsoft/usersecrets
       read_only: true
       bind:
         create_host_path: true
     - type: bind
-      source: C:\Program Files (x86)\Microsoft Visual Studio\Shared\NuGetPackages
-      target: /root/.nuget/fallbackpackages
+      source: C:\Users\yazon\AppData\Roaming/ASP.NET/Https
+      target: /root/.aspnet/https
       read_only: true
-      bind:
-        create_host_path: true
-    - type: bind
-      source: C:\Users\yazon\.nuget\packages\
-      target: /root/.nuget/packages
-      read_only: true
-      bind:
-        create_host_path: true
-    - type: bind
-      source: D:\jounier\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1
-      target: /src
       bind:
         create_host_path: true
   cashallowanclessthan42:
     build:
-      context: D:\MS\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1
+      context: D:\jounier\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1
       dockerfile: CashAllowancLessThan42/Dockerfile
-      labels:
-        com.microsoft.created-by: visual-studio
-        com.microsoft.visual-studio.project-name: CashAllowancLessThan42
-      target: base
-    container_name: CashAllowancLessThan42
-    entrypoint:
-    - tail
-    - -f
-    - /dev/null
     environment:
       ASPNETCORE_ENVIRONMENT: Development
-      ASPNETCORE_LOGGING__CONSOLE__DISABLECOLORS: "true"
       ASPNETCORE_URLS: https://+:443;http://+:80
-      DOTNET_USE_POLLING_FILE_WATCHER: "1"
-      NUGET_FALLBACK_PACKAGES: /root/.nuget/fallbackpackages
-    image: cashallowanclessthan42:dev
-    labels:
-      com.microsoft.visualstudio.debuggee.arguments: ' --additionalProbingPath /root/.nuget/packages
-        --additionalProbingPath /root/.nuget/fallbackpackages  "/app/bin/Debug/net5.0/CashAllowancLessThan42.dll"'
-      com.microsoft.visualstudio.debuggee.killprogram: /bin/sh -c "if PID=$$(pidof
-        dotnet); then kill $$PID; fi"
-      com.microsoft.visualstudio.debuggee.program: dotnet
-      com.microsoft.visualstudio.debuggee.workingdirectory: /app
+    image: cashallowanclessthan42
     networks:
       default: null
     ports:
@@ -398,45 +153,17 @@ services:
       target: 443
       published: "60002"
       protocol: tcp
-    tty: true
     volumes:
     - type: bind
-      source: D:\jounier\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1\CashAllowancLessThan42
-      target: /app
-      bind:
-        create_host_path: true
-    - type: bind
-      source: C:\Users\yazon\vsdbg\vs2017u5
-      target: /remote_debugger
-      bind:
-        create_host_path: true
-    - type: bind
-      source: C:\Users\mooha\AppData\Roaming/ASP.NET/Https
-      target: /root/.aspnet/https
-      read_only: true
-      bind:
-        create_host_path: true
-    - type: bind
-      source: C:\Users\mooha\AppData\Roaming/Microsoft/UserSecrets
+      source: C:\Users\yazon\AppData\Roaming/Microsoft/UserSecrets
       target: /root/.microsoft/usersecrets
       read_only: true
       bind:
         create_host_path: true
     - type: bind
-      source: C:\Program Files (x86)\Microsoft Visual Studio\Shared\NuGetPackages
-      target: /root/.nuget/fallbackpackages
+      source: C:\Users\yazon\AppData\Roaming/ASP.NET/Https
+      target: /root/.aspnet/https
       read_only: true
-      bind:
-        create_host_path: true
-    - type: bind
-      source: C:\Users\yazon\.nuget\packages\
-      target: /root/.nuget/packages
-      read_only: true
-      bind:
-        create_host_path: true
-    - type: bind
-      source: D:\jounier\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1
-      target: /src
       bind:
         create_host_path: true
   consul:
@@ -463,31 +190,12 @@ services:
       protocol: udp
   externalapicaller:
     build:
-      context: D:\MS\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1
+      context: D:\jounier\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1
       dockerfile: ExternalAPICaller/Dockerfile
-      labels:
-        com.microsoft.created-by: visual-studio
-        com.microsoft.visual-studio.project-name: ExternalAPICaller
-      target: base
-    container_name: ExternalAPICaller
-    entrypoint:
-    - tail
-    - -f
-    - /dev/null
     environment:
       ASPNETCORE_ENVIRONMENT: Development
-      ASPNETCORE_LOGGING__CONSOLE__DISABLECOLORS: "true"
       ASPNETCORE_URLS: https://+:443;http://+:80
-      DOTNET_USE_POLLING_FILE_WATCHER: "1"
-      NUGET_FALLBACK_PACKAGES: /root/.nuget/fallbackpackages
-    image: externalapicaller:dev
-    labels:
-      com.microsoft.visualstudio.debuggee.arguments: ' --additionalProbingPath /root/.nuget/packages
-        --additionalProbingPath /root/.nuget/fallbackpackages  "/app/bin/Debug/net5.0/ExternalAPICaller.dll"'
-      com.microsoft.visualstudio.debuggee.killprogram: /bin/sh -c "if PID=$$(pidof
-        dotnet); then kill $$PID; fi"
-      com.microsoft.visualstudio.debuggee.program: dotnet
-      com.microsoft.visualstudio.debuggee.workingdirectory: /app
+    image: externalapicaller
     networks:
       default: null
     ports:
@@ -505,74 +213,27 @@ services:
       target: 443
       published: "60052"
       protocol: tcp
-    tty: true
     volumes:
     - type: bind
-      source: D:\jounier\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1\ExternalAPICaller
-      target: /app
-      bind:
-        create_host_path: true
-    - type: bind
-      source: C:\Users\yazon\vsdbg\vs2017u5
-      target: /remote_debugger
-      bind:
-        create_host_path: true
-    - type: bind
-      source: C:\Users\mooha\AppData\Roaming/ASP.NET/Https
-      target: /root/.aspnet/https
-      read_only: true
-      bind:
-        create_host_path: true
-    - type: bind
-      source: C:\Users\mooha\AppData\Roaming/Microsoft/UserSecrets
+      source: C:\Users\yazon\AppData\Roaming/Microsoft/UserSecrets
       target: /root/.microsoft/usersecrets
       read_only: true
       bind:
         create_host_path: true
     - type: bind
-      source: C:\Program Files (x86)\Microsoft Visual Studio\Shared\NuGetPackages
-      target: /root/.nuget/fallbackpackages
+      source: C:\Users\yazon\AppData\Roaming/ASP.NET/Https
+      target: /root/.aspnet/https
       read_only: true
-      bind:
-        create_host_path: true
-    - type: bind
-      source: C:\Users\yazon\.nuget\packages\
-      target: /root/.nuget/packages
-      read_only: true
-      bind:
-        create_host_path: true
-    - type: bind
-      source: D:\jounier\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1
-      target: /src
       bind:
         create_host_path: true
   fixedserviceallowanceapi:
     build:
-      context: D:\MS\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1
+      context: D:\jounier\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1
       dockerfile: FixedServiceAllowanceAPI/Dockerfile
-      labels:
-        com.microsoft.created-by: visual-studio
-        com.microsoft.visual-studio.project-name: FixedServiceAllowanceAPI
-      target: base
-    container_name: FixedServiceAllowanceAPI
-    entrypoint:
-    - tail
-    - -f
-    - /dev/null
     environment:
       ASPNETCORE_ENVIRONMENT: Development
-      ASPNETCORE_LOGGING__CONSOLE__DISABLECOLORS: "true"
       ASPNETCORE_URLS: https://+:443;http://+:80
-      DOTNET_USE_POLLING_FILE_WATCHER: "1"
-      NUGET_FALLBACK_PACKAGES: /root/.nuget/fallbackpackages
-    image: fixedserviceallowanceapi:dev
-    labels:
-      com.microsoft.visualstudio.debuggee.arguments: ' --additionalProbingPath /root/.nuget/packages
-        --additionalProbingPath /root/.nuget/fallbackpackages  "/app/bin/Debug/net5.0/FixedServiceAllowanceAPI.dll"'
-      com.microsoft.visualstudio.debuggee.killprogram: /bin/sh -c "if PID=$$(pidof
-        dotnet); then kill $$PID; fi"
-      com.microsoft.visualstudio.debuggee.program: dotnet
-      com.microsoft.visualstudio.debuggee.workingdirectory: /app
+    image: fixedserviceallowanceapi
     networks:
       default: null
     ports:
@@ -590,74 +251,27 @@ services:
       target: 443
       published: "50009"
       protocol: tcp
-    tty: true
     volumes:
     - type: bind
-      source: D:\jounier\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1\FixedServiceAllowanceAPI
-      target: /app
-      bind:
-        create_host_path: true
-    - type: bind
-      source: C:\Users\yazon\vsdbg\vs2017u5
-      target: /remote_debugger
-      bind:
-        create_host_path: true
-    - type: bind
-      source: C:\Users\mooha\AppData\Roaming/ASP.NET/Https
-      target: /root/.aspnet/https
-      read_only: true
-      bind:
-        create_host_path: true
-    - type: bind
-      source: C:\Users\mooha\AppData\Roaming/Microsoft/UserSecrets
+      source: C:\Users\yazon\AppData\Roaming/Microsoft/UserSecrets
       target: /root/.microsoft/usersecrets
       read_only: true
       bind:
         create_host_path: true
     - type: bind
-      source: C:\Program Files (x86)\Microsoft Visual Studio\Shared\NuGetPackages
-      target: /root/.nuget/fallbackpackages
+      source: C:\Users\yazon\AppData\Roaming/ASP.NET/Https
+      target: /root/.aspnet/https
       read_only: true
-      bind:
-        create_host_path: true
-    - type: bind
-      source: C:\Users\yazon\.nuget\packages\
-      target: /root/.nuget/packages
-      read_only: true
-      bind:
-        create_host_path: true
-    - type: bind
-      source: D:\jounier\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1
-      target: /src
       bind:
         create_host_path: true
   loginapi:
     build:
-      context: D:\MS\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1
+      context: D:\jounier\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1
       dockerfile: LoginAPI/Dockerfile
-      labels:
-        com.microsoft.created-by: visual-studio
-        com.microsoft.visual-studio.project-name: LoginAPI
-      target: base
-    container_name: LoginAPI
-    entrypoint:
-    - tail
-    - -f
-    - /dev/null
     environment:
       ASPNETCORE_ENVIRONMENT: Development
-      ASPNETCORE_LOGGING__CONSOLE__DISABLECOLORS: "true"
       ASPNETCORE_URLS: https://+:443;http://+:80
-      DOTNET_USE_POLLING_FILE_WATCHER: "1"
-      NUGET_FALLBACK_PACKAGES: /root/.nuget/fallbackpackages
-    image: loginapi:dev
-    labels:
-      com.microsoft.visualstudio.debuggee.arguments: ' --additionalProbingPath /root/.nuget/packages
-        --additionalProbingPath /root/.nuget/fallbackpackages  "/app/bin/Debug/net5.0/LoginAPI.dll"'
-      com.microsoft.visualstudio.debuggee.killprogram: /bin/sh -c "if PID=$$(pidof
-        dotnet); then kill $$PID; fi"
-      com.microsoft.visualstudio.debuggee.program: dotnet
-      com.microsoft.visualstudio.debuggee.workingdirectory: /app
+    image: loginapi
     networks:
       default: null
     ports:
@@ -675,74 +289,27 @@ services:
       target: 443
       published: "60050"
       protocol: tcp
-    tty: true
     volumes:
     - type: bind
-      source: D:\jounier\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1\LoginAPI
-      target: /app
-      bind:
-        create_host_path: true
-    - type: bind
-      source: C:\Users\yazon\vsdbg\vs2017u5
-      target: /remote_debugger
-      bind:
-        create_host_path: true
-    - type: bind
-      source: C:\Users\mooha\AppData\Roaming/ASP.NET/Https
-      target: /root/.aspnet/https
-      read_only: true
-      bind:
-        create_host_path: true
-    - type: bind
-      source: C:\Users\mooha\AppData\Roaming/Microsoft/UserSecrets
+      source: C:\Users\yazon\AppData\Roaming/Microsoft/UserSecrets
       target: /root/.microsoft/usersecrets
       read_only: true
       bind:
         create_host_path: true
     - type: bind
-      source: C:\Program Files (x86)\Microsoft Visual Studio\Shared\NuGetPackages
-      target: /root/.nuget/fallbackpackages
+      source: C:\Users\yazon\AppData\Roaming/ASP.NET/Https
+      target: /root/.aspnet/https
       read_only: true
-      bind:
-        create_host_path: true
-    - type: bind
-      source: C:\Users\yazon\.nuget\packages\
-      target: /root/.nuget/packages
-      read_only: true
-      bind:
-        create_host_path: true
-    - type: bind
-      source: D:\jounier\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1
-      target: /src
       bind:
         create_host_path: true
   obligatoryserviceapi:
     build:
-      context: D:\MS\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1
+      context: D:\jounier\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1
       dockerfile: ObligatoryServiceAPI/Dockerfile
-      labels:
-        com.microsoft.created-by: visual-studio
-        com.microsoft.visual-studio.project-name: ObligatoryServiceAPI
-      target: base
-    container_name: ObligatoryServiceAPI
-    entrypoint:
-    - tail
-    - -f
-    - /dev/null
     environment:
       ASPNETCORE_ENVIRONMENT: Development
-      ASPNETCORE_LOGGING__CONSOLE__DISABLECOLORS: "true"
       ASPNETCORE_URLS: https://+:443;http://+:80
-      DOTNET_USE_POLLING_FILE_WATCHER: "1"
-      NUGET_FALLBACK_PACKAGES: /root/.nuget/fallbackpackages
-    image: obligatoryserviceapi:dev
-    labels:
-      com.microsoft.visualstudio.debuggee.arguments: ' --additionalProbingPath /root/.nuget/packages
-        --additionalProbingPath /root/.nuget/fallbackpackages  "/app/bin/Debug/net5.0/ObligatoryServiceAPI.dll"'
-      com.microsoft.visualstudio.debuggee.killprogram: /bin/sh -c "if PID=$$(pidof
-        dotnet); then kill $$PID; fi"
-      com.microsoft.visualstudio.debuggee.program: dotnet
-      com.microsoft.visualstudio.debuggee.workingdirectory: /app
+    image: obligatoryserviceapi
     networks:
       default: null
     ports:
@@ -752,74 +319,27 @@ services:
     - mode: ingress
       target: 443
       protocol: tcp
-    tty: true
     volumes:
     - type: bind
-      source: D:\jounier\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1\ObligatoryServiceAPI
-      target: /app
-      bind:
-        create_host_path: true
-    - type: bind
-      source: C:\Users\yazon\vsdbg\vs2017u5
-      target: /remote_debugger
-      bind:
-        create_host_path: true
-    - type: bind
-      source: C:\Users\mooha\AppData\Roaming/ASP.NET/Https
-      target: /root/.aspnet/https
-      read_only: true
-      bind:
-        create_host_path: true
-    - type: bind
-      source: C:\Users\mooha\AppData\Roaming/Microsoft/UserSecrets
+      source: C:\Users\yazon\AppData\Roaming/Microsoft/UserSecrets
       target: /root/.microsoft/usersecrets
       read_only: true
       bind:
         create_host_path: true
     - type: bind
-      source: C:\Program Files (x86)\Microsoft Visual Studio\Shared\NuGetPackages
-      target: /root/.nuget/fallbackpackages
+      source: C:\Users\yazon\AppData\Roaming/ASP.NET/Https
+      target: /root/.aspnet/https
       read_only: true
-      bind:
-        create_host_path: true
-    - type: bind
-      source: C:\Users\yazon\.nuget\packages\
-      target: /root/.nuget/packages
-      read_only: true
-      bind:
-        create_host_path: true
-    - type: bind
-      source: D:\jounier\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1
-      target: /src
       bind:
         create_host_path: true
   postponementofconvictsapi:
     build:
-      context: D:\MS\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1
+      context: D:\jounier\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1
       dockerfile: PostponementOfConvictsAPI/Dockerfile
-      labels:
-        com.microsoft.created-by: visual-studio
-        com.microsoft.visual-studio.project-name: PostponementOfConvictsAPI
-      target: base
-    container_name: PostponementOfConvictsAPI
-    entrypoint:
-    - tail
-    - -f
-    - /dev/null
     environment:
       ASPNETCORE_ENVIRONMENT: Development
-      ASPNETCORE_LOGGING__CONSOLE__DISABLECOLORS: "true"
       ASPNETCORE_URLS: https://+:443;http://+:80
-      DOTNET_USE_POLLING_FILE_WATCHER: "1"
-      NUGET_FALLBACK_PACKAGES: /root/.nuget/fallbackpackages
-    image: postponementofconvictsapi:dev
-    labels:
-      com.microsoft.visualstudio.debuggee.arguments: ' --additionalProbingPath /root/.nuget/packages
-        --additionalProbingPath /root/.nuget/fallbackpackages  "/app/bin/Debug/net5.0/PostponementOfConvictsAPI.dll"'
-      com.microsoft.visualstudio.debuggee.killprogram: /bin/sh -c "if PID=$$(pidof
-        dotnet); then kill $$PID; fi"
-      com.microsoft.visualstudio.debuggee.program: dotnet
-      com.microsoft.visualstudio.debuggee.workingdirectory: /app
+    image: postponementofconvictsapi
     networks:
       default: null
     ports:
@@ -829,74 +349,27 @@ services:
     - mode: ingress
       target: 443
       protocol: tcp
-    tty: true
     volumes:
     - type: bind
-      source: D:\jounier\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1\PostponementOfConvictsAPI
-      target: /app
-      bind:
-        create_host_path: true
-    - type: bind
-      source: C:\Users\yazon\vsdbg\vs2017u5
-      target: /remote_debugger
-      bind:
-        create_host_path: true
-    - type: bind
-      source: C:\Users\mooha\AppData\Roaming/ASP.NET/Https
-      target: /root/.aspnet/https
-      read_only: true
-      bind:
-        create_host_path: true
-    - type: bind
-      source: C:\Users\mooha\AppData\Roaming/Microsoft/UserSecrets
+      source: C:\Users\yazon\AppData\Roaming/Microsoft/UserSecrets
       target: /root/.microsoft/usersecrets
       read_only: true
       bind:
         create_host_path: true
     - type: bind
-      source: C:\Program Files (x86)\Microsoft Visual Studio\Shared\NuGetPackages
-      target: /root/.nuget/fallbackpackages
+      source: C:\Users\yazon\AppData\Roaming/ASP.NET/Https
+      target: /root/.aspnet/https
       read_only: true
-      bind:
-        create_host_path: true
-    - type: bind
-      source: C:\Users\yazon\.nuget\packages\
-      target: /root/.nuget/packages
-      read_only: true
-      bind:
-        create_host_path: true
-    - type: bind
-      source: D:\jounier\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1
-      target: /src
       bind:
         create_host_path: true
   schoolpostponementapi:
     build:
-      context: D:\MS\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1
+      context: D:\jounier\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1
       dockerfile: SchoolPostponementAPI/Dockerfile
-      labels:
-        com.microsoft.created-by: visual-studio
-        com.microsoft.visual-studio.project-name: SchoolPostponementAPI
-      target: base
-    container_name: SchoolPostponementAPI
-    entrypoint:
-    - tail
-    - -f
-    - /dev/null
     environment:
       ASPNETCORE_ENVIRONMENT: Development
-      ASPNETCORE_LOGGING__CONSOLE__DISABLECOLORS: "true"
       ASPNETCORE_URLS: https://+:443;http://+:80
-      DOTNET_USE_POLLING_FILE_WATCHER: "1"
-      NUGET_FALLBACK_PACKAGES: /root/.nuget/fallbackpackages
-    image: schoolpostponementapi:dev
-    labels:
-      com.microsoft.visualstudio.debuggee.arguments: ' --additionalProbingPath /root/.nuget/packages
-        --additionalProbingPath /root/.nuget/fallbackpackages  "/app/bin/Debug/net5.0/SchoolPostponementAPI.dll"'
-      com.microsoft.visualstudio.debuggee.killprogram: /bin/sh -c "if PID=$$(pidof
-        dotnet); then kill $$PID; fi"
-      com.microsoft.visualstudio.debuggee.program: dotnet
-      com.microsoft.visualstudio.debuggee.workingdirectory: /app
+    image: schoolpostponementapi
     networks:
       default: null
     ports:
@@ -914,45 +387,11 @@ services:
       target: 443
       published: "60012"
       protocol: tcp
-    tty: true
     volumes:
     - type: bind
-      source: D:\jounier\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1\SchoolPostponementAPI
-      target: /app
-      bind:
-        create_host_path: true
-    - type: bind
-      source: C:\Users\yazon\vsdbg\vs2017u5
-      target: /remote_debugger
-      bind:
-        create_host_path: true
-    - type: bind
-      source: C:\Users\mooha\AppData\Roaming/ASP.NET/Https
+      source: C:\Users\yazon\AppData\Roaming/ASP.NET/Https
       target: /root/.aspnet/https
       read_only: true
-      bind:
-        create_host_path: true
-    - type: bind
-      source: C:\Users\mooha\AppData\Roaming/Microsoft/UserSecrets
-      target: /root/.microsoft/usersecrets
-      read_only: true
-      bind:
-        create_host_path: true
-    - type: bind
-      source: C:\Program Files (x86)\Microsoft Visual Studio\Shared\NuGetPackages
-      target: /root/.nuget/fallbackpackages
-      read_only: true
-      bind:
-        create_host_path: true
-    - type: bind
-      source: C:\Users\yazon\.nuget\packages\
-      target: /root/.nuget/packages
-      read_only: true
-      bind:
-        create_host_path: true
-    - type: bind
-      source: D:\jounier\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1
-      target: /src
       bind:
         create_host_path: true
   sql-server-db:
@@ -975,31 +414,12 @@ services:
       volume: {}
   travelapprovalapi:
     build:
-      context: D:\MS\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1
+      context: D:\jounier\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1
       dockerfile: TravelApprovalAPI/Dockerfile
-      labels:
-        com.microsoft.created-by: visual-studio
-        com.microsoft.visual-studio.project-name: TravelApprovalAPI
-      target: base
-    container_name: TravelApprovalAPI
-    entrypoint:
-    - tail
-    - -f
-    - /dev/null
     environment:
       ASPNETCORE_ENVIRONMENT: Development
-      ASPNETCORE_LOGGING__CONSOLE__DISABLECOLORS: "true"
       ASPNETCORE_URLS: https://+:443;http://+:80
-      DOTNET_USE_POLLING_FILE_WATCHER: "1"
-      NUGET_FALLBACK_PACKAGES: /root/.nuget/fallbackpackages
-    image: travelapprovalapi:dev
-    labels:
-      com.microsoft.visualstudio.debuggee.arguments: ' --additionalProbingPath /root/.nuget/packages
-        --additionalProbingPath /root/.nuget/fallbackpackages  "/app/bin/Debug/net5.0/TravelApprovalAPI.dll"'
-      com.microsoft.visualstudio.debuggee.killprogram: /bin/sh -c "if PID=$$(pidof
-        dotnet); then kill $$PID; fi"
-      com.microsoft.visualstudio.debuggee.program: dotnet
-      com.microsoft.visualstudio.debuggee.workingdirectory: /app
+    image: travelapprovalapi
     networks:
       default: null
     ports:
@@ -1017,45 +437,17 @@ services:
       target: 443
       published: "60000"
       protocol: tcp
-    tty: true
     volumes:
     - type: bind
-      source: D:\jounier\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1\TravelApprovalAPI
-      target: /app
-      bind:
-        create_host_path: true
-    - type: bind
-      source: C:\Users\yazon\vsdbg\vs2017u5
-      target: /remote_debugger
-      bind:
-        create_host_path: true
-    - type: bind
-      source: C:\Users\mooha\AppData\Roaming/ASP.NET/Https
-      target: /root/.aspnet/https
-      read_only: true
-      bind:
-        create_host_path: true
-    - type: bind
-      source: C:\Users\mooha\AppData\Roaming/Microsoft/UserSecrets
+      source: C:\Users\yazon\AppData\Roaming/Microsoft/UserSecrets
       target: /root/.microsoft/usersecrets
       read_only: true
       bind:
         create_host_path: true
     - type: bind
-      source: C:\Program Files (x86)\Microsoft Visual Studio\Shared\NuGetPackages
-      target: /root/.nuget/fallbackpackages
+      source: C:\Users\yazon\AppData\Roaming/ASP.NET/Https
+      target: /root/.aspnet/https
       read_only: true
-      bind:
-        create_host_path: true
-    - type: bind
-      source: C:\Users\yazon\.nuget\packages\
-      target: /root/.nuget/packages
-      read_only: true
-      bind:
-        create_host_path: true
-    - type: bind
-      source: D:\jounier\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1
-      target: /src
       bind:
         create_host_path: true
   uptime-kuma:
@@ -1076,31 +468,12 @@ services:
         create_host_path: true
   userrequesthandler:
     build:
-      context: D:\MS\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1
+      context: D:\jounier\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1
       dockerfile: UserRequestHandler/Dockerfile
-      labels:
-        com.microsoft.created-by: visual-studio
-        com.microsoft.visual-studio.project-name: UserRequestHandler
-      target: base
-    container_name: UserRequestHandler
-    entrypoint:
-    - tail
-    - -f
-    - /dev/null
     environment:
       ASPNETCORE_ENVIRONMENT: Development
-      ASPNETCORE_LOGGING__CONSOLE__DISABLECOLORS: "true"
       ASPNETCORE_URLS: https://+:443;http://+:80
-      DOTNET_USE_POLLING_FILE_WATCHER: "1"
-      NUGET_FALLBACK_PACKAGES: /root/.nuget/fallbackpackages
-    image: userrequesthandler:dev
-    labels:
-      com.microsoft.visualstudio.debuggee.arguments: ' --additionalProbingPath /root/.nuget/packages
-        --additionalProbingPath /root/.nuget/fallbackpackages  "/app/bin/Debug/net5.0/UserRequestHandler.dll"'
-      com.microsoft.visualstudio.debuggee.killprogram: /bin/sh -c "if PID=$$(pidof
-        dotnet); then kill $$PID; fi"
-      com.microsoft.visualstudio.debuggee.program: dotnet
-      com.microsoft.visualstudio.debuggee.workingdirectory: /app
+    image: userrequesthandler
     networks:
       default: null
     ports:
@@ -1118,74 +491,27 @@ services:
       target: 443
       published: "60053"
       protocol: tcp
-    tty: true
     volumes:
     - type: bind
-      source: D:\jounier\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1\UserRequestHandler
-      target: /app
-      bind:
-        create_host_path: true
-    - type: bind
-      source: C:\Users\yazon\vsdbg\vs2017u5
-      target: /remote_debugger
-      bind:
-        create_host_path: true
-    - type: bind
-      source: C:\Users\mooha\AppData\Roaming/ASP.NET/Https
-      target: /root/.aspnet/https
-      read_only: true
-      bind:
-        create_host_path: true
-    - type: bind
-      source: C:\Users\mooha\AppData\Roaming/Microsoft/UserSecrets
+      source: C:\Users\yazon\AppData\Roaming/Microsoft/UserSecrets
       target: /root/.microsoft/usersecrets
       read_only: true
       bind:
         create_host_path: true
     - type: bind
-      source: C:\Program Files (x86)\Microsoft Visual Studio\Shared\NuGetPackages
-      target: /root/.nuget/fallbackpackages
+      source: C:\Users\yazon\AppData\Roaming/ASP.NET/Https
+      target: /root/.aspnet/https
       read_only: true
-      bind:
-        create_host_path: true
-    - type: bind
-      source: C:\Users\yazon\.nuget\packages\
-      target: /root/.nuget/packages
-      read_only: true
-      bind:
-        create_host_path: true
-    - type: bind
-      source: D:\jounier\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1
-      target: /src
       bind:
         create_host_path: true
   usertransactions:
     build:
-      context: D:\MS\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1
+      context: D:\jounier\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1
       dockerfile: UserTransactions/Dockerfile
-      labels:
-        com.microsoft.created-by: visual-studio
-        com.microsoft.visual-studio.project-name: UserTransactions
-      target: base
-    container_name: UserTransactions
-    entrypoint:
-    - tail
-    - -f
-    - /dev/null
     environment:
       ASPNETCORE_ENVIRONMENT: Development
-      ASPNETCORE_LOGGING__CONSOLE__DISABLECOLORS: "true"
       ASPNETCORE_URLS: https://+:443;http://+:80
-      DOTNET_USE_POLLING_FILE_WATCHER: "1"
-      NUGET_FALLBACK_PACKAGES: /root/.nuget/fallbackpackages
-    image: usertransactions:dev
-    labels:
-      com.microsoft.visualstudio.debuggee.arguments: ' --additionalProbingPath /root/.nuget/packages
-        --additionalProbingPath /root/.nuget/fallbackpackages  "/app/bin/Debug/net5.0/UserTransactions.dll"'
-      com.microsoft.visualstudio.debuggee.killprogram: /bin/sh -c "if PID=$$(pidof
-        dotnet); then kill $$PID; fi"
-      com.microsoft.visualstudio.debuggee.program: dotnet
-      com.microsoft.visualstudio.debuggee.workingdirectory: /app
+    image: usertransactions
     networks:
       default: null
     ports:
@@ -1203,50 +529,16 @@ services:
       target: 443
       published: "60054"
       protocol: tcp
-    tty: true
     volumes:
     - type: bind
-      source: D:\jounier\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1\UserTransactions
-      target: /app
-      bind:
-        create_host_path: true
-    - type: bind
-      source: C:\Users\yazon\vsdbg\vs2017u5
-      target: /remote_debugger
-      bind:
-        create_host_path: true
-    - type: bind
-      source: C:\Users\mooha\AppData\Roaming/ASP.NET/Https
+      source: C:\Users\yazon\AppData\Roaming/ASP.NET/Https
       target: /root/.aspnet/https
       read_only: true
       bind:
         create_host_path: true
-    - type: bind
-      source: C:\Users\mooha\AppData\Roaming/Microsoft/UserSecrets
-      target: /root/.microsoft/usersecrets
-      read_only: true
-      bind:
-        create_host_path: true
-    - type: bind
-      source: C:\Program Files (x86)\Microsoft Visual Studio\Shared\NuGetPackages
-      target: /root/.nuget/fallbackpackages
-      read_only: true
-      bind:
-        create_host_path: true
-    - type: bind
-      source: C:\Users\yazon\.nuget\packages\
-      target: /root/.nuget/packages
-      read_only: true
-      bind:
-        create_host_path: true
-    - type: bind
-      source: D:\jounier\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1
-      target: /src
-      bind:
-        create_host_path: true
 networks:
   default:
-    name: dockercompose1791817882577683927_default
+    name: dockercompose5144703731817758637_default
 volumes:
   sqlvol2:
-    name: dockercompose1791817882577683927_sqlvol2
+    name: dockercompose5144703731817758637_sqlvol2
