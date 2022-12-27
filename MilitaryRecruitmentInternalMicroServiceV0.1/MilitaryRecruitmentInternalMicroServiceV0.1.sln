@@ -19,8 +19,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BrotherInServicePostponemen
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LoginAPI", "LoginAPI\LoginAPI.csproj", "{FD870D47-54EC-4F15-9581-7A809E75C440}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "APIGateway", "APIGateway\APIGateway.csproj", "{F32C7066-AB7E-4181-A62B-348D17F53EC4}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FixedServiceAllowanceAPI", "FixedServiceAllowanceAPI\FixedServiceAllowanceAPI.csproj", "{273D5DFA-E852-4C10-937F-4BDCF57809B7}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PostponementOfConvictsAPI", "PostponementOfConvictsAPI\PostponementOfConvictsAPI.csproj", "{E7D52C6E-FEE7-4ADB-B6FF-8D5221E9BB26}"
@@ -33,7 +31,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UserRequestHandler", "UserR
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UserTransactions", "UserTransactions\UserTransactions.csproj", "{F7BF0A81-30E1-4306-9701-119F07BBD9B9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FinanceAPI", "APIGateway\FinanceAPI\FinanceAPI.csproj", "{52492A69-B465-45E8-9694-4144AC98F788}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FinanceAPI", "APIGateway\FinanceAPI\FinanceAPI.csproj", "{52492A69-B465-45E8-9694-4144AC98F788}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -73,10 +71,6 @@ Global
 		{FD870D47-54EC-4F15-9581-7A809E75C440}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FD870D47-54EC-4F15-9581-7A809E75C440}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FD870D47-54EC-4F15-9581-7A809E75C440}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F32C7066-AB7E-4181-A62B-348D17F53EC4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F32C7066-AB7E-4181-A62B-348D17F53EC4}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F32C7066-AB7E-4181-A62B-348D17F53EC4}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F32C7066-AB7E-4181-A62B-348D17F53EC4}.Release|Any CPU.Build.0 = Release|Any CPU
 		{273D5DFA-E852-4C10-937F-4BDCF57809B7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{273D5DFA-E852-4C10-937F-4BDCF57809B7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{273D5DFA-E852-4C10-937F-4BDCF57809B7}.Release|Any CPU.ActiveCfg = Release|Any CPU

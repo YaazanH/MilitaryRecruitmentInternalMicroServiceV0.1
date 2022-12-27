@@ -98,45 +98,46 @@ namespace UserTransactions.Controllers
 
         [HttpGet]
         [Route("GetAUserTransactions")]
-        public async Task<RequestStatues> GetAUserTransactions(int Reqid, string postponmentname)
+        public async Task<Dictionary<string, string>> GetAUserTransactions(int Reqid, string postponmentname)
         {
-            RequestStatues requestStatues=new RequestStatues();
+             Dictionary<string, string> result = new Dictionary<string, string>();
             switch (postponmentname)
             {
                 case "AlonePostponement":
-                    requestStatues = JsonConvert.DeserializeObject<RequestStatues>(await APICall("https://host.docker.internal:600" + Reqid));
+                    result = JsonConvert.DeserializeObject<Dictionary<string, string>>(await APICall("https://host.docker.internal:600" + Reqid));
                     break;
                 case "BrotherInServicePostponement":
-                    requestStatues = JsonConvert.DeserializeObject<RequestStatues>(await APICall("https://host.docker.internal:600" + Reqid));
+                    result = JsonConvert.DeserializeObject<Dictionary<string, string>>(await APICall("https://host.docker.internal:600" + Reqid));
                     break;
                 case "CashAllowancLessThan42ponement":
-                    requestStatues = JsonConvert.DeserializeObject<RequestStatues>(await APICall("https://host.docker.internal:600" + Reqid));
+                    result = JsonConvert.DeserializeObject<Dictionary<string, string>>(await APICall("https://host.docker.internal:600" + Reqid));
                     break;
                 case "FixedServiceAllowanceponement":
-                    requestStatues = JsonConvert.DeserializeObject<RequestStatues>(await APICall("https://host.docker.internal:600" + Reqid));
+                    result = JsonConvert.DeserializeObject<Dictionary<string, string>>(await APICall("https://host.docker.internal:600" + Reqid));
                     break;
                 case "ObligatoryServiceponement":
-                    requestStatues = JsonConvert.DeserializeObject<RequestStatues>(await APICall("https://host.docker.internal:600" + Reqid));
+                    result = JsonConvert.DeserializeObject<Dictionary<string, string>>(await APICall("https://host.docker.internal:600" + Reqid));
                     break;
                 case "SchoolPostponement":
-                    requestStatues = JsonConvert.DeserializeObject<RequestStatues>(await APICall("https://host.docker.internal:600" + Reqid));
+                    result = JsonConvert.DeserializeObject<Dictionary<string, string>>(await APICall("https://host.docker.internal:600" + Reqid));
                     break;
                 case "TravelApprovalPostponement":
-                    requestStatues = JsonConvert.DeserializeObject<RequestStatues>(await APICall("https://host.docker.internal:600" + Reqid));
+                    result = JsonConvert.DeserializeObject<Dictionary<string, string>>(await APICall("https://host.docker.internal:600" + Reqid));
                     break;
                 case "ConvictsPostponement":
-                    requestStatues = JsonConvert.DeserializeObject<RequestStatues>(await APICall("https://host.docker.internal:600" + Reqid));
+                    result = JsonConvert.DeserializeObject<Dictionary<string, string>>(await APICall("https://host.docker.internal:600" + Reqid));
                     break;
                 case "CashAllowancetponement":
-                    requestStatues = JsonConvert.DeserializeObject<RequestStatues>(await APICall("https://host.docker.internal:600" + Reqid));
+                    result = JsonConvert.DeserializeObject<Dictionary<string, string>>(await APICall("https://host.docker.internal:600" + Reqid));
                     break;
 
                 default:
+                    result = null;
                     break;
             }
             
 
-            return requestStatues;
+            return result;
         }
     }
 }

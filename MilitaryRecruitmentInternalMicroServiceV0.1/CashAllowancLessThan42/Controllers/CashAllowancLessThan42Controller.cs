@@ -48,10 +48,23 @@ namespace CashAllowancLessThan42.Controllers
 
         [HttpGet]
         [Route("GetAUserTransactions")]
-        public RequestStatues GetAUserTransactions(int Reqid)
+        public Dictionary<string, string> GetAUserTransactions(int Reqid)
         {
-            RequestStatues result = _context.RequestStatuesDBS.Where(x => x.ReqStatuesID == Reqid).FirstOrDefault();
+            RequestStatues requestStatues = _context.RequestStatuesDBS.Where(x => x.ReqStatuesID == Reqid).FirstOrDefault();
+            Asynctravel asynctravel = _context.AsynctravelDBS.Where(x => x.RequestStatuesID == requestStatues).FirstOrDefault();
+            AsyncUserTransactions asyncUserTransactions = _context.AsyncUserTransactionsDBS.Where(x => x.RequestStatuesID == requestStatues).FirstOrDefault();
+            AsyncDaysOutsideCoun asyncDaysOutsideCoun = _context.AsyncDaysOutsideCounDBS.Where(x => x.RequestStatuesID == requestStatues).FirstOrDefault();
+            AsyncAge asyncAge = _context.AsyncAgeDBS.Where(x => x.RequestStatuesID == requestStatues).FirstOrDefault();
+
+            Dictionary<string, string> result = new Dictionary<string, string>();
+
+            result.Add("asynctravel", asynctravel.statuse);
+            result.Add("asyncUserTransactions", asyncUserTransactions.statuse);
+            result.Add("asynLabor", asyncDaysOutsideCoun.statuse);
+            result.Add("asyncAge", asyncAge.statuse);
+
             return result;
         }
+
     }
 }
