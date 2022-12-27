@@ -53,5 +53,63 @@ namespace CashAllowancLessThan42.Controllers
             RequestStatues result = _context.RequestStatuesDBS.Where(x => x.ReqStatuesID == Reqid).FirstOrDefault();
             return result;
         }
+        [HttpGet]
+        [Route("GetNumberOfRequests")]
+        public int GetNumberOfRequests()
+        {
+            int result = _context.CashAllowancLessThan42Db.Count();
+
+            return result;
+        }
+
+        [HttpGet]
+        [Route("GetNumberOfRequestsApproved")]
+        public int GetNumberOfRequestsApproved()
+        {
+            int result = _context.RequestStatuesDBS.Where(x => x.Statues == "wrong").Count();
+
+            return result;
+        }
+
+        [HttpGet]
+        [Route("GetNumberOfRequestsProcessing")]
+        public int GetNumberOfRequestsProcessing()
+        {
+            int result = _context.RequestStatuesDBS.Where(x => x.Statues == "wating").Count();
+
+            return result;
+        }
+
+        [HttpGet]
+        [Route("GetNumberOfRequestsDeleted")]
+        public int GetNumberOfRequestsDeleted()
+        {
+            int result = _context.RequestStatuesDBS.Where(x => x.Statues == "deleted").Count();
+
+            return result;
+        }
+
+
+        [HttpGet]
+        [Route("SearchUserPostponment")]
+        public Models.CashAllowancLessThan42Model GetUserPostponment(int id)
+        {
+
+            Models.CashAllowancLessThan42Model result = _context.CashAllowancLessThan42Db.Where(x => x.UserID == id).FirstOrDefault();
+
+
+            return result;
+        }
+
+        [HttpGet]
+        [Route("SearchAllPostponment")]
+        public List<Models.CashAllowancLessThan42Model> GetAllUsersPostponments()
+        {
+
+            List<Models.CashAllowancLessThan42Model> result = _context.CashAllowancLessThan42Db.ToList();
+
+
+            return result;
+        }
     }
 }

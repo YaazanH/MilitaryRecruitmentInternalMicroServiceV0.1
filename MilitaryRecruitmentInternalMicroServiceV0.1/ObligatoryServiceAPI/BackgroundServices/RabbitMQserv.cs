@@ -1,269 +1,211 @@
-﻿//using System.Threading.Tasks;
-//using Microsoft.Extensions.Options;
-//using System.Threading;
-//using System;
-//using Microsoft.Extensions.Hosting;
-//using Microsoft.Extensions.Logging;
-//using CashAllowancLessThan42.Data;
-//using RabbitMQ.Client;
-//using Microsoft.AspNetCore.Mvc;
-//using System.Text;
-//using CashAllowancLessThan42.Models;
-//using RabbitMQ.Client.Events;
-//using System.Text.Json;
-//using Microsoft.Extensions.DependencyInjection;
-//using System.Linq;
+﻿using System.Threading.Tasks;
+using Microsoft.Extensions.Options;
+using System.Threading;
+using System;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using ObligatoryServiceAPI.Data;
+using RabbitMQ.Client;
+using Microsoft.AspNetCore.Mvc;
+using System.Text;
+using ObligatoryServiceAPI.Models;
+using RabbitMQ.Client.Events;
+using System.Text.Json;
+using Microsoft.Extensions.DependencyInjection;
+using System.Linq;
 
-//namespace CashAllowancLessThan42.BackgroundServices
-//{
-//    public class RabbitMQserv : BackgroundService
-//    {
-//        private readonly CashAllowancLessThan42Context _context;
-//        ConnectionFactory factory { get; set; }
-//        IConnection connection { get; set; }
-//        IModel channel { get; set; }
+namespace CashAllowancLessThan42.BackgroundServices
+{
+    public class RabbitMQserv : BackgroundService
+    {
+        private readonly ObligatoryServiceContext _context;
+        ConnectionFactory factory { get; set; }
+        IConnection connection { get; set; }
+        IModel channel { get; set; }
 
-//        public RabbitMQserv(IServiceScopeFactory factory)
-//        {
-//            _context = factory.CreateScope().ServiceProvider.GetRequiredService<CashAllowancLessThan42Context>();
-//        }
+        public RabbitMQserv(IServiceScopeFactory factory)
+        {
+            _context = factory.CreateScope().ServiceProvider.GetRequiredService<ObligatoryServiceContext>();
+        }
 
-//        protected override Task ExecuteAsync(CancellationToken stoppingToken)
-//        {
-//            stoppingToken.ThrowIfCancellationRequested();
-//            startrabbitMQ();
-//            return Task.CompletedTask;
-//        }
+        protected override Task ExecuteAsync(CancellationToken stoppingToken)
+        {
+            stoppingToken.ThrowIfCancellationRequested();
+            startrabbitMQ();
+            return Task.CompletedTask;
+        }
 
-//        private void startrabbitMQ()
-//        {
-//                factory = new ConnectionFactory() { HostName = "host.docker.internal" };
-//                connection = factory.CreateConnection();
-//                channel = connection.CreateModel();
+        private void startrabbitMQ()
+        {
+            factory = new ConnectionFactory() { HostName = "host.docker.internal" };
+            connection = factory.CreateConnection();
+            channel = connection.CreateModel();
 
-//                channel.ExchangeDeclare(exchange: "UserRequestExch", ExchangeType.Direct);
+            channel.ExchangeDeclare(exchange: "UserRequestExch", ExchangeType.Direct);
 
-//                var queName = channel.QueueDeclare().QueueName;
+            var queName = channel.QueueDeclare().QueueName;
 
-//                channel.QueueBind(queue: queName, exchange: "UserRequestExch", routingKey: "CashAllowancLessThan42");
+            channel.QueueBind(queue: queName, exchange: "UserRequestExch", routingKey: "ObligatoryService");
 
-//                var consumer = new EventingBasicConsumer(channel);
+            var consumer = new EventingBasicConsumer(channel);
 
-//                consumer.Received += (model, ea) =>
-//                {
+            consumer.Received += (model, ea) =>
+            {
 
-//                    var recbody = ea.Body.ToArray();
+                var recbody = ea.Body.ToArray();
 
-//                    var recmess = Encoding.UTF8.GetString(recbody);
+                var recmess = Encoding.UTF8.GetString(recbody);
 
-//                    UserInfo userInfo = JsonSerializer.Deserialize<UserInfo>(recmess);
+                UserInfo userInfo = JsonSerializer.Deserialize<UserInfo>(recmess);
 
-//                    var User = _context.CashAllowancLessThan42Db.Where(x => x.UserID == userInfo.UserID).FirstOrDefault();
-//                    if (User == null)
-//                    {
-//                        int ReqStatuesID = InsertRequestToDB(userInfo.UserID);
-//                        SendToExternalAPI(userInfo.JWT, ReqStatuesID);
-//                    }                    
-//                };
-//                channel.BasicConsume(queue: queName, autoAck: true, consumer: consumer);
-//                                System.Console.Read(); 
+                var User = _context.ObligatoryServiceDB.Where(x => x.UserID == userInfo.UserID).FirstOrDefault();
+                if (User == null)
+                {
+                    int ReqStatuesID = InsertRequestToDB(userInfo.UserID);
+                    SendToExternalAPI(userInfo.JWT, ReqStatuesID);
+                }
+            };
+            channel.BasicConsume(queue: queName, autoAck: true, consumer: consumer);
+            //Console.ReadLine(); 
 
+        }
 
-//        }
+        private int InsertRequestToDB(int userID)
+        {
+            RequestStatues rs = new RequestStatues();
+            rs.UserID = userID;
+            rs.DateOfRecive = DateTime.Now;
+            rs.Statues = "wating";
+            _context.RequestStatuesDBS.Add(rs);
+            _context.SaveChanges();
 
-//        private int InsertRequestToDB(int userID)
-//        {
-//            RequestStatues rs = new RequestStatues();
-//            rs.UserID = userID;
-//            rs.DateOfRecive = DateTime.Now;
-//            rs.Statues = "wating";
-//            _context.RequestStatuesDBS.Add(rs);
-//            _context.SaveChanges();
-
-//            return rs.ReqStatuesID;
-//        }
-
+            return rs.ReqStatuesID;
+        }
 
 
-//        public void SendToExternalAPI(String Token, int ReqStatuesID)
-//        {
 
-//            var factory = new ConnectionFactory() { HostName = "host.docker.internal" };
+        public void SendToExternalAPI(String Token, int ReqStatuesID)
+        {
 
-//            using var connection = factory.CreateConnection();
+            var factory = new ConnectionFactory() { HostName = "host.docker.internal" };
 
-//            using var channel = connection.CreateModel();
+            using var connection = factory.CreateConnection();
 
-
-//            var replyQueue = channel.QueueDeclare(queue: "", exclusive: true);
-
-//            channel.QueueDeclare(queue: "requestQueue", exclusive: false);
-
-//            var consumer = new EventingBasicConsumer(channel);
-
-//            consumer.Received += (model, ea) =>
-//            {
-//                var recbody = ea.Body.ToArray();
-
-//                var recmess = Encoding.UTF8.GetString(recbody);
-
-//                RabbitMQResponce ExternalAPIResponce = JsonSerializer.Deserialize<RabbitMQResponce>(recmess);
+            using var channel = connection.CreateModel();
 
 
-//                string CorrelationId = ea.BasicProperties.CorrelationId;
+            var replyQueue = channel.QueueDeclare(queue: "", exclusive: true);
+
+            channel.QueueDeclare(queue: "requestQueue", exclusive: false);
+
+            var consumer = new EventingBasicConsumer(channel);
+
+            consumer.Received += (model, ea) =>
+            {
+                var recbody = ea.Body.ToArray();
+
+                var recmess = Encoding.UTF8.GetString(recbody);
+
+                RabbitMQResponce ExternalAPIResponce = JsonSerializer.Deserialize<RabbitMQResponce>(recmess);
 
 
-//                UpdateRequestToDB(ExternalAPIResponce, CorrelationId, ReqStatuesID);
-//            };
-
-//            channel.BasicConsume(queue: replyQueue.QueueName, autoAck: true, consumer: consumer);
+                string CorrelationId = ea.BasicProperties.CorrelationId;
 
 
-//            var properties = channel.CreateBasicProperties();
+                UpdateRequestToDB(ExternalAPIResponce, CorrelationId, ReqStatuesID);
+            };
 
-//            properties.ReplyTo = replyQueue.QueueName;
-//            RequestStatues requestStatues = _context.RequestStatuesDBS.Find(ReqStatuesID);
-//            RabbitMQobj rabbitMQobj = new RabbitMQobj() { JWT = Token };
-//            for (int i = 0; i < 4; i++)
-//            {
-//                if (i == 0)
-//                {
-//                    Asynctravel asynctravel = new Asynctravel() { RequestStatuesID = requestStatues,RequestSendTime = DateTime.Now };
-//                    _context.AsynctravelDBS.Add(asynctravel);
-//                    _context.SaveChanges();
-//                    rabbitMQobj.URL = "https://host.docker.internal:40011/Passport/GetIstravel";
-//                    properties.CorrelationId = "GetIstravel";
-//                    rabbitMQobj.ProcID = asynctravel.ID;
-//                }
+            channel.BasicConsume(queue: replyQueue.QueueName, autoAck: true, consumer: consumer);
 
-//                if (i == 1)
-//                {
-//                    AsyncUserTransactions asyncUserTransactions = new AsyncUserTransactions() { RequestStatuesID = requestStatues, RequestSendTime = DateTime.Now };
-//                    _context.AsyncUserTransactionsDBS.Add(asyncUserTransactions);
-//                    _context.SaveChanges();
-//                    rabbitMQobj.URL = "https://host.docker.internal:40022/Finance/GetUserTransactions";
-//                    properties.CorrelationId = "GetUserTransactions";
-//                    rabbitMQobj.ProcID = asyncUserTransactions.ID;
-//                }
-//                if (i == 2)
-//                {
-//                    AsyncDaysOutsideCoun asyncDaysOutsideCoun = new AsyncDaysOutsideCoun() { RequestStatuesID = requestStatues, RequestSendTime = DateTime.Now };
-//                    _context.AsyncDaysOutsideCounDBS.Add(asyncDaysOutsideCoun);
-//                    _context.SaveChanges();
-//                    rabbitMQobj.ProcID = asyncDaysOutsideCoun.ID;
-//                    rabbitMQobj.URL = "https://host.docker.internal:40011/Passport/GetNumberOfDaysOutsideCoun";
-//                    properties.CorrelationId = "GetNumberOfDaysOutsideCoun";
-//                }
-//                if (i == 3)
-//                {
-//                    AsyncAge asyncAge = new AsyncAge() { RequestStatuesID = requestStatues, RequestSendTime = DateTime.Now };
-//                    _context.AsyncAgeDBS.Add(asyncAge);
-//                    _context.SaveChanges();
-//                    rabbitMQobj.ProcID = asyncAge.ID;
-//                    rabbitMQobj.URL = "https://host.docker.internal:40018/RecordAdminstration/GetAge";
-//                    properties.CorrelationId = "GetAge";
-//                }
 
-//                var mess = JsonSerializer.Serialize(rabbitMQobj);
-//                var body = Encoding.UTF8.GetBytes(mess);
+            var properties = channel.CreateBasicProperties();
 
-//                channel.BasicPublish("", "requestQueue", properties, body);
-//            }
-//            System.Console.ReadLine();
+            properties.ReplyTo = replyQueue.QueueName;
+            RequestStatues requestStatues = _context.RequestStatuesDBS.Find(ReqStatuesID);
+            RabbitMQobj rabbitMQobj = new RabbitMQobj() { JWT = Token };
 
-//        }
 
-//        private void UpdateRequestToDB(RabbitMQResponce externalAPIResponce, string correlationId, int processID)
-//        {
-//            switch (correlationId)
-//            {
-//                case "GetIstravel":
 
-//                    Asynctravel asynctravel = _context.AsynctravelDBS.Find(externalAPIResponce.ProcID);
 
-//                    asynctravel.travel = true;// bool.Parse(externalAPIResponce.Responce);
-//                    asynctravel.RequestReciveTime = DateTime.Now;
-//                    _context.AsynctravelDBS.Update(asynctravel);
-//                    _context.SaveChanges();
 
-//                    break;
-//                case "GetUserTransactions":
+            AsyncDonatedBlood asyncDonatedBlood = new AsyncDonatedBlood() { RequestStatuesID = requestStatues, RequestSendTime = DateTime.Now };
+            _context.AsyncDonatedBloodDB.Add(asyncDonatedBlood);
+            _context.SaveChanges();
+            rabbitMQobj.URL = "https://host.docker.internal:40005/BloodBank/HasDonated";
+            properties.CorrelationId = "GetHasDonated";
+            rabbitMQobj.ProcID = asyncDonatedBlood.ID;
 
-//                    AsyncUserTransactions asyncUserTransactions = _context.AsyncUserTransactionsDBS.Find(externalAPIResponce.ProcID);
 
-//                    asyncUserTransactions.UserTransactions = true;// bool.Parse(externalAPIResponce.Responce);
-//                    asyncUserTransactions.RequestReciveTime = DateTime.Now;
-//                    _context.AsyncUserTransactionsDBS.Update(asyncUserTransactions);
-//                    _context.SaveChanges();
 
-//                    break;
-//                case "GetNumberOfDaysOutsideCoun":
+            var mess = JsonSerializer.Serialize(rabbitMQobj);
+            var body = Encoding.UTF8.GetBytes(mess);
 
-//                    AsyncDaysOutsideCoun asyncDaysOutsideCoun=_context.AsyncDaysOutsideCounDBS.Find(externalAPIResponce.ProcID);
+            channel.BasicPublish("", "requestQueue", properties, body);
 
-//                    asyncDaysOutsideCoun.DaysOutsideCoun = 1;// Int32.Parse(externalAPIResponce.Responce);
-//                    asyncDaysOutsideCoun.RequestReciveTime = DateTime.Now;
-//                    _context.AsyncDaysOutsideCounDBS.Update(asyncDaysOutsideCoun);
-//                    _context.SaveChanges();
+            System.Console.ReadLine();
 
-//                    break;
-//                case "GetAge":
+        }
 
-//                    AsyncAge asyncAge = _context.AsyncAgeDBS.Find(externalAPIResponce.ProcID);
-//                    asyncAge.Age = 1;// Int32.Parse(externalAPIResponce.Responce);
-//                    asyncAge.RequestReciveTime = DateTime.Now;
-//                    _context.AsyncAgeDBS.Update(asyncAge);
-//                    _context.SaveChanges();
+        private void UpdateRequestToDB(RabbitMQResponce externalAPIResponce, string correlationId, int processID)
+        {
+            switch (correlationId)
+            {
+                case "GetHasDonated":
 
-//                    break;
-//            }
-//            CheckIfFinish(processID);
-//        }
+                    AsyncDonatedBlood asyncDonatedBlood = _context.AsyncDonatedBloodDB.Find(externalAPIResponce.ProcID);
 
-//        private void CheckIfFinish(int procID)
-//        {
-//            RequestStatues requestStatues = _context.RequestStatuesDBS.Find(procID);
-//            Asynctravel asynctravel = _context.AsynctravelDBS.Where(x => x.RequestStatuesID== requestStatues).FirstOrDefault();
-//            AsyncUserTransactions asyncUserTransactions = _context.AsyncUserTransactionsDBS.Where(x => x.RequestStatuesID == requestStatues).FirstOrDefault();
-//            AsyncDaysOutsideCoun asyncDaysOutsideCoun = _context.AsyncDaysOutsideCounDBS.Where(x => x.RequestStatuesID == requestStatues).FirstOrDefault();
-//            AsyncAge asyncAge = _context.AsyncAgeDBS.Where(x => x.RequestStatuesID == requestStatues).FirstOrDefault();
+                    asyncDonatedBlood.Donated = true;// bool.Parse(externalAPIResponce.Responce);
+                    asyncDonatedBlood.RequestReciveTime = DateTime.Now;
+                    _context.AsyncDonatedBloodDB.Update(asyncDonatedBlood);
+                    _context.SaveChanges();
 
-//            //in gov process request canceled after certain time
-//            int NumberOfDaystoAllow = -15;
+                    break;
 
-//            if (asynctravel.RequestReciveTime>DateTime.Today.AddDays(NumberOfDaystoAllow) && asyncUserTransactions.RequestReciveTime > DateTime.Today.AddDays(NumberOfDaystoAllow) && asyncDaysOutsideCoun.RequestReciveTime > DateTime.Today.AddDays(NumberOfDaystoAllow) && asyncAge.RequestReciveTime > DateTime.Today.AddDays(NumberOfDaystoAllow) )
-//            {
-//                requestStatues.DateOfDone = DateTime.Now;
-//                requestStatues.Statues = "Done";
-//                _context.RequestStatuesDBS.Update(requestStatues);
-//                _context.SaveChanges();
+            }
+            CheckIfFinish(processID);
+        }
 
-//                if (asyncAge.Age <= 42)
-//                {
-//                    if (asynctravel.travel)
-//                    {
-//                        if (asyncUserTransactions.UserTransactions)
-//                        {
+        private void CheckIfFinish(int procID)
+        {
+            RequestStatues requestStatues = _context.RequestStatuesDBS.Find(procID);
+            AsyncDonatedBlood asyncDonatedBlood = _context.AsyncDonatedBloodDB.Where(x => x.RequestStatuesID == requestStatues).FirstOrDefault();
 
-//                            AddCert(requestStatues.UserID);
 
-//                        }
-//                    }
-//                }
-//            }
-//        }
+            //in gov process request canceled after certain time
+            int NumberOfDaystoAllow = -15;
+            if (asyncDonatedBlood.RequestReciveTime > DateTime.Today.AddDays(NumberOfDaystoAllow))
+            {
 
-//        private void AddCert(int CUserID)
-//        {
-//            CashAllowancLessThan42Model tra = new CashAllowancLessThan42Model { UserID = CUserID, DateOfGiven = DateTime.Now };
-//            _context.CashAllowancLessThan42Db.Add(tra);
-//            _context.SaveChanges();
+                requestStatues.DateOfDone = DateTime.Now;
+                requestStatues.Statues = "Done";
+                _context.RequestStatuesDBS.Update(requestStatues);
+                _context.SaveChanges();
 
-//        }
 
-//        public Task StopAsync(CancellationToken cancellationToken)
-//        {
-//            return null;
-//        }
-//    }
-//}
+
+
+                if (asyncDonatedBlood.Donated)
+                {
+
+                    AddCert(requestStatues.UserID);
+
+                }
+
+
+            }
+        }
+
+        private void AddCert(int CUserID)
+        {
+            ObligatoryService tra = new ObligatoryService { UserID = CUserID, DateOfGiven = DateTime.Now, DateOfEnd = DateTime.Now.AddMonths(6) };
+            _context.ObligatoryServiceDB.Add(tra);
+            _context.SaveChanges();
+
+        }
+
+        public Task StopAsync(CancellationToken cancellationToken)
+        {
+            return null;
+        }
+    }
+}

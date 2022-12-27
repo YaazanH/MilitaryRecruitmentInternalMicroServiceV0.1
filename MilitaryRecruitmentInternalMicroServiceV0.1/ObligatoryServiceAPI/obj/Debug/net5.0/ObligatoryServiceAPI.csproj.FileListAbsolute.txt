@@ -184,3 +184,4 @@ D:\jounier\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentIntern
 D:\jounier\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1\ObligatoryServiceAPI\obj\Debug\net5.0\ObligatoryServiceAPI.csproj.CopyComplete
 D:\jounier\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1\ObligatoryServiceAPI\obj\Debug\net5.0\ObligatoryServiceAPI.genruntimeconfig.cache
 D:\jounier\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1\ObligatoryServiceAPI\obj\Debug\net5.0\ObligatoryServiceAPI.csproj.AssemblyReference.cache
+D:\MS\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1\ObligatoryServiceAPI\bin\Debug\net5.0\RabbitMQ.Client.dll

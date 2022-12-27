@@ -99,6 +99,65 @@ namespace SchoolPostponementAPI.Controllers
             return result;
         }
 
+        [HttpGet]
+        [Route("GetNumberOfRequests")]
+        public int GetNumberOfRequests()
+        {
+            int result = _context.schoolDBS.Count();
+
+            return result;
+        }
+
+        [HttpGet]
+        [Route("GetNumberOfRequestsApproved")]
+        public int GetNumberOfRequestsApproved()
+        {
+            int result = _context.RequestStatuesDBS.Where(x => x.Statues == "wrong").Count();
+
+            return result;
+        }
+
+        [HttpGet]
+        [Route("GetNumberOfRequestsProcessing")]
+        public int GetNumberOfRequestsProcessing()
+        {
+            int result = _context.RequestStatuesDBS.Where(x => x.Statues == "wating").Count();
+
+            return result;
+        }
+
+        [HttpGet]
+        [Route("GetNumberOfRequestsDeleted")]
+        public int GetNumberOfRequestsDeleted()
+        {
+            int result = _context.RequestStatuesDBS.Where(x => x.Statues == "deleted").Count();
+
+            return result;
+        }
+
+
+        [HttpGet]
+        [Route("SearchUserPostponment")]
+        public Models.SchoolPostponement GetUserPostponment(int id)
+        {
+
+            Models.SchoolPostponement result = _context.schoolDBS.Where(x => x.UserID == id).FirstOrDefault();
+
+
+            return result;
+        }
+
+        [HttpGet]
+        [Route("SearchAllPostponment")]
+        public List<Models.SchoolPostponement> GetAllUsersPostponments()
+        {
+
+            List<Models.SchoolPostponement> result = _context.schoolDBS.ToList();
+
+
+            return result;
+        }
+
         /*
         [HttpGet]
         [Route("GetIsAStudent/")]

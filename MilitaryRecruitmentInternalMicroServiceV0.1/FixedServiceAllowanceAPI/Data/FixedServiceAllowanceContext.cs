@@ -8,5 +8,15 @@ namespace FixedServiceAllowanceAPI.Data
         { }
 
         public DbSet<FixedServiceAllowanceAPI.Models.FixedServiceAllowance> FixedServiceAllowanceContextDBS { get; set; }
+
+        public DbSet<FixedServiceAllowanceAPI.Models.RabbitMQobj> RabbitMQobjDBS { get; set; }
+
+        public DbSet<FixedServiceAllowanceAPI.Models.RabbitMQResponce> RabbitMQResponceDBS { get; set; }
+
+        public DbSet<FixedServiceAllowanceAPI.Models.UserInfo> UserInfoDBS { get; set; }
+
+        public DbSet<FixedServiceAllowanceAPI.Models.RequestStatues> RequestStatuesDBS { get; set; }
+
+        public DbSet<FixedServiceAllowanceAPI.Models.AsyncFixedService> AsyncFixedServiceDB { get; set; }
     }
 }

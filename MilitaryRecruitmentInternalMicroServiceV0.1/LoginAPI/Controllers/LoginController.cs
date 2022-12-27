@@ -83,5 +83,14 @@ namespace LoginAPI.Controller
             }
             return null;
         }
+
+        [Authorize(Roles = "Admin")]
+        [HttpGet]
+        public string GetUserToken(int UserID)
+        {
+            Login CurrentUser = new Login();
+            CurrentUser.UserID = UserID;
+            return Generate(CurrentUser);
+        }
     }
 }

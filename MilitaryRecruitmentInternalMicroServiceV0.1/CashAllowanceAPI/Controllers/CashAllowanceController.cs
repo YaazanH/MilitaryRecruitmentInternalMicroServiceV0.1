@@ -35,6 +35,67 @@ namespace CashAllowanceAPI.Controllers
             }
             return 0;
         }
+
+     
+
+        [HttpGet]
+        [Route("GetNumberOfRequests")]
+        public int GetNumberOfRequests()
+        {
+            int result = _context.CashAllowanceDb.Count();
+
+            return result;
+        }
+
+        [HttpGet]
+        [Route("GetNumberOfRequestsApproved")]
+        public int GetNumberOfRequestsApproved()
+        {
+            int result = _context.RequestStatuesDBS.Where(x => x.Statues == "wrong").Count();
+
+            return result;
+        }
+
+        [HttpGet]
+        [Route("GetNumberOfRequestsProcessing")]
+        public int GetNumberOfRequestsProcessing()
+        {
+            int result = _context.RequestStatuesDBS.Where(x => x.Statues == "wating").Count();
+
+            return result;
+        }
+
+        [HttpGet]
+        [Route("GetNumberOfRequestsDeleted")]
+        public int GetNumberOfRequestsDeleted()
+        {
+            int result = _context.RequestStatuesDBS.Where(x => x.Statues == "deleted").Count();
+
+            return result;
+        }
+
+
+        [HttpGet]
+        [Route("SearchUserPostponment")]
+        public Models.CashAllowance GetUserPostponment(int id)
+        {
+
+            Models.CashAllowance result = _context.CashAllowanceDb.Where(x => x.UserID == id).FirstOrDefault();
+
+
+            return result;
+        }
+
+        [HttpGet]
+        [Route("SearchAllPostponment")]
+        public List<Models.CashAllowance> GetAllUsersPostponments()
+        {
+
+            List<Models.CashAllowance> result = _context.CashAllowanceDb.ToList();
+
+
+            return result;
+        }
         /*
         [HttpGet]
         [Route("GetAllUserTransactions")]

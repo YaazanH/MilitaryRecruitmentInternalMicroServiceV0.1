@@ -35,6 +35,65 @@ namespace PostponementOfConvictsAPI.Controllers
                 }
                 return 0;
             }
+
+        [HttpGet]
+        [Route("GetNumberOfRequests")]
+        public int GetNumberOfRequests()
+        {
+            int result = _context.PostponementOfConvictsDb.Count();
+
+            return result;
+        }
+
+        [HttpGet]
+        [Route("GetNumberOfRequestsApproved")]
+        public int GetNumberOfRequestsApproved()
+        {
+            int result = _context.RequestStatuesDBS.Where(x => x.Statues == "wrong").Count();
+
+            return result;
+        }
+
+        [HttpGet]
+        [Route("GetNumberOfRequestsProcessing")]
+        public int GetNumberOfRequestsProcessing()
+        {
+            int result = _context.RequestStatuesDBS.Where(x => x.Statues == "wating").Count();
+
+            return result;
+        }
+
+        [HttpGet]
+        [Route("GetNumberOfRequestsDeleted")]
+        public int GetNumberOfRequestsDeleted()
+        {
+            int result = _context.RequestStatuesDBS.Where(x => x.Statues == "deleted").Count();
+
+            return result;
+        }
+
+
+        [HttpGet]
+        [Route("SearchUserPostponment")]
+        public Models.PostponementOfConvicts GetUserPostponment(int id)
+        {
+
+            Models.PostponementOfConvicts result = _context.PostponementOfConvictsDb.Where(x => x.UserID == id).FirstOrDefault();
+
+
+            return result;
+        }
+
+        [HttpGet]
+        [Route("SearchAllPostponment")]
+        public List<Models.PostponementOfConvicts> GetAllUsersPostponments()
+        {
+
+            List<Models.PostponementOfConvicts> result = _context.PostponementOfConvictsDb.ToList();
+
+
+            return result;
+        }
         /*
             [HttpGet]
             [Route("GetAllUserTransactions")]

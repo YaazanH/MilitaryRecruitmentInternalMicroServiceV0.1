@@ -18,8 +18,7 @@ namespace FinanceAPI.Controllers
             _context = context;
         }
 
-        [HttpGet]
-        [Route("GetPayAampunt")]
+       
 
     }
 }

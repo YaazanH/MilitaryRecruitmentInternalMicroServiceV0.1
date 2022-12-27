@@ -256,7 +256,7 @@ namespace CashAllowancLessThan42.BackgroundServices
             else
             {
                 requestStatues.DateOfDone = DateTime.Now;
-                requestStatues.Statues = "Faild to creat cerf pls re do it";
+                requestStatues.Statues = "Faild";
                 _context.RequestStatuesDBS.Update(requestStatues);
                 _context.SaveChanges();
             }
