@@ -68,8 +68,8 @@ namespace CashAllowancLessThan42
             services.AddDbContext<CashAllowancLessThan42Context>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("CashAllowancLessThan42Context")));
 
-
             services.AddHostedService<RabbitMQserv>();
+            services.AddHostedService<RabbitMQEndActiveCert>();
 
         }
 

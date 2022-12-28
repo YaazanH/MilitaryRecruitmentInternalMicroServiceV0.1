@@ -16,6 +16,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TravelApprovalAPI.BackgroundServices;
 using TravelApprovalAPI.Data;
 
 namespace TravelApprovalAPI
@@ -68,6 +69,9 @@ namespace TravelApprovalAPI
 
             services.AddDbContext<TravelApprovalContext>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("TravelApprovalContext")));
+
+            services.AddHostedService<RabbitMQserv>();
+            services.AddHostedService<RabbitMQEndActiveCert>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

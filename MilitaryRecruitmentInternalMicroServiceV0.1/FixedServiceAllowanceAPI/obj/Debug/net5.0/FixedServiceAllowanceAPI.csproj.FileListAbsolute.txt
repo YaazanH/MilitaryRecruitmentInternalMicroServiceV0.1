@@ -188,3 +188,4 @@ D:\jounier\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentIntern
 D:\jounier\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1\FixedServiceAllowanceAPI\obj\Debug\net5.0\FixedServiceAllowanceAPI.pdb
 D:\jounier\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1\FixedServiceAllowanceAPI\obj\Debug\net5.0\FixedServiceAllowanceAPI.genruntimeconfig.cache
 D:\MS\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1\FixedServiceAllowanceAPI\bin\Debug\net5.0\RabbitMQ.Client.dll
+D:\jounier\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1\FixedServiceAllowanceAPI\bin\Debug\net5.0\RabbitMQ.Client.dll

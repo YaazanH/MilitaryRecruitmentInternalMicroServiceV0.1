@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-namespace SchoolPostponementAPI.Data
+namespace BrotherInServicePostponementAPI.Data
 {
     public class BrotherInServicePostponementContext : DbContext
     {

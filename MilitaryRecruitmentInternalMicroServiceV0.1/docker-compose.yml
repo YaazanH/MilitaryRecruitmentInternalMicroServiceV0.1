@@ -154,6 +154,9 @@ services:
     build:
       context: .
       dockerfile: AdminDashboard/Dockerfile
+    ports:
+      - "61055:80"
+      - "60055:443"
 
 volumes:
   sqlvol2:

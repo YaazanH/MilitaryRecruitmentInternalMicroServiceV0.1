@@ -1,3 +1,4 @@
+using CashAllowanceAPI.BackgroundServices;
 using CashAllowanceAPI.Data;
 using Consul;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -67,6 +68,8 @@ namespace CashAllowanceAPI
             services.AddDbContext<CashAllowanceContext>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("CashAllowanceContext")));
 
+            services.AddHostedService<RabbitMQserv>();
+            services.AddHostedService<RabbitMQEndActiveCert>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

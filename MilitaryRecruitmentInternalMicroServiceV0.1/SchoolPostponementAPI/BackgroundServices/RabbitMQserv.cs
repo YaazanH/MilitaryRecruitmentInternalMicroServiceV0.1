@@ -14,7 +14,7 @@ using System.Text.Json;
 using Microsoft.Extensions.DependencyInjection;
 using System.Linq;
 
-namespace CashAllowancLessThan42.BackgroundServices
+namespace SchoolPostponementAPI.BackgroundServices
 {
     public class RabbitMQserv : BackgroundService
     {
@@ -252,6 +252,8 @@ namespace CashAllowancLessThan42.BackgroundServices
                                 case "2":
                                     if (asyncAge.Age < 24)
                                     {
+                                        EndOtherPostponment(requestStatues.UserID);
+
                                         AddCert(requestStatues.UserID);
                                         
                                     }
@@ -259,6 +261,8 @@ namespace CashAllowancLessThan42.BackgroundServices
                                 case "3":
                                     if (asyncAge.Age < 25)
                                     {
+                                        EndOtherPostponment(requestStatues.UserID);
+
                                         AddCert(requestStatues.UserID);
                                        
                                     }
@@ -266,6 +270,8 @@ namespace CashAllowancLessThan42.BackgroundServices
                                 case "4":
                                     if (asyncAge.Age < 26)
                                     {
+                                        EndOtherPostponment(requestStatues.UserID);
+
                                         AddCert(requestStatues.UserID);
                                         
                                     }
@@ -273,6 +279,8 @@ namespace CashAllowancLessThan42.BackgroundServices
                                 case "5":
                                     if (asyncAge.Age < 27)
                                     {
+                                        EndOtherPostponment(requestStatues.UserID);
+
                                         AddCert(requestStatues.UserID);
                                        
                                     }
@@ -280,6 +288,8 @@ namespace CashAllowancLessThan42.BackgroundServices
                                 case "6":
                                     if (asyncAge.Age < 29)
                                     {
+                                        EndOtherPostponment(requestStatues.UserID);
+
                                         AddCert(requestStatues.UserID);
                                         
                                     }
@@ -290,13 +300,27 @@ namespace CashAllowancLessThan42.BackgroundServices
                 }
             }
 
-            //cant postmant and close all calls
             else
             {
                 requestStatues.DateOfDone = DateTime.Now;
                 requestStatues.Statues = "Faild";
                 _context.RequestStatuesDBS.Update(requestStatues);
                 _context.SaveChanges();
+            }
+        }
+
+        private void EndOtherPostponment(int UserID)
+        {
+            var factory = new ConnectionFactory() { HostName = "host.docker.internal" };
+            using (var connection = factory.CreateConnection())
+            using (var channel = connection.CreateModel())
+            {
+                channel.ExchangeDeclare(exchange: "EndActiveCert", type: ExchangeType.Fanout);
+
+                var message = UserID;
+                var body = Encoding.UTF8.GetBytes(message.ToString());
+                channel.BasicPublish(exchange: "EndActiveCert", routingKey: "", basicProperties: null, body: body);
+
             }
         }
 
