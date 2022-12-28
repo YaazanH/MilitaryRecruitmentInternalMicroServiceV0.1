@@ -1,11 +1,12 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace UserTransactions.Models
 {
+    [Keyless]
     public class RequestStatues
     {
-        [Key]
         public int ReqStatuesID { get; set; }
 
         public int UserID { get; set; }

@@ -1,5 +1,8 @@
-﻿namespace TravelApprovalAPI.Models
+﻿using Microsoft.EntityFrameworkCore;
+
+namespace TravelApprovalAPI.Models
 {
+    [Keyless]
     public class RabbitMQResponce
     {
 

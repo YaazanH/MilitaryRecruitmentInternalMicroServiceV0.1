@@ -1,5 +1,8 @@
-﻿namespace ObligatoryServiceAPI.Models
+﻿using Microsoft.EntityFrameworkCore;
+
+namespace ObligatoryServiceAPI.Models
 {
+    [Keyless]
     public class RabbitMQResponce
     {
 

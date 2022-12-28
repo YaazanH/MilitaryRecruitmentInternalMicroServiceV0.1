@@ -1,5 +1,8 @@
-﻿namespace ExternalAPICaller.Models
+﻿using Microsoft.EntityFrameworkCore;
+
+namespace ExternalAPICaller.Models
 {
+    [Keyless]
     public class RabbitMQResponce
     {
 

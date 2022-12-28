@@ -1,5 +1,8 @@
-﻿namespace SchoolPostponementAPI.Models
+﻿using Microsoft.EntityFrameworkCore;
+
+namespace SchoolPostponementAPI.Models
 {
+    [Keyless]
     public class RabbitMQResponce
     {
 

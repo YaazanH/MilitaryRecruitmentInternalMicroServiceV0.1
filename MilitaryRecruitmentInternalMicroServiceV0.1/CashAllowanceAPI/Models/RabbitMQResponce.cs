@@ -1,5 +1,8 @@
-﻿namespace CashAllowanceAPI.Models
+﻿using Microsoft.EntityFrameworkCore;
+
+namespace CashAllowanceAPI.Models
 {
+    [Keyless]
     public class RabbitMQResponce
     {
 
