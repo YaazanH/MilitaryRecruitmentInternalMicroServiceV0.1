@@ -52,7 +52,6 @@ namespace AdminDashboard
                });
             services.AddMvc();
 
-
             services.AddSingleton<IHostedService, ConsulRegisterService>();
             services.Configure<ServiceConfiguration>(Configuration.GetSection("Service"));
             services.Configure<ConsulConfiguration>(Configuration.GetSection("Consul"));
