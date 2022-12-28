@@ -80,3 +80,7 @@ D:\MS\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMic
 D:\MS\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1\UserRequestHandler\obj\Debug\net5.0\UserRequestHandler.pdb
 D:\MS\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1\UserRequestHandler\obj\Debug\net5.0\UserRequestHandler.genruntimeconfig.cache
 D:\MS\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1\UserRequestHandler\obj\Debug\net5.0\ref\UserRequestHandler.dll
+D:\jounier\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1\UserRequestHandler\bin\Debug\net5.0\Microsoft.EntityFrameworkCore.dll
+D:\jounier\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1\UserRequestHandler\bin\Debug\net5.0\Microsoft.EntityFrameworkCore.Abstractions.dll
+D:\jounier\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1\UserRequestHandler\bin\Debug\net5.0\Microsoft.Extensions.DependencyInjection.dll
+D:\jounier\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1\UserRequestHandler\bin\Debug\net5.0\System.Diagnostics.DiagnosticSource.dll

@@ -301,3 +301,9 @@ D:\jounier\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentIntern
 D:\jounier\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1\bin\Debug\AdminDashboard.exe
 D:\jounier\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1\bin\Debug\AdminDashboard.dll
 D:\jounier\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1\bin\Debug\AdminDashboard.pdb
+D:\jounier\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1\bin\Debug\FinanceAPI.deps.json
+D:\jounier\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1\bin\Debug\FinanceAPI.runtimeconfig.json
+D:\jounier\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1\bin\Debug\FinanceAPI.runtimeconfig.dev.json
+D:\jounier\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1\bin\Debug\FinanceAPI.exe
+D:\jounier\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1\bin\Debug\FinanceAPI.dll
+D:\jounier\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1\bin\Debug\FinanceAPI.pdb
