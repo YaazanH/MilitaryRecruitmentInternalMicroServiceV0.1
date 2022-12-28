@@ -1,4 +1,5 @@
 using Consul;
+using FixedServiceAllowanceAPI.BackgroundServices;
 using FixedServiceAllowanceAPI.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -66,6 +67,9 @@ namespace FixedServiceAllowanceAPI
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "FixedServiceAllowanceAPI", Version = "v1" });
             });
+
+            services.AddHostedService<RabbitMQserv>();
+            services.AddHostedService<RabbitMQEndActiveCert>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -11,6 +11,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using PostponementOfConvictsAPI.BackgroundServices;
 using PostponementOfConvictsAPI.Data;
 using System;
 using System.Collections.Generic;
@@ -64,6 +65,10 @@ namespace PostponementOfConvictsAPI
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "PostponementOfConvictsAPI", Version = "v1" });
             });
+
+
+            services.AddHostedService<RabbitMQserv>();
+            services.AddHostedService<RabbitMQEndActiveCert>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

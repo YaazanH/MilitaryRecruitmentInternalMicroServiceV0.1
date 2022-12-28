@@ -52,7 +52,7 @@ namespace UserRequestHandler.Controllers
         }
 
 
-        [HttpGet]
+        [HttpPost]
         [Route("GetUserRequestHandler/")]
         public IActionResult GetUserRequestHandler([FromBody] JObject dataObject)
         {
@@ -72,7 +72,7 @@ namespace UserRequestHandler.Controllers
 
             string RoueKey = "";
 
-                switch (Int32.Parse(dataObject["ID"].ToString()))
+                switch (Int32.Parse(dataObject["PostponementID"].ToString()))
                 {
                 case 1:
                     RoueKey = "AlonePostponement";

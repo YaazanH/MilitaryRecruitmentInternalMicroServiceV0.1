@@ -183,13 +183,35 @@ namespace FixedServiceAllowanceAPI.BackgroundServices
 
                 if (asyncFixedService.fixedservice)
                 {
+                    EndOtherPostponment(requestStatues.UserID);
 
                     AddCert(requestStatues.UserID);
 
                 }
 
             }
+            else
+            {
+                requestStatues.DateOfDone = DateTime.Now;
+                requestStatues.Statues = "Faild";
+                _context.RequestStatuesDBS.Update(requestStatues);
+                _context.SaveChanges();
+            }
+        }
 
+        private void EndOtherPostponment(int UserID)
+        {
+            var factory = new ConnectionFactory() { HostName = "host.docker.internal" };
+            using (var connection = factory.CreateConnection())
+            using (var channel = connection.CreateModel())
+            {
+                channel.ExchangeDeclare(exchange: "EndActiveCert", type: ExchangeType.Fanout);
+
+                var message = UserID;
+                var body = Encoding.UTF8.GetBytes(message.ToString());
+                channel.BasicPublish(exchange: "EndActiveCert", routingKey: "", basicProperties: null, body: body);
+
+            }
         }
 
         private void AddCert(int CUserID)

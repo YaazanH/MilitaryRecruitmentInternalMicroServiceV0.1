@@ -1,5 +1,9 @@
-﻿namespace BrotherInServicePostponementAPI.Models
+﻿using Microsoft.EntityFrameworkCore;
+
+namespace BrotherInServicePostponementAPI.Models
 {
+    [Keyless]
+
     public class RabbitMQobj
     {
         public int ProcID { get; set; }

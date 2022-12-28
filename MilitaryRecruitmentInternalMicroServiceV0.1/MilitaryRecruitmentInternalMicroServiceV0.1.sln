@@ -33,6 +33,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UserTransactions", "UserTra
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FinanceAPI", "APIGateway\FinanceAPI\FinanceAPI.csproj", "{52492A69-B465-45E8-9694-4144AC98F788}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdminDashboard", "AdminDashboard\AdminDashboard.csproj", "{F2506BC7-264F-43E4-97F4-4C1A7FDD886D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -99,6 +101,10 @@ Global
 		{52492A69-B465-45E8-9694-4144AC98F788}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{52492A69-B465-45E8-9694-4144AC98F788}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{52492A69-B465-45E8-9694-4144AC98F788}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F2506BC7-264F-43E4-97F4-4C1A7FDD886D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F2506BC7-264F-43E4-97F4-4C1A7FDD886D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F2506BC7-264F-43E4-97F4-4C1A7FDD886D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F2506BC7-264F-43E4-97F4-4C1A7FDD886D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

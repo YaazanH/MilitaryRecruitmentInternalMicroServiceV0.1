@@ -17,6 +17,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using SchoolPostponementAPI.Data;
+using SchoolPostponementAPI.BackgroundServices;
 
 namespace SchoolPostponementAPI
 {
@@ -63,6 +64,10 @@ namespace SchoolPostponementAPI
 
             services.AddDbContext<SchoolPostponementContext>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("SchoolPostponementContext")));
+
+
+            services.AddHostedService<RabbitMQserv>();
+            services.AddHostedService<RabbitMQEndActiveCert>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

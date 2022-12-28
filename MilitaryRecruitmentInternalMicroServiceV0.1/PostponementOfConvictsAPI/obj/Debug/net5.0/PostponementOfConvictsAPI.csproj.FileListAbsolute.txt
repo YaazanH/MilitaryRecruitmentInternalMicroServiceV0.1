@@ -185,3 +185,4 @@ D:\jounier\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentIntern
 D:\jounier\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1\PostponementOfConvictsAPI\obj\Debug\net5.0\PostponementOfConvictsAPI.genruntimeconfig.cache
 D:\jounier\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1\PostponementOfConvictsAPI\obj\Debug\net5.0\PostponementOfConvictsAPI.csproj.AssemblyReference.cache
 D:\MS\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1\PostponementOfConvictsAPI\bin\Debug\net5.0\RabbitMQ.Client.dll
+D:\jounier\MilitaryRecruitmentInternalMicroServiceV0.1\MilitaryRecruitmentInternalMicroServiceV0.1\PostponementOfConvictsAPI\bin\Debug\net5.0\RabbitMQ.Client.dll
