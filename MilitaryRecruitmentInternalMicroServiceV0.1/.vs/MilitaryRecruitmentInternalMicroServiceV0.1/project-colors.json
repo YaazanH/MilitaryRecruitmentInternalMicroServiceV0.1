@@ -120,7 +120,12 @@
       "ProjectGuid": "52492a69-b465-45e8-9694-4144ac98f788",
       "DisplayName": "FinanceAPI",
       "ColorIndex": 6
+    },
+    "f2506bc7-264f-43e4-97f4-4c1a7fdd886d": {
+      "ProjectGuid": "f2506bc7-264f-43e4-97f4-4c1a7fdd886d",
+      "DisplayName": "AdminDashboard",
+      "ColorIndex": 7
     }
   },
-  "NextColorIndex": 7
+  "NextColorIndex": 8
 }

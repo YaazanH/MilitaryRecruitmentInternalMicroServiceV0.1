@@ -36,8 +36,8 @@ services:
       context: .
       dockerfile: SchoolPostponementAPI/Dockerfile
     ports:
-      - "61012:80"
-      - "60012:443"
+      - "61017:80"
+      - "60017:443"
 
   travelapprovalapi:
     image: ${DOCKER_REGISTRY-}travelapprovalapi
@@ -45,8 +45,8 @@ services:
       context: .
       dockerfile: TravelApprovalAPI/Dockerfile
     ports:
-      - "61000:80"
-      - "60000:443"
+      - "61008:80"
+      - "60008:443"
 
   cashallowanceapi:
     image: ${DOCKER_REGISTRY-}cashallowanceapi
@@ -54,8 +54,8 @@ services:
       context: .
       dockerfile: CashAllowanceAPI/Dockerfile
     ports:
-      - "61001:80"
-      - "60001:443"
+      - "61002:80"
+      - "60002:443"
 
   cashallowanclessthan42:
     image: ${DOCKER_REGISTRY-}cashallowanclessthan42
@@ -63,8 +63,8 @@ services:
       context: .
       dockerfile: CashAllowancLessThan42/Dockerfile
     ports:
-      - "61002:80"
-      - "60002:443"
+      - "61003:80"
+      - "60003:443"
 
   alonepostponement:
     image: ${DOCKER_REGISTRY-}alonepostponement
@@ -72,8 +72,8 @@ services:
       context: .
       dockerfile: AlonePostponement/Dockerfile
     ports:
-      - "61014:80"
-      - "60014:443"
+      - "61009:80"
+      - "60009:443"
 
   brotherinservicepostponementapi:
     image: ${DOCKER_REGISTRY-}brotherinservicepostponementapi
@@ -81,8 +81,8 @@ services:
       context: .
       dockerfile: BrotherInServicePostponementAPI/Dockerfile
     ports:
-      - "61030:80"
-      - "60030:443"
+      - "61001:80"
+      - "60001:443"
 
   loginapi:
     image: ${DOCKER_REGISTRY-}loginapi
@@ -99,20 +99,26 @@ services:
       context: .
       dockerfile: FixedServiceAllowanceAPI/Dockerfile
     ports:
-      - "51009:80"
-      - "50009:443"
+      - "61004:80"
+      - "60004:443"
 
   postponementofconvictsapi:
     image: ${DOCKER_REGISTRY-}postponementofconvictsapi
     build:
       context: .
       dockerfile: PostponementOfConvictsAPI/Dockerfile
+    ports:
+      - "61006:80"
+      - "60006:443"
 
   obligatoryserviceapi:
     image: ${DOCKER_REGISTRY-}obligatoryserviceapi
     build:
       context: .
       dockerfile: ObligatoryServiceAPI/Dockerfile
+    ports:
+      - "61005:80"
+      - "60005:443"
 
   RabbitMQ:
     image: rabbitmq:3.9-management
@@ -158,7 +164,17 @@ services:
       - "61055:80"
       - "60055:443"
 
+  financeapi:
+    image: ${DOCKER_REGISTRY-}financeapi
+    build:
+      context: .
+      dockerfile: APIGateway/FinanceAPI/Dockerfile
+    ports:
+      - "61056:80"
+      - "60056:443"
+
 volumes:
   sqlvol2:
+
 
 

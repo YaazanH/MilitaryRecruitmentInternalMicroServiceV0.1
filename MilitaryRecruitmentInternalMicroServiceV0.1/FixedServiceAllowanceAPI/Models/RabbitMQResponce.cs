@@ -1,5 +1,8 @@
-﻿namespace FixedServiceAllowanceAPI.Models
+﻿using Microsoft.EntityFrameworkCore;
+
+namespace FixedServiceAllowanceAPI.Models
 {
+    [Keyless]
     public class RabbitMQResponce
     {
 

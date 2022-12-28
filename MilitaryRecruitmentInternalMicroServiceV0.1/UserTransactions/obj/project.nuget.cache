@@ -1,11 +1,12 @@
 {
   "version": 2,
-  "dgSpecHash": "bCRAE2lnGk4YuWNCbv6sjUNZB+DU8ucDfP578aWh7Dcj+4WIueUfsTw0UxXYsQInyDlIlEF0Cg/zF985Zurs7g==",
+  "dgSpecHash": "GjKULsey1H03mzNjmrv0CsigTk+a9GoPtjvBQRW5pyJE1ZY2xgurjfAtoF/6+50dCuiziC9Tmuy4q/1nlydSSQ==",
   "success": true,
   "projectFilePath": "D:\\jounier\\MilitaryRecruitmentInternalMicroServiceV0.1\\MilitaryRecruitmentInternalMicroServiceV0.1\\UserTransactions\\UserTransactions.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\yazon\\.nuget\\packages\\consul\\1.6.10.7\\consul.1.6.10.7.nupkg.sha512",
     "C:\\Users\\yazon\\.nuget\\packages\\microsoft.aspnetcore.authentication.jwtbearer\\5.0.17\\microsoft.aspnetcore.authentication.jwtbearer.5.0.17.nupkg.sha512",
-    "C:\\Users\\yazon\\.nuget\\packages\\microsoft.csharp\\4.5.0\\microsoft.csharp.4.5.0.nupkg.sha512",
+    "C:\\Users\\yazon\\.nuget\\packages\\microsoft.csharp\\4.7.0\\microsoft.csharp.4.7.0.nupkg.sha512",
     "C:\\Users\\yazon\\.nuget\\packages\\microsoft.data.sqlclient\\2.0.1\\microsoft.data.sqlclient.2.0.1.nupkg.sha512",
     "C:\\Users\\yazon\\.nuget\\packages\\microsoft.data.sqlclient.sni.runtime\\2.0.1\\microsoft.data.sqlclient.sni.runtime.2.0.1.nupkg.sha512",
     "C:\\Users\\yazon\\.nuget\\packages\\microsoft.entityframeworkcore\\5.0.17\\microsoft.entityframeworkcore.5.0.17.nupkg.sha512",
