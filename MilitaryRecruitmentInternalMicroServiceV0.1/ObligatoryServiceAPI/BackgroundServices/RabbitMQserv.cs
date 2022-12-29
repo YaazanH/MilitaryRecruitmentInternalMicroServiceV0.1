@@ -31,11 +31,14 @@ namespace ObligatoryServiceAPI.BackgroundServices
         protected override Task ExecuteAsync(CancellationToken stoppingToken)
         {
             stoppingToken.ThrowIfCancellationRequested();
-            startrabbitMQ();
+            Task.Run(async () =>
+            {
+                await startrabbitMQ();
+            }, stoppingToken);
             return Task.CompletedTask;
         }
 
-        private void startrabbitMQ()
+        private Task startrabbitMQ()
         {
             factory = new ConnectionFactory() { HostName = "host.docker.internal" };
             connection = factory.CreateConnection();
@@ -66,8 +69,8 @@ namespace ObligatoryServiceAPI.BackgroundServices
                 }
             };
             channel.BasicConsume(queue: queName, autoAck: true, consumer: consumer);
-            //Console.ReadLine(); 
-
+            System.Console.Read();
+            return null ;
         }
 
         private int InsertRequestToDB(int userID)
@@ -76,6 +79,7 @@ namespace ObligatoryServiceAPI.BackgroundServices
             rs.UserID = userID;
             rs.DateOfRecive = DateTime.Now;
             rs.Statues = "wating";
+            rs.PostponmentType = "ObligatoryService";
             _context.RequestStatuesDBS.Add(rs);
             _context.SaveChanges();
 
@@ -128,7 +132,7 @@ namespace ObligatoryServiceAPI.BackgroundServices
 
 
 
-            AsyncDonatedBlood asyncDonatedBlood = new AsyncDonatedBlood() { RequestStatuesID = requestStatues, RequestSendTime = DateTime.Now };
+            AsyncDonatedBlood asyncDonatedBlood = new AsyncDonatedBlood() { RequestStatuesID = requestStatues, RequestSendTime = DateTime.Now ,Statues="wating"};
             _context.AsyncDonatedBloodDB.Add(asyncDonatedBlood);
             _context.SaveChanges();
             rabbitMQobj.URL = "https://host.docker.internal:40005/BloodBank/HasDonated";
@@ -156,6 +160,7 @@ namespace ObligatoryServiceAPI.BackgroundServices
 
                     asyncDonatedBlood.Donated = true;// bool.Parse(externalAPIResponce.Responce);
                     asyncDonatedBlood.RequestReciveTime = DateTime.Now;
+                    asyncDonatedBlood.Statues = "Done";
                     _context.AsyncDonatedBloodDB.Update(asyncDonatedBlood);
                     _context.SaveChanges();
 

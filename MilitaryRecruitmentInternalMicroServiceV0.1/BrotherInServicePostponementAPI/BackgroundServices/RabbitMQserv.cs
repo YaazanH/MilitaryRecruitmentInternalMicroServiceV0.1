@@ -31,11 +31,14 @@
 //        protected override Task ExecuteAsync(CancellationToken stoppingToken)
 //        {
 //            stoppingToken.ThrowIfCancellationRequested();
-//            startrabbitMQ();
+//                       Task.Run(async () =>
+//{
+//    await startrabbitMQ();
+//}, stoppingToken);
 //            return Task.CompletedTask;
 //        }
 
-//        private void startrabbitMQ()
+//        private Task startrabbitMQ()
 //        {
 //                factory = new ConnectionFactory() { HostName = "host.docker.internal" };
 //                connection = factory.CreateConnection();
@@ -45,7 +48,7 @@
 
 //                var queName = channel.QueueDeclare().QueueName;
 
-//                channel.QueueBind(queue: queName, exchange: "UserRequestExch", routingKey: "CashAllowancLessThan42");
+//                channel.QueueBind(queue: queName, exchange: "UserRequestExch", routingKey: "BrotherInServicePostponement");
 
 //                var consumer = new EventingBasicConsumer(channel);
 
@@ -67,7 +70,7 @@
 //                };
 //                channel.BasicConsume(queue: queName, autoAck: true, consumer: consumer);
 //                                System.Console.Read(); 
-
+//return null;
 
 //        }
 
@@ -77,6 +80,8 @@
 //            rs.UserID = userID;
 //            rs.DateOfRecive = DateTime.Now;
 //            rs.Statues = "wating";
+//rs.PostponmentType = "BrotherInServicePostponement";
+
 //            _context.RequestStatuesDBS.Add(rs);
 //            _context.SaveChanges();
 

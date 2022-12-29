@@ -96,19 +96,28 @@ namespace SchoolPostponementAPI.Controllers
         public Dictionary<string, string> GetAUserTransactions(int Reqid)
         {
             RequestStatues requestStatues = _context.RequestStatuesDBS.Where(x => x.ReqStatuesID == Reqid).FirstOrDefault();
-            AsyncDroppedOut asyncDroppedOut = _context.AsyncDroppedOutDBS.Where(x => x.RequestStatuesID == requestStatues).FirstOrDefault();
-            AsyncStudyingNow asyncStudyingNow = _context.AsyncStudyingNowDBS.Where(x => x.RequestStatuesID == requestStatues).FirstOrDefault();
-            AsyncStudyYears asyncStudyYears = _context.AsyncStudyYearsDBS.Where(x => x.RequestStatuesID == requestStatues).FirstOrDefault();
-            AsyncAge asyncAge = _context.AsyncAgeDBS.Where(x => x.RequestStatuesID == requestStatues).FirstOrDefault();
+            if (requestStatues != null)
+            {
 
-            Dictionary<string, string> result = new Dictionary<string, string>();
 
-            result.Add("asynctravel", asyncDroppedOut.statuse);
-            result.Add("asyncUserTransactions", asyncStudyingNow.statuse);
-            result.Add("asynLabor", asyncStudyYears.statuse);
-            result.Add("asyncAge", asyncAge.statuse);
+                AsyncDroppedOut asyncDroppedOut = _context.AsyncDroppedOutDBS.Where(x => x.RequestStatuesID == requestStatues).FirstOrDefault();
+                AsyncStudyingNow asyncStudyingNow = _context.AsyncStudyingNowDBS.Where(x => x.RequestStatuesID == requestStatues).FirstOrDefault();
+                AsyncStudyYears asyncStudyYears = _context.AsyncStudyYearsDBS.Where(x => x.RequestStatuesID == requestStatues).FirstOrDefault();
+                AsyncAge asyncAge = _context.AsyncAgeDBS.Where(x => x.RequestStatuesID == requestStatues).FirstOrDefault();
 
-            return result;
+                Dictionary<string, string> result = new Dictionary<string, string>();
+
+                result.Add("asynctravel", asyncDroppedOut.statuse);
+                result.Add("asyncUserTransactions", asyncStudyingNow.statuse);
+                result.Add("asynLabor", asyncStudyYears.statuse);
+                result.Add("asyncAge", asyncAge.statuse);
+
+                return result;
+            }
+            else
+            {
+                return null;
+            }
         }
 
 

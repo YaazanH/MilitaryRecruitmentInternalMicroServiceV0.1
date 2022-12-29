@@ -31,11 +31,14 @@ namespace FixedServiceAllowanceAPI.BackgroundServices
         protected override Task ExecuteAsync(CancellationToken stoppingToken)
         {
             stoppingToken.ThrowIfCancellationRequested();
-            startrabbitMQ();
+            Task.Run(async () =>
+            {
+                await startrabbitMQ();
+            }, stoppingToken);
             return Task.CompletedTask;
         }
 
-        private void startrabbitMQ()
+        private Task startrabbitMQ()
         {
             factory = new ConnectionFactory() { HostName = "host.docker.internal" };
             connection = factory.CreateConnection();
@@ -66,8 +69,9 @@ namespace FixedServiceAllowanceAPI.BackgroundServices
                 }
             };
             channel.BasicConsume(queue: queName, autoAck: true, consumer: consumer);
-            //Console.ReadLine(); 
 
+            System.Console.Read();
+            return null;
         }
 
         private int InsertRequestToDB(int userID)
@@ -76,6 +80,7 @@ namespace FixedServiceAllowanceAPI.BackgroundServices
             rs.UserID = userID;
             rs.DateOfRecive = DateTime.Now;
             rs.Statues = "wating";
+            rs.PostponmentType = "FixedServiceAllowance";
             _context.RequestStatuesDBS.Add(rs);
             _context.SaveChanges();
 
@@ -124,7 +129,7 @@ namespace FixedServiceAllowanceAPI.BackgroundServices
             RequestStatues requestStatues = _context.RequestStatuesDBS.Find(ReqStatuesID);
             RabbitMQobj rabbitMQobj = new RabbitMQobj() { JWT = Token };
 
-            AsyncFixedService asyncFixedService = new AsyncFixedService() { RequestStatuesID = requestStatues, RequestSendTime = DateTime.Now };
+            AsyncFixedService asyncFixedService = new AsyncFixedService() { RequestStatuesID = requestStatues, RequestSendTime = DateTime.Now,Statues   ="wating" };
             _context.AsyncFixedServiceDB.Add(asyncFixedService);
             _context.SaveChanges();
             rabbitMQobj.URL = "https://host.docker.internal:40013/DefenseAPI/GetIsFixed";
@@ -154,6 +159,7 @@ namespace FixedServiceAllowanceAPI.BackgroundServices
 
                     asynctravel.fixedservice = true;// bool.Parse(externalAPIResponce.Responce);
                     asynctravel.RequestReciveTime = DateTime.Now;
+                    asynctravel.Statues = "Done";
                     _context.AsyncFixedServiceDB.Update(asynctravel);
                     _context.SaveChanges();
 

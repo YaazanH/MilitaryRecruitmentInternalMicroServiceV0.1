@@ -16,7 +16,8 @@ namespace ObligatoryServiceAPI.Models
 
         public bool Donated { get; set; }
 
-        //public IActionResult Result { get; set; }
+        public String Statues { get; set; }
+
 
         public DateTime RequestReciveTime { get; set; }
     }
