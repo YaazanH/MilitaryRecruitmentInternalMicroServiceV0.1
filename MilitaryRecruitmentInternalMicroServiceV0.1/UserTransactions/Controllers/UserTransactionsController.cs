@@ -21,15 +21,6 @@ namespace UserTransactions.Controllers
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class UserTransactionsController : Controller
     {
-        private int GetCurrentUserID()
-        {
-            var identity = HttpContext.User.Identity as ClaimsIdentity;
-            if (identity != null)
-            {
-                return Int32.Parse(identity.Claims.FirstOrDefault(o => o.Type == ClaimTypes.PrimarySid)?.Value);
-            }
-            return 0;
-        }
         private async Task<string> APICall(string GURI)
         {
             var authorization = Request.Headers[HeaderNames.Authorization];
@@ -71,64 +62,63 @@ namespace UserTransactions.Controllers
         public async Task<List<RequestStatues>> GetAllUserTransactions()
         {
             List<RequestStatues> requestStatues = new List<RequestStatues>();
-            List<RequestStatues> AlonePostponementRequestStatues = JsonConvert.DeserializeObject<List<RequestStatues>>(await APICall("https://host.docker.internal:600"));
-            List<RequestStatues> BrotherInServicePostponementRequestStatues = JsonConvert.DeserializeObject<List<RequestStatues>>(await APICall("https://host.docker.internal:600"));
-            List<RequestStatues> CashAllowancetponementRequestStatues = JsonConvert.DeserializeObject<List<RequestStatues>>(await APICall("https://host.docker.internal:600"));
-            List<RequestStatues> CashAllowancLessThan42ponementRequestStatues = JsonConvert.DeserializeObject<List<RequestStatues>>(await APICall("https://host.docker.internal:600"));
-            List<RequestStatues> FixedServiceAllowanceponementRequestStatues = JsonConvert.DeserializeObject<List<RequestStatues>>(await APICall("https://host.docker.internal:600"));
-            List<RequestStatues> ObligatoryServiceponementRequestStatues = JsonConvert.DeserializeObject<List<RequestStatues>>(await APICall("https://host.docker.internal:600"));
-            List<RequestStatues> SchoolPostponementRequestStatues = JsonConvert.DeserializeObject<List<RequestStatues>>(await APICall("https://host.docker.internal:600"));
-            List<RequestStatues> TravelApprovalPostponementRequestStatues = JsonConvert.DeserializeObject<List<RequestStatues>>(await APICall("https://host.docker.internal:600"));
-            List<RequestStatues> ConvictsPostponementRequestStatues = JsonConvert.DeserializeObject<List<RequestStatues>>(await APICall("https://host.docker.internal:600"));
+            List<RequestStatues> AlonePostponementRequestStatues = JsonConvert.DeserializeObject<List<RequestStatues>>(await APICall("https://host.docker.internal:60009/AlonePostponement/GetAllUserTransactions"));
+            List<RequestStatues> BrotherInServicePostponementRequestStatues = JsonConvert.DeserializeObject<List<RequestStatues>>(await APICall("https://host.docker.internal:60001/BrotherInServicePostponement/GetAllUserTransactions"));
+            List<RequestStatues> CashAllowancetponementRequestStatues = JsonConvert.DeserializeObject<List<RequestStatues>>(await APICall("https://host.docker.internal:60002/CashAllowance/GetAllUserTransactions"));
+            List<RequestStatues> CashAllowancLessThan42ponementRequestStatues = JsonConvert.DeserializeObject<List<RequestStatues>>(await APICall("https://host.docker.internal:60003/CashAllowanceLessThan42/GetAllUserTransactions"));
+            List<RequestStatues> FixedServiceAllowanceponementRequestStatues = JsonConvert.DeserializeObject<List<RequestStatues>>(await APICall("https://host.docker.internal:60004/FixedServiceAllowance/GetAllUserTransactions"));
+            List<RequestStatues> ObligatoryServiceponementRequestStatues = JsonConvert.DeserializeObject<List<RequestStatues>>(await APICall("https://host.docker.internal:60005/ObligatoryService/GetAllUserTransactions"));
+            List<RequestStatues> SchoolPostponementRequestStatues = JsonConvert.DeserializeObject<List<RequestStatues>>(await APICall("https://host.docker.internal:60007/SchoolPostponement/GetAllUserTransactions"));
+            List<RequestStatues> TravelApprovalPostponementRequestStatues = JsonConvert.DeserializeObject<List<RequestStatues>>(await APICall("https://host.docker.internal:60008/TravelApproval/GetAllUserTransactions"));
+            List<RequestStatues> ConvictsPostponementRequestStatues = JsonConvert.DeserializeObject<List<RequestStatues>>(await APICall("https://host.docker.internal:60006/PostponementOfConvicts/GetAllUserTransactions"));
 
-            requestStatues.Concat(AlonePostponementRequestStatues).OrderByDescending(x=>x.DateOfRecive);
-            requestStatues.Concat(BrotherInServicePostponementRequestStatues).OrderByDescending(x=>x.DateOfRecive);
-            requestStatues.Concat(CashAllowancetponementRequestStatues).OrderByDescending(x=>x.DateOfRecive);
-            requestStatues.Concat(CashAllowancLessThan42ponementRequestStatues).OrderByDescending(x=>x.DateOfRecive);
-            requestStatues.Concat(FixedServiceAllowanceponementRequestStatues).OrderByDescending(x=>x.DateOfRecive);
-            requestStatues.Concat(ObligatoryServiceponementRequestStatues).OrderByDescending(x=>x.DateOfRecive);
-            requestStatues.Concat(SchoolPostponementRequestStatues).OrderByDescending(x=>x.DateOfRecive);
-            requestStatues.Concat(TravelApprovalPostponementRequestStatues).OrderByDescending(x=>x.DateOfRecive);
-            requestStatues.Concat(ConvictsPostponementRequestStatues).OrderByDescending(x=>x.DateOfRecive);
+            requestStatues.AddRange(AlonePostponementRequestStatues);
+            requestStatues.AddRange(BrotherInServicePostponementRequestStatues);
+            requestStatues.AddRange(CashAllowancetponementRequestStatues);
+            requestStatues.AddRange(CashAllowancLessThan42ponementRequestStatues);
+            requestStatues.AddRange(FixedServiceAllowanceponementRequestStatues);
+            requestStatues.AddRange(ObligatoryServiceponementRequestStatues);
+            requestStatues.AddRange(SchoolPostponementRequestStatues);
+            requestStatues.AddRange(TravelApprovalPostponementRequestStatues);
+            requestStatues.AddRange(ConvictsPostponementRequestStatues);
 
-
-
-            return requestStatues;
+            List<RequestStatues>result = requestStatues.OrderByDescending(x => x.DateOfRecive).ToList<RequestStatues>();
+            return result;
         }
 
-        [HttpGet]
+        [HttpPost]
         [Route("GetAUserTransactions")]
-        public async Task<Dictionary<string, string>> GetAUserTransactions(int Reqid, string postponmentname)
+        public async Task<Dictionary<string, string>> GetAUserTransactions([FromBody] PostponmentInfo postponmentInfo)
         {
              Dictionary<string, string> result = new Dictionary<string, string>();
-            switch (postponmentname)
+            switch (postponmentInfo.PosponmentName)
             {
                 case "AlonePostponement":
-                    result = JsonConvert.DeserializeObject<Dictionary<string, string>>(await APICall("https://host.docker.internal:600" + Reqid));
+                    result = JsonConvert.DeserializeObject<Dictionary<string, string>>(await APICall("https://host.docker.internal:60009/AlonePostponement/GetAUserTransactions?Reqid=" + postponmentInfo.PosponmentID.ToString()));
                     break;
                 case "BrotherInServicePostponement":
-                    result = JsonConvert.DeserializeObject<Dictionary<string, string>>(await APICall("https://host.docker.internal:600" + Reqid));
+                    result = JsonConvert.DeserializeObject<Dictionary<string, string>>(await APICall("https://host.docker.internal:60001/BrotherInServicePostponement/GetAUserTransactions?Reqid=" + postponmentInfo.PosponmentID.ToString()));
                     break;
-                case "CashAllowancLessThan42ponement":
-                    result = JsonConvert.DeserializeObject<Dictionary<string, string>>(await APICall("https://host.docker.internal:600" + Reqid));
+                case "CashAllowancLessThan42":
+                    result = JsonConvert.DeserializeObject<Dictionary<string, string>>(await APICall("https://host.docker.internal:60003/CashAllowanceLessThan42/GetAUserTransactions?Reqid=" + postponmentInfo.PosponmentID.ToString()));
                     break;
-                case "FixedServiceAllowanceponement":
-                    result = JsonConvert.DeserializeObject<Dictionary<string, string>>(await APICall("https://host.docker.internal:600" + Reqid));
+                case "FixedServiceAllowance":
+                    result = JsonConvert.DeserializeObject<Dictionary<string, string>>(await APICall("https://host.docker.internal:60004/FixedServiceAllowance/GetAUserTransactions?Reqid=" + postponmentInfo.PosponmentID.ToString()));
                     break;
-                case "ObligatoryServiceponement":
-                    result = JsonConvert.DeserializeObject<Dictionary<string, string>>(await APICall("https://host.docker.internal:600" + Reqid));
+                case "ObligatoryService":
+                    result = JsonConvert.DeserializeObject<Dictionary<string, string>>(await APICall("https://host.docker.internal:60005/ObligatoryService/GetAUserTransactions?Reqid=" + postponmentInfo.PosponmentID.ToString()));
                     break;
                 case "SchoolPostponement":
-                    result = JsonConvert.DeserializeObject<Dictionary<string, string>>(await APICall("https://host.docker.internal:600" + Reqid));
+                    result = JsonConvert.DeserializeObject<Dictionary<string, string>>(await APICall("https://host.docker.internal:60007/SchoolPostponement/GetAUserTransactions?Reqid=" + postponmentInfo.PosponmentID.ToString()));
                     break;
-                case "TravelApprovalPostponement":
-                    result = JsonConvert.DeserializeObject<Dictionary<string, string>>(await APICall("https://host.docker.internal:600" + Reqid));
+                case "TravelApproval":
+                    result = JsonConvert.DeserializeObject<Dictionary<string, string>>(await APICall("https://host.docker.internal:60008/TravelApproval/GetAUserTransactions?Reqid=" + postponmentInfo.PosponmentID.ToString()));
                     break;
-                case "ConvictsPostponement":
-                    result = JsonConvert.DeserializeObject<Dictionary<string, string>>(await APICall("https://host.docker.internal:600" + Reqid));
+                case "PostponementOfConvicts":
+                    result = JsonConvert.DeserializeObject<Dictionary<string, string>>(await APICall("https://host.docker.internal:60006/PostponementOfConvicts/GetAUserTransactions?Reqid=" + postponmentInfo.PosponmentID.ToString()));
                     break;
-                case "CashAllowancetponement":
-                    result = JsonConvert.DeserializeObject<Dictionary<string, string>>(await APICall("https://host.docker.internal:600" + Reqid));
+                case "CashAllowance":
+                    result = JsonConvert.DeserializeObject<Dictionary<string, string>>(await APICall("https://host.docker.internal:60002/CashAllowance/GetAUserTransactions?Reqid=" + postponmentInfo.PosponmentID.ToString()));
                     break;
 
                 default:

@@ -37,6 +37,44 @@ namespace PostponementOfConvictsAPI.Controllers
             }
 
         [HttpGet]
+        [Route("GetAllUserTransactions")]
+        public List<RequestStatues> GetAllUserTransactions()
+        {
+            int CUserID = GetCurrentUserID();
+            List<RequestStatues> result = _context.RequestStatuesDBS.Where(x => x.UserID == CUserID).OrderByDescending(x => x.DateOfRecive).Take(10).ToList<RequestStatues>();
+            return result;
+        }
+
+        [HttpGet]
+        [Route("GetAUserTransactions")]
+        public Dictionary<string, string> GetAUserTransactions(int Reqid)
+        {
+            RequestStatues requestStatues = _context.RequestStatuesDBS.Where(x => x.ReqStatuesID == Reqid).FirstOrDefault();
+            if (requestStatues != null)
+            {
+
+
+                AsyncEntryDate asyncEntryDate = _context.AsyncEntryDateDb.Where(x => x.RequestStatuesID == requestStatues).FirstOrDefault();
+                AsyncInJail asyncInJail = _context.AsyncInJailDb.Where(x => x.RequestStatuesID == requestStatues).FirstOrDefault();
+                AsyncYearsRemaning asyncYearsRemaning = _context.AsyncYearsRemaningDb.Where(x => x.RequestStatuesID == requestStatues).FirstOrDefault();
+                
+
+                Dictionary<string, string> result = new Dictionary<string, string>();
+
+                result.Add("asyncEntryDate", asyncEntryDate.Statues);
+                result.Add("asyncInJail", asyncInJail.Statues);
+                result.Add("asyncYearsRemaning", asyncYearsRemaning.Statues);
+                
+
+                return result;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        [HttpGet]
         [Route("GetNumberOfRequests")]
         public int GetNumberOfRequests()
         {

@@ -31,11 +31,14 @@ namespace FixedServiceAllowanceAPI.BackgroundServices
         protected override Task ExecuteAsync(CancellationToken stoppingToken)
         {
             stoppingToken.ThrowIfCancellationRequested();
-            startrabbitMQ();
+            Task.Run(async () =>
+            {
+                await startrabbitMQ();
+            }, stoppingToken);
             return Task.CompletedTask;
         }
 
-        private void startrabbitMQ()
+        private Task startrabbitMQ()
         {
             factory = new ConnectionFactory() { HostName = "host.docker.internal" };
             connection = factory.CreateConnection();
@@ -66,7 +69,7 @@ namespace FixedServiceAllowanceAPI.BackgroundServices
             };
             channel.BasicConsume(queue: queName,autoAck: true,consumer: consumer);
             System.Console.Read();
-
+            return null;
         }
 
         public Task StopAsync(CancellationToken cancellationToken)

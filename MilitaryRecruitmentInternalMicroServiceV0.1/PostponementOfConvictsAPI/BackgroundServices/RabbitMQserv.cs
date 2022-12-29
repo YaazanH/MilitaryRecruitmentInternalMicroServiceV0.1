@@ -31,11 +31,14 @@ namespace PostponementOfConvictsAPI.BackgroundServices
         protected override Task ExecuteAsync(CancellationToken stoppingToken)
         {
             stoppingToken.ThrowIfCancellationRequested();
-            startrabbitMQ();
+            Task.Run(async () =>
+            {
+                await startrabbitMQ();
+            }, stoppingToken); startrabbitMQ();
             return Task.CompletedTask;
         }
 
-        private void startrabbitMQ()
+        private Task startrabbitMQ()
         {
             factory = new ConnectionFactory() { HostName = "host.docker.internal" };
             connection = factory.CreateConnection();
@@ -66,8 +69,8 @@ namespace PostponementOfConvictsAPI.BackgroundServices
                 }
             };
             channel.BasicConsume(queue: queName, autoAck: true, consumer: consumer);
-            //Console.ReadLine(); 
-
+            System.Console.Read();
+            return null;
         }
 
         private int InsertRequestToDB(int userID)
@@ -76,6 +79,7 @@ namespace PostponementOfConvictsAPI.BackgroundServices
             rs.UserID = userID;
             rs.DateOfRecive = DateTime.Now;
             rs.Statues = "wating";
+            rs.PostponmentType = "PostponementOfConvicts";
             _context.RequestStatuesDBS.Add(rs);
             _context.SaveChanges();
 
@@ -127,7 +131,7 @@ namespace PostponementOfConvictsAPI.BackgroundServices
             {
                 if (i == 0)
                 {
-                    AsyncInJail asyncInJail = new AsyncInJail() { RequestStatuesID = requestStatues, RequestSendTime = DateTime.Now };
+                    AsyncInJail asyncInJail = new AsyncInJail() { RequestStatuesID = requestStatues, RequestSendTime = DateTime.Now,Statues="wating" };
                     _context.AsyncInJailDb.Add(asyncInJail);
                     _context.SaveChanges();
                     rabbitMQobj.URL = "https://host.docker.internal:40015/Jail/GetIfInJail";
@@ -137,7 +141,7 @@ namespace PostponementOfConvictsAPI.BackgroundServices
 
                 if (i == 1)
                 {
-                    AsyncYearsRemaning asyncYearsRemaning = new AsyncYearsRemaning() { RequestStatuesID = requestStatues, RequestSendTime = DateTime.Now };
+                    AsyncYearsRemaning asyncYearsRemaning = new AsyncYearsRemaning() { RequestStatuesID = requestStatues, RequestSendTime = DateTime.Now, Statues = "wating" };
                     _context.AsyncYearsRemaningDb.Add(asyncYearsRemaning);
                     _context.SaveChanges();
                     rabbitMQobj.URL = "https://host.docker.internal:40012/Court/GetYearsRemaining";
@@ -146,7 +150,7 @@ namespace PostponementOfConvictsAPI.BackgroundServices
                 }
                 if (i == 2)
                 {
-                    AsyncEntryDate asyncEntryDate = new AsyncEntryDate() { RequestStatuesID = requestStatues, RequestSendTime = DateTime.Now };
+                    AsyncEntryDate asyncEntryDate = new AsyncEntryDate() { RequestStatuesID = requestStatues, RequestSendTime = DateTime.Now, Statues = "wating" };
                     _context.AsyncEntryDateDb.Add(asyncEntryDate);
                     _context.SaveChanges();
                     rabbitMQobj.ProcID = asyncEntryDate.ID;
@@ -174,6 +178,7 @@ namespace PostponementOfConvictsAPI.BackgroundServices
 
                     asyncInJail.InJail = true;// bool.Parse(externalAPIResponce.Responce);
                     asyncInJail.RequestReciveTime = DateTime.Now;
+                    asyncInJail.Statues = "Done";
                     _context.AsyncInJailDb.Update(asyncInJail);
                     _context.SaveChanges();
 
@@ -184,6 +189,7 @@ namespace PostponementOfConvictsAPI.BackgroundServices
 
                     asyncYearsRemaning.Years = 5;// bool.Parse(externalAPIResponce.Responce);
                     asyncYearsRemaning.RequestReciveTime = DateTime.Now;
+                    asyncYearsRemaning.Statues = "Done";
                     _context.AsyncYearsRemaningDb.Update(asyncYearsRemaning);
                     _context.SaveChanges();
 
@@ -194,6 +200,7 @@ namespace PostponementOfConvictsAPI.BackgroundServices
 
                     asyncEntryDate.Entrydate = DateTime.Now;// Int32.Parse(externalAPIResponce.Responce);
                     asyncEntryDate.RequestReciveTime = DateTime.Now;
+                    asyncEntryDate.Statues = "Done";
                     _context.AsyncEntryDateDb.Update(asyncEntryDate);
                     _context.SaveChanges();
 

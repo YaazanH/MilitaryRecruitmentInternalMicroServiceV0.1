@@ -8,7 +8,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using TravelApprovalAPI.Data;
@@ -38,7 +37,7 @@ namespace TravelApprovalAPI.Controllers
         }
 
         [HttpGet]
-        [Route("GetAllUserTransactions")]
+        [Route("GetAllUserTransactions/")]
         public List<RequestStatues> GetAllUserTransactions()
         {
            int CUserID = GetCurrentUserID();
@@ -47,23 +46,32 @@ namespace TravelApprovalAPI.Controllers
         }
 
         [HttpGet]
-        [Route("GetAUserTransactions")]
+        [Route("GetAUserTransactions/")]
         public Dictionary<string, string> GetAUserTransactions(int Reqid)
         {
-           RequestStatues requestStatues = _context.RequestStatuesDBS.Where(x => x.ReqStatuesID == Reqid).FirstOrDefault();
-            Asynctravel asynctravel = _context.AsynctravelDBS.Where(x => x.RequestStatuesID == requestStatues).FirstOrDefault();
-            AsyncUserTransactions asyncUserTransactions = _context.AsyncUserTransactionsDBS.Where(x => x.RequestStatuesID == requestStatues).FirstOrDefault();
-            AsynLabor asynLabor = _context.AsynLaborDBS.Where(x => x.RequestStatuesID == requestStatues).FirstOrDefault();
-            AsyncAge asyncAge = _context.AsyncAgeDBS.Where(x => x.RequestStatuesID == requestStatues).FirstOrDefault();
+            RequestStatues requestStatues = _context.RequestStatuesDBS.Where(x => x.ReqStatuesID == Reqid).FirstOrDefault();
+            if (requestStatues != null)
+            {
 
-            Dictionary<string, string> result = new Dictionary<string, string>();
 
-            result.Add("asynctravel", asynctravel.statuse);
-            result.Add("asyncUserTransactions", asyncUserTransactions.statuse);
-            result.Add("asynLabor", asynLabor.statuse);
-            result.Add("asyncAge", asyncAge.statuse);
+                Asynctravel asynctravel = _context.AsynctravelDBS.Where(x => x.RequestStatuesID == requestStatues).FirstOrDefault();
+                AsyncUserTransactions asyncUserTransactions = _context.AsyncUserTransactionsDBS.Where(x => x.RequestStatuesID == requestStatues).FirstOrDefault();
+                AsynLabor asynLabor = _context.AsynLaborDBS.Where(x => x.RequestStatuesID == requestStatues).FirstOrDefault();
+                AsyncAge asyncAge = _context.AsyncAgeDBS.Where(x => x.RequestStatuesID == requestStatues).FirstOrDefault();
 
-            return result;
+                Dictionary<string, string> result = new Dictionary<string, string>();
+
+                result.Add("asynctravel", asynctravel.statuse);
+                result.Add("asyncUserTransactions", asyncUserTransactions.statuse);
+                result.Add("asynLabor", asynLabor.statuse);
+                result.Add("asyncAge", asyncAge.statuse);
+
+                return result;
+            }
+            else
+            {
+                return null;
+            }
         }
 
         [HttpGet]

@@ -16,7 +16,7 @@ namespace CashAllowanceAPI.Models
 
         public int Age { get; set; }
 
-        //public IActionResult Result { get; set; }
+        public String Statues { get; set; }
 
         public DateTime RequestReciveTime { get; set; }
     }

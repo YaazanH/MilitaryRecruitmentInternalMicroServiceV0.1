@@ -33,14 +33,6 @@ namespace TravelApprovalAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
-            services.AddControllers();
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "TravelApprovalAPI", Version = "v1" });
-
-                
-            });
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
                 {
@@ -56,7 +48,14 @@ namespace TravelApprovalAPI
                     };
                 });
             services.AddMvc();
+            services.AddControllers();
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "TravelApprovalAPI", Version = "v1" });
 
+                
+            });
+            
 
             services.AddSingleton<IHostedService, ConsulRegisterService>();
             services.Configure<ServiceConfiguration>(Configuration.GetSection("Service"));
@@ -69,7 +68,7 @@ namespace TravelApprovalAPI
 
             services.AddDbContext<TravelApprovalContext>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("TravelApprovalContext")));
-
+            
             services.AddHostedService<RabbitMQserv>();
             services.AddHostedService<RabbitMQEndActiveCert>();
         }
@@ -94,6 +93,7 @@ namespace TravelApprovalAPI
             {
                 endpoints.MapControllers();
             });
+            
         }
     }
 }

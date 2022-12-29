@@ -31,11 +31,13 @@ namespace CashAllowanceAPI.BackgroundServices
         protected override Task ExecuteAsync(CancellationToken stoppingToken)
         {
             stoppingToken.ThrowIfCancellationRequested();
-            startrabbitMQ();
-            return Task.CompletedTask;
+            Task.Run(async () =>
+            {
+                await startrabbitMQ();
+            }, stoppingToken); return Task.CompletedTask;
         }
 
-        private void startrabbitMQ()
+        private Task startrabbitMQ()
         {
                 factory = new ConnectionFactory() { HostName = "host.docker.internal" };
                 connection = factory.CreateConnection();
@@ -58,19 +60,18 @@ namespace CashAllowanceAPI.BackgroundServices
 
                     UserInfo userInfo = JsonSerializer.Deserialize<UserInfo>(recmess);
 
-                   // var User = _context.CashAllowanceDb.Where(x => x.UserID == userInfo.UserID).FirstOrDefault();
-                   // if (User == null)
-                   // {
-                    //    if (User.DateOfEnd.DateTime > DateTime.Now)
-                    //    {
-                    //        int ReqStatuesID = InsertRequestToDB(userInfo.UserID);
-                    //        SendToExternalAPI(userInfo.JWT, ReqStatuesID);
-                    //    }
-                   // }                  
+                    var User = _context.CashAllowanceDb.Where(x => x.UserID == userInfo.UserID).FirstOrDefault();
+                    if (User == null)
+                    {
+
+                            int ReqStatuesID = InsertRequestToDB(userInfo.UserID);
+                            SendToExternalAPI(userInfo.JWT, ReqStatuesID);
+                        
+                    }
                 };
                 channel.BasicConsume(queue: queName, autoAck: true, consumer: consumer);
-                //Console.ReadLine(); 
-
+            System.Console.Read();
+            return null;
         }
 
         private int InsertRequestToDB(int userID)
@@ -79,6 +80,7 @@ namespace CashAllowanceAPI.BackgroundServices
             rs.UserID = userID;
             rs.DateOfRecive = DateTime.Now;
             rs.Statues = "wating";
+            rs.PostponmentType = "CashAllowance";
             _context.RequestStatuesDBS.Add(rs);
             _context.SaveChanges();
 
@@ -130,7 +132,7 @@ namespace CashAllowanceAPI.BackgroundServices
             {
                 if (i == 0)
                 {
-                    AsyncAge asyncage = new AsyncAge() { RequestStatuesID = requestStatues,RequestSendTime = DateTime.Now };
+                    AsyncAge asyncage = new AsyncAge() { RequestStatuesID = requestStatues,RequestSendTime = DateTime.Now,Statues="wating" };
                     _context.AsyncAgeDb.Add(asyncage);
                     _context.SaveChanges();
                     rabbitMQobj.URL = "https://host.docker.internal:40018/RecordAdminstration/GetAge";
@@ -140,7 +142,7 @@ namespace CashAllowanceAPI.BackgroundServices
 
                 if (i == 1)
                 {
-                    AsyncUserTransactions asyncUserTransactions = new AsyncUserTransactions() { RequestStatuesID = requestStatues, RequestSendTime = DateTime.Now };
+                    AsyncUserTransactions asyncUserTransactions = new AsyncUserTransactions() { RequestStatuesID = requestStatues, RequestSendTime = DateTime.Now,Statues="wating" };
                     _context.AsyncUserTransactionsDb.Add(asyncUserTransactions);
                     _context.SaveChanges();
                     rabbitMQobj.URL = "https://host.docker.internal:40022/Finance/GetUserTransactions";
@@ -168,6 +170,7 @@ namespace CashAllowanceAPI.BackgroundServices
 
                     asyncUserTransactions.UserTransactions = true;// bool.Parse(externalAPIResponce.Responce);
                     asyncUserTransactions.RequestReciveTime = DateTime.Now;
+                    asyncUserTransactions.Statues = "Done";      
                     _context.AsyncUserTransactionsDb.Update(asyncUserTransactions);
                     _context.SaveChanges();
 
@@ -178,6 +181,7 @@ namespace CashAllowanceAPI.BackgroundServices
                     AsyncAge asyncAge = _context.AsyncAgeDb.Find(externalAPIResponce.ProcID);
                     asyncAge.Age = 1;// Int32.Parse(externalAPIResponce.Responce);
                     asyncAge.RequestReciveTime = DateTime.Now;
+                    asyncAge.Statues = "Done";
                     _context.AsyncAgeDb.Update(asyncAge);
                     _context.SaveChanges();
 

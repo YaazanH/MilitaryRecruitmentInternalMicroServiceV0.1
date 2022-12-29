@@ -31,11 +31,14 @@ namespace CashAllowancLessThan42.BackgroundServices
         protected override Task ExecuteAsync(CancellationToken stoppingToken)
         {
             stoppingToken.ThrowIfCancellationRequested();
-            startrabbitMQ();
+            Task.Run(async () =>
+            {
+                await startrabbitMQ();
+            }, stoppingToken);
             return Task.CompletedTask;
         }
 
-        private void startrabbitMQ()
+        private Task startrabbitMQ()
         {
                 factory = new ConnectionFactory() { HostName = "host.docker.internal" };
                 connection = factory.CreateConnection();
@@ -60,15 +63,15 @@ namespace CashAllowancLessThan42.BackgroundServices
 
                     var User = _context.CashAllowancLessThan42Db.Where(x => x.UserID == userInfo.UserID).FirstOrDefault();
                    //have to change to ==  bec != for test
-                    if (User != null)
+                    if (User == null)
                     {
                         int ReqStatuesID = InsertRequestToDB(userInfo.UserID);
                         SendToExternalAPI(userInfo.JWT, ReqStatuesID);
                     }                    
                 };
                 channel.BasicConsume(queue: queName, autoAck: true, consumer: consumer);
-                System.Console.Read(); 
-
+                System.Console.Read();
+            return null;
         }
 
         private int InsertRequestToDB(int userID)
@@ -77,6 +80,7 @@ namespace CashAllowancLessThan42.BackgroundServices
             rs.UserID = userID;
             rs.DateOfRecive = DateTime.Now;
             rs.Statues = "wating";
+            rs.PostponmentType = "CashAllowancLessThan42";
             _context.RequestStatuesDBS.Add(rs);
             _context.SaveChanges();
 
@@ -128,7 +132,7 @@ namespace CashAllowancLessThan42.BackgroundServices
             {
                 if (i == 0)
                 {
-                    Asynctravel asynctravel = new Asynctravel() { RequestStatuesID = requestStatues,RequestSendTime = DateTime.Now };
+                    Asynctravel asynctravel = new Asynctravel() { RequestStatuesID = requestStatues,RequestSendTime = DateTime.Now,statuse="wating" };
                     _context.AsynctravelDBS.Add(asynctravel);
                     _context.SaveChanges();
                     rabbitMQobj.URL = "https://host.docker.internal:40011/Passport/GetIstravel";
@@ -138,7 +142,7 @@ namespace CashAllowancLessThan42.BackgroundServices
 
                 if (i == 1)
                 {
-                    AsyncUserTransactions asyncUserTransactions = new AsyncUserTransactions() { RequestStatuesID = requestStatues, RequestSendTime = DateTime.Now };
+                    AsyncUserTransactions asyncUserTransactions = new AsyncUserTransactions() { RequestStatuesID = requestStatues, RequestSendTime = DateTime.Now, statuse = "wating" };
                     _context.AsyncUserTransactionsDBS.Add(asyncUserTransactions);
                     _context.SaveChanges();
                     rabbitMQobj.URL = "";// "https://host.docker.internal:40022/Finance/GetUserTransactions";
@@ -147,7 +151,7 @@ namespace CashAllowancLessThan42.BackgroundServices
                 }
                 if (i == 2)
                 {
-                    AsyncDaysOutsideCoun asyncDaysOutsideCoun = new AsyncDaysOutsideCoun() { RequestStatuesID = requestStatues, RequestSendTime = DateTime.Now };
+                    AsyncDaysOutsideCoun asyncDaysOutsideCoun = new AsyncDaysOutsideCoun() { RequestStatuesID = requestStatues, RequestSendTime = DateTime.Now, statuse = "wating" };
                     _context.AsyncDaysOutsideCounDBS.Add(asyncDaysOutsideCoun);
                     _context.SaveChanges();
                     rabbitMQobj.ProcID = asyncDaysOutsideCoun.ID;
@@ -156,7 +160,7 @@ namespace CashAllowancLessThan42.BackgroundServices
                 }
                 if (i == 3)
                 {
-                    AsyncAge asyncAge = new AsyncAge() { RequestStatuesID = requestStatues, RequestSendTime = DateTime.Now };
+                    AsyncAge asyncAge = new AsyncAge() { RequestStatuesID = requestStatues, RequestSendTime = DateTime.Now, statuse = "wating" };
                     _context.AsyncAgeDBS.Add(asyncAge);
                     _context.SaveChanges();
                     rabbitMQobj.ProcID = asyncAge.ID;
@@ -183,6 +187,7 @@ namespace CashAllowancLessThan42.BackgroundServices
 
                     asynctravel.travel =  bool.Parse(externalAPIResponce.Responce);
                     asynctravel.RequestReciveTime = DateTime.Now;
+                    asynctravel.statuse = "Done";
                     _context.AsynctravelDBS.Update(asynctravel);
                     _context.SaveChanges();
 
@@ -193,6 +198,7 @@ namespace CashAllowancLessThan42.BackgroundServices
 
                     asyncUserTransactions.UserTransactions = true;// bool.Parse(externalAPIResponce.Responce);
                     asyncUserTransactions.RequestReciveTime = DateTime.Now;
+                    asyncUserTransactions.statuse = "Done";
                     _context.AsyncUserTransactionsDBS.Update(asyncUserTransactions);
                     _context.SaveChanges();
 
@@ -203,6 +209,7 @@ namespace CashAllowancLessThan42.BackgroundServices
 
                     asyncDaysOutsideCoun.DaysOutsideCoun = 1;// Int32.Parse(externalAPIResponce.Responce);
                     asyncDaysOutsideCoun.RequestReciveTime = DateTime.Now;
+                    asyncDaysOutsideCoun.statuse = "Done";
                     _context.AsyncDaysOutsideCounDBS.Update(asyncDaysOutsideCoun);
                     _context.SaveChanges();
 
@@ -212,6 +219,7 @@ namespace CashAllowancLessThan42.BackgroundServices
                     AsyncAge asyncAge = _context.AsyncAgeDBS.Find(externalAPIResponce.ProcID);
                     asyncAge.Age = 1;//  Int32.Parse(externalAPIResponce.Responce);
                     asyncAge.RequestReciveTime = DateTime.Now;
+                    asyncAge.statuse = "Done";
                     _context.AsyncAgeDBS.Update(asyncAge);
                     _context.SaveChanges();
 

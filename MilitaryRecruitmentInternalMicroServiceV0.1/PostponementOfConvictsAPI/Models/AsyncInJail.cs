@@ -16,7 +16,7 @@ namespace PostponementOfConvictsAPI.Models
 
         public bool InJail { get; set; }
 
-       // public IActionResult Result { get; set; }
+        public String Statues { get; set; }
 
         public DateTime RequestReciveTime { get; set; }
     }

@@ -16,7 +16,7 @@ namespace PostponementOfConvictsAPI.Models
 
         public DateTime Entrydate { get; set; }
 
-       // public IActionResult Result { get; set; }
+        public string Statues { get; set; }
 
         public DateTime RequestReciveTime { get; set; }
     }

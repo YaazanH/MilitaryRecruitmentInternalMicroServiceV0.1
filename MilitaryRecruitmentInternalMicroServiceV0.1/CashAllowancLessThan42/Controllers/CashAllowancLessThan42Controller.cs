@@ -50,20 +50,30 @@ namespace CashAllowancLessThan42.Controllers
         [Route("GetAUserTransactions")]
         public Dictionary<string, string> GetAUserTransactions(int Reqid)
         {
+            
             RequestStatues requestStatues = _context.RequestStatuesDBS.Where(x => x.ReqStatuesID == Reqid).FirstOrDefault();
-            Asynctravel asynctravel = _context.AsynctravelDBS.Where(x => x.RequestStatuesID == requestStatues).FirstOrDefault();
-            AsyncUserTransactions asyncUserTransactions = _context.AsyncUserTransactionsDBS.Where(x => x.RequestStatuesID == requestStatues).FirstOrDefault();
-            AsyncDaysOutsideCoun asyncDaysOutsideCoun = _context.AsyncDaysOutsideCounDBS.Where(x => x.RequestStatuesID == requestStatues).FirstOrDefault();
-            AsyncAge asyncAge = _context.AsyncAgeDBS.Where(x => x.RequestStatuesID == requestStatues).FirstOrDefault();
+            if (requestStatues != null)
+            {
 
-            Dictionary<string, string> result = new Dictionary<string, string>();
 
-            result.Add("asynctravel", asynctravel.statuse);
-            result.Add("asyncUserTransactions", asyncUserTransactions.statuse);
-            result.Add("asynLabor", asyncDaysOutsideCoun.statuse);
-            result.Add("asyncAge", asyncAge.statuse);
+                Asynctravel asynctravel = _context.AsynctravelDBS.Where(x => x.RequestStatuesID == requestStatues).FirstOrDefault();
+                AsyncUserTransactions asyncUserTransactions = _context.AsyncUserTransactionsDBS.Where(x => x.RequestStatuesID == requestStatues).FirstOrDefault();
+                AsyncDaysOutsideCoun asyncDaysOutsideCoun = _context.AsyncDaysOutsideCounDBS.Where(x => x.RequestStatuesID == requestStatues).FirstOrDefault();
+                AsyncAge asyncAge = _context.AsyncAgeDBS.Where(x => x.RequestStatuesID == requestStatues).FirstOrDefault();
 
-            return result;
+                Dictionary<string, string> result = new Dictionary<string, string>();
+
+                result.Add("asynctravel", asynctravel.statuse);
+                result.Add("asyncUserTransactions", asyncUserTransactions.statuse);
+                result.Add("asynLabor", asyncDaysOutsideCoun.statuse);
+                result.Add("asyncAge", asyncAge.statuse);
+
+                return result;
+            }
+            else
+            {
+                return null;
+            }
         }
 
     }

@@ -31,11 +31,17 @@ namespace TravelApprovalAPI.BackgroundServices
         protected override Task ExecuteAsync(CancellationToken stoppingToken)
         {
             stoppingToken.ThrowIfCancellationRequested();
-            startrabbitMQ();
+
+            Task.Run(async () =>
+            {
+                await startrabbitMQ();
+            }, stoppingToken);
+            
             return Task.CompletedTask;
+
         }
 
-        private void startrabbitMQ()
+        private Task startrabbitMQ()
         {
                 factory = new ConnectionFactory() { HostName = "host.docker.internal" };
                 connection = factory.CreateConnection();
@@ -61,15 +67,23 @@ namespace TravelApprovalAPI.BackgroundServices
                     var User = _context.TravelApprovalDb.Where(x => x.UserID == userInfo.UserID).FirstOrDefault();
                     if (User == null)
                     {
+
+                            int ReqStatuesID = InsertRequestToDB(userInfo.UserID);
+                            SendToExternalAPI(userInfo.JWT, ReqStatuesID);
+                        
+                    } 
+                    else
+                    {
                         if (User.DateOfEnd.DateTime > DateTime.Now)
                         {
                             int ReqStatuesID = InsertRequestToDB(userInfo.UserID);
                             SendToExternalAPI(userInfo.JWT, ReqStatuesID);
                         }
-                    }                  
+                    }
                 };
                 channel.BasicConsume(queue: queName, autoAck: true, consumer: consumer);
                 System.Console.Read();
+            return null;
 
         }
 
@@ -79,6 +93,7 @@ namespace TravelApprovalAPI.BackgroundServices
             rs.UserID = userID;
             rs.DateOfRecive = DateTime.Now;
             rs.Statues = "wating";
+            rs.PostponmentType = "TravelApproval";
             _context.RequestStatuesDBS.Add(rs);
             _context.SaveChanges();
 
@@ -130,7 +145,7 @@ namespace TravelApprovalAPI.BackgroundServices
             {
                 if (i == 0)
                 {
-                    Asynctravel asynctravel = new Asynctravel() { RequestStatuesID = requestStatues,RequestSendTime = DateTime.Now };
+                    Asynctravel asynctravel = new Asynctravel() { RequestStatuesID = requestStatues,RequestSendTime = DateTime.Now ,statuse="wating"};
                     _context.AsynctravelDBS.Add(asynctravel);
                     _context.SaveChanges();
                     rabbitMQobj.URL = "https://host.docker.internal:40011/Passport/GetIstravel";
@@ -140,7 +155,7 @@ namespace TravelApprovalAPI.BackgroundServices
 
                 if (i == 1)
                 {
-                    AsyncUserTransactions asyncUserTransactions = new AsyncUserTransactions() { RequestStatuesID = requestStatues, RequestSendTime = DateTime.Now };
+                    AsyncUserTransactions asyncUserTransactions = new AsyncUserTransactions() { RequestStatuesID = requestStatues, RequestSendTime = DateTime.Now, statuse = "wating" };
                     _context.AsyncUserTransactionsDBS.Add(asyncUserTransactions);
                     _context.SaveChanges();
                     rabbitMQobj.URL = "https://host.docker.internal:40022/Finance/GetUserTransactions";
@@ -149,7 +164,7 @@ namespace TravelApprovalAPI.BackgroundServices
                 }
                 if (i == 2)
                 {
-                    AsynLabor asynLabor = new AsynLabor() { RequestStatuesID = requestStatues, RequestSendTime = DateTime.Now };
+                    AsynLabor asynLabor = new AsynLabor() { RequestStatuesID = requestStatues, RequestSendTime = DateTime.Now, statuse = "wating" };
                     _context.AsynLaborDBS.Add(asynLabor);
                     _context.SaveChanges();
                     rabbitMQobj.ProcID = asynLabor.ID;
@@ -158,7 +173,7 @@ namespace TravelApprovalAPI.BackgroundServices
                 }
                 if (i == 3)
                 {
-                    AsyncAge asyncAge = new AsyncAge() { RequestStatuesID = requestStatues, RequestSendTime = DateTime.Now };
+                    AsyncAge asyncAge = new AsyncAge() { RequestStatuesID = requestStatues, RequestSendTime = DateTime.Now, statuse = "wating" };
                     _context.AsyncAgeDBS.Add(asyncAge);
                     _context.SaveChanges();
                     rabbitMQobj.ProcID = asyncAge.ID;
@@ -183,8 +198,9 @@ namespace TravelApprovalAPI.BackgroundServices
 
                     Asynctravel asynctravel = _context.AsynctravelDBS.Find(externalAPIResponce.ProcID);
 
-                    asynctravel.travel = true;// bool.Parse(externalAPIResponce.Responce);
+                    asynctravel.travel =  bool.Parse(externalAPIResponce.Responce);
                     asynctravel.RequestReciveTime = DateTime.Now;
+                    asynctravel.statuse = "Done";
                     _context.AsynctravelDBS.Update(asynctravel);
                     _context.SaveChanges();
 
@@ -193,8 +209,9 @@ namespace TravelApprovalAPI.BackgroundServices
 
                     AsyncUserTransactions asyncUserTransactions = _context.AsyncUserTransactionsDBS.Find(externalAPIResponce.ProcID);
 
-                    asyncUserTransactions.UserTransactions = true;// bool.Parse(externalAPIResponce.Responce);
+                    asyncUserTransactions.UserTransactions =  bool.Parse(externalAPIResponce.Responce);
                     asyncUserTransactions.RequestReciveTime = DateTime.Now;
+                    asyncUserTransactions.statuse = "Done";
                     _context.AsyncUserTransactionsDBS.Update(asyncUserTransactions);
                     _context.SaveChanges();
 
@@ -203,8 +220,9 @@ namespace TravelApprovalAPI.BackgroundServices
 
                     AsynLabor asynLabor = _context.AsynLaborDBS.Find(externalAPIResponce.ProcID);
 
-                    asynLabor.IsALaborWorker = true;// bool.Parse(externalAPIResponce.Responce);
+                    asynLabor.IsALaborWorker =  bool.Parse(externalAPIResponce.Responce);
                     asynLabor.RequestReciveTime = DateTime.Now;
+                    asynLabor.statuse = "Done";
                     _context.AsynLaborDBS.Update(asynLabor);
                     _context.SaveChanges();
 
@@ -212,8 +230,9 @@ namespace TravelApprovalAPI.BackgroundServices
                 case "GetAge":
 
                     AsyncAge asyncAge = _context.AsyncAgeDBS.Find(externalAPIResponce.ProcID);
-                    asyncAge.Age = 1;// Int32.Parse(externalAPIResponce.Responce);
+                    asyncAge.Age =  Int32.Parse(externalAPIResponce.Responce);
                     asyncAge.RequestReciveTime = DateTime.Now;
+                    asyncAge.statuse = "Done";
                     _context.AsyncAgeDBS.Update(asyncAge);
                     _context.SaveChanges();
 
@@ -262,6 +281,7 @@ namespace TravelApprovalAPI.BackgroundServices
                 _context.SaveChanges();
             }
         }
+
 
         private void EndOtherPostponment(int UserID)
         {

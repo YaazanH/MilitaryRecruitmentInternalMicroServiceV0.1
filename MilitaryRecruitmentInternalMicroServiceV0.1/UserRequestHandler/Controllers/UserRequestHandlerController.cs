@@ -22,7 +22,7 @@ namespace UserRequestHandler.Controllers
     [ApiController]
     [Route("UserRequestHandler")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    public class UserRequestHandlerController : Controller
+    public class UserRequestHandlerController : ControllerBase
     {
 
         private int GetCurrentUserID()

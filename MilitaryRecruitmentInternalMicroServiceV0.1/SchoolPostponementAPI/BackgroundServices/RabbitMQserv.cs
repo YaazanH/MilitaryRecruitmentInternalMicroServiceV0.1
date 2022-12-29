@@ -31,11 +31,14 @@ namespace SchoolPostponementAPI.BackgroundServices
         protected override Task ExecuteAsync(CancellationToken stoppingToken)
         {
             stoppingToken.ThrowIfCancellationRequested();
-            startrabbitMQ();
+            Task.Run(async () =>
+            {
+                await startrabbitMQ();
+            }, stoppingToken);
             return Task.CompletedTask;
         }
 
-        private void startrabbitMQ()
+        private Task startrabbitMQ()
         {
                 factory = new ConnectionFactory() { HostName = "host.docker.internal" };
                 connection = factory.CreateConnection();
@@ -70,7 +73,7 @@ namespace SchoolPostponementAPI.BackgroundServices
                 };
                 channel.BasicConsume(queue: queName, autoAck: true, consumer: consumer);
                 System.Console.Read();
-
+            return null;
 
         }
 
@@ -80,6 +83,7 @@ namespace SchoolPostponementAPI.BackgroundServices
             rs.UserID = userID;
             rs.DateOfRecive = DateTime.Now;
             rs.Statues = "wating";
+            rs.PostponmentType = "SchoolPostponement";
             _context.RequestStatuesDBS.Add(rs);
             _context.SaveChanges();
 
@@ -131,7 +135,7 @@ namespace SchoolPostponementAPI.BackgroundServices
             {
                 if (i == 0)
                 {
-                    AsyncStudyYears asyncStudyYears = new AsyncStudyYears() { RequestStatuesID = requestStatues,RequestSendTime = DateTime.Now };
+                    AsyncStudyYears asyncStudyYears = new AsyncStudyYears() { RequestStatuesID = requestStatues,RequestSendTime = DateTime.Now ,statuse ="wating" };
                     _context.AsyncStudyYearsDBS.Add(asyncStudyYears);
                     _context.SaveChanges();
                     rabbitMQobj.URL = "https://host.docker.internal:40006/University/GetStudyYears";
@@ -141,7 +145,7 @@ namespace SchoolPostponementAPI.BackgroundServices
 
                 if (i == 1)
                 {
-                    AsyncStudyingNow asyncStudyingNow = new AsyncStudyingNow() { RequestStatuesID = requestStatues, RequestSendTime = DateTime.Now };
+                    AsyncStudyingNow asyncStudyingNow = new AsyncStudyingNow() { RequestStatuesID = requestStatues, RequestSendTime = DateTime.Now, statuse = "wating" };
                     _context.AsyncStudyingNowDBS.Add(asyncStudyingNow);
                     _context.SaveChanges();
                     rabbitMQobj.URL = "https://host.docker.internal:40006/University/GetIsStudyingNow";
@@ -150,7 +154,7 @@ namespace SchoolPostponementAPI.BackgroundServices
                 }
                 if (i == 2)
                 {
-                    AsyncDroppedOut asyncDroppedOut = new AsyncDroppedOut() { RequestStatuesID = requestStatues, RequestSendTime = DateTime.Now };
+                    AsyncDroppedOut asyncDroppedOut = new AsyncDroppedOut() { RequestStatuesID = requestStatues, RequestSendTime = DateTime.Now, statuse = "wating" };
                     _context.AsyncDroppedOutDBS.Add(asyncDroppedOut);
                     _context.SaveChanges();
                     rabbitMQobj.ProcID = asyncDroppedOut.ID;
@@ -159,7 +163,7 @@ namespace SchoolPostponementAPI.BackgroundServices
                 }
                 if (i == 3)
                 {
-                    AsyncAge asyncAge = new AsyncAge() { RequestStatuesID = requestStatues, RequestSendTime = DateTime.Now };
+                    AsyncAge asyncAge = new AsyncAge() { RequestStatuesID = requestStatues, RequestSendTime = DateTime.Now, statuse = "wating" };
                     _context.AsyncAgeDBS.Add(asyncAge);
                     _context.SaveChanges();
                     rabbitMQobj.ProcID = asyncAge.ID;
@@ -186,6 +190,7 @@ namespace SchoolPostponementAPI.BackgroundServices
 
                     asyncDroppedOut.IsDroppedOut = true;// bool.Parse(externalAPIResponce.Responce);
                     asyncDroppedOut.RequestReciveTime = DateTime.Now;
+                    asyncDroppedOut.statuse = "Done";
                     _context.AsyncDroppedOutDBS.Update(asyncDroppedOut);
                     _context.SaveChanges();
 
@@ -196,6 +201,7 @@ namespace SchoolPostponementAPI.BackgroundServices
 
                     asyncStudyingNow.StudyingNow = true;// bool.Parse(externalAPIResponce.Responce);
                     asyncStudyingNow.RequestReciveTime = DateTime.Now;
+                    asyncStudyingNow.statuse = "Done";
                     _context.AsyncStudyingNowDBS.Update(asyncStudyingNow);
                     _context.SaveChanges();
 
@@ -206,6 +212,7 @@ namespace SchoolPostponementAPI.BackgroundServices
 
                     asyncStudyYears.StudyYears = "1";//  externalAPIResponce.Responce.ToString();
                     asyncStudyYears.RequestReciveTime = DateTime.Now;
+                    asyncStudyYears.statuse = "Done";
                     _context.AsyncStudyYearsDBS.Update(asyncStudyYears);
                     _context.SaveChanges();
 
@@ -215,6 +222,7 @@ namespace SchoolPostponementAPI.BackgroundServices
                     AsyncAge asyncAge = _context.AsyncAgeDBS.Find(externalAPIResponce.ProcID);
                     asyncAge.Age = 1;// Int32.Parse(externalAPIResponce.Responce);
                     asyncAge.RequestReciveTime = DateTime.Now;
+                    asyncAge.statuse = "Done";
                     _context.AsyncAgeDBS.Update(asyncAge);
                     _context.SaveChanges();
 
