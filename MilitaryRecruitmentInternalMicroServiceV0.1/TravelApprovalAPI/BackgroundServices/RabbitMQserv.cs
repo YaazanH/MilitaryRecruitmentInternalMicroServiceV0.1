@@ -238,7 +238,7 @@ namespace TravelApprovalAPI.BackgroundServices
 
                     break;
             }
-            CheckIfFinish(processID);
+            CheckIfFinish(externalAPIResponce.RequestStatuseID);
         }
 
         private void CheckIfFinish(int procID)

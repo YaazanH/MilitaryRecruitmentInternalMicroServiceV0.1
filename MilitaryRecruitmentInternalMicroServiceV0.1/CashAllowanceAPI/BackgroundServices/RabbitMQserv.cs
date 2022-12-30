@@ -117,7 +117,7 @@ namespace CashAllowanceAPI.BackgroundServices
                 string CorrelationId = ea.BasicProperties.CorrelationId;
 
 
-                UpdateRequestToDB(ExternalAPIResponce, CorrelationId, ReqStatuesID);
+                UpdateRequestToDB(ExternalAPIResponce, CorrelationId);
             };
 
             channel.BasicConsume(queue: replyQueue.QueueName, autoAck: true, consumer: consumer);
@@ -159,7 +159,7 @@ namespace CashAllowanceAPI.BackgroundServices
 
         }
 
-        private void UpdateRequestToDB(RabbitMQResponce externalAPIResponce, string correlationId, int processID)
+        private void UpdateRequestToDB(RabbitMQResponce externalAPIResponce, string correlationId)
         {
             switch (correlationId)
             {
@@ -187,7 +187,7 @@ namespace CashAllowanceAPI.BackgroundServices
 
                     break;
             }
-            CheckIfFinish(processID);
+            CheckIfFinish(externalAPIResponce.RequestStatuseID);
         }
 
         private void CheckIfFinish(int procID)
@@ -216,9 +216,7 @@ namespace CashAllowanceAPI.BackgroundServices
                     if (asyncUserTransactions.UserTransactions)
                     {
 
-                        EndOtherPostponment(requestStatues.UserID);
-
-                        AddCert(requestStatues.UserID);
+                        CalculateExtraPAyment(requestStatues);
 
                     }
 
@@ -232,28 +230,59 @@ namespace CashAllowanceAPI.BackgroundServices
                 _context.SaveChanges();
             }
         }
-
-        private void EndOtherPostponment(int UserID)
+        private void CalculateExtraPAyment(RequestStatues requestStatues)
         {
             var factory = new ConnectionFactory() { HostName = "host.docker.internal" };
-            using (var connection = factory.CreateConnection())
-            using (var channel = connection.CreateModel())
+
+            using var connection = factory.CreateConnection();
+
+            using var channel = connection.CreateModel();
+
+
+            var replyQueue = channel.QueueDeclare(queue: "", exclusive: true);
+
+            channel.QueueDeclare(queue: "UserCalcPayment", exclusive: false);
+
+            var consumer = new EventingBasicConsumer(channel);
+
+            consumer.Received += (model, ea) =>
             {
-                channel.ExchangeDeclare(exchange: "EndActiveCert", type: ExchangeType.Fanout);
+                var recbody = ea.Body.ToArray();
 
-                var message = UserID;
-                var body = Encoding.UTF8.GetBytes(message.ToString());
-                channel.BasicPublish(exchange: "EndActiveCert", routingKey: "", basicProperties: null, body: body);
+                var recmess = Encoding.UTF8.GetString(recbody);
 
-            }
-        }
-        private void AddCert(int CUserID)
-        {
-            CashAllowance tra = new CashAllowance { UserID = CUserID, DateOfGiven = DateTime.Now};
-            _context.CashAllowanceDb.Add(tra);
+                RabbitMQResponce ExternalAPIResponce = JsonSerializer.Deserialize<RabbitMQResponce>(recmess);
+
+                AsyncPayment asyncPayment = _context.AsyncPaymentDBS.Where(x => x.PaymentID == ExternalAPIResponce.ProcID).FirstOrDefault();
+                asyncPayment.EcashURl = ExternalAPIResponce.Responce;
+                _context.AsyncPaymentDBS.Update(asyncPayment);
+                _context.SaveChanges();
+
+            };
+
+            channel.BasicConsume(queue: replyQueue.QueueName, autoAck: true, consumer: consumer);
+
+
+            var properties = channel.CreateBasicProperties();
+
+            properties.ReplyTo = replyQueue.QueueName;
+
+            RabbitMQobj rabbitMQobj = new RabbitMQobj() { RequestStatuseID = requestStatues.ReqStatuesID, URL = "CashAllowancLessThan42" };
+
+            AsyncPayment asyncPayment = new AsyncPayment() { RequestStatuesID = requestStatues, RequestSendTime = DateTime.Now, Statues = "wating" };
+            _context.AsyncPaymentDBS.Add(asyncPayment);
             _context.SaveChanges();
 
+            rabbitMQobj.ProcID = asyncPayment.PaymentID;
+
+            var mess = JsonSerializer.Serialize(rabbitMQobj);
+            var body = Encoding.UTF8.GetBytes(mess);
+
+            channel.BasicPublish("", "UserCalcPayment", properties, body);
+
+            System.Console.ReadLine();
         }
+
 
         public Task StopAsync(CancellationToken cancellationToken)
         {

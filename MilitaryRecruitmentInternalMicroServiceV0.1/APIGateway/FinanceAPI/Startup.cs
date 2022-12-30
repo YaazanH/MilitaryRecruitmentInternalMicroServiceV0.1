@@ -17,7 +17,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using FinanceAPI.BackgroundServices;
 namespace FinanceAPI
 {
     public class Startup
@@ -65,6 +65,8 @@ namespace FinanceAPI
 
             services.AddDbContext<FinanceContext>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("FinanceContext")));
+            services.AddHostedService<RaabbitMQserv>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

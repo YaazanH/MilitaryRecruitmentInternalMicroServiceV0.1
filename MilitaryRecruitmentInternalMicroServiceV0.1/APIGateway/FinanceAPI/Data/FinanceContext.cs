@@ -8,5 +8,6 @@ namespace FinanceAPI.Data
         { }
 
         public DbSet<FinanceAPI.Models.Finance> FinanceContextDBS { get; set; }
+        public DbSet<FinanceAPI.Models.OrderRef> OrderRefDBS { get; set; }
     }
 }
