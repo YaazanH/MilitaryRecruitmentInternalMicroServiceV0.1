@@ -18,5 +18,6 @@ namespace FixedServiceAllowanceAPI.Data
         public DbSet<FixedServiceAllowanceAPI.Models.RequestStatues> RequestStatuesDBS { get; set; }
 
         public DbSet<FixedServiceAllowanceAPI.Models.AsyncFixedService> AsyncFixedServiceDB { get; set; }
+        public DbSet<FixedServiceAllowanceAPI.Models.AsyncPayment> AsyncPaymentDBS { get; set; }
     }
 }

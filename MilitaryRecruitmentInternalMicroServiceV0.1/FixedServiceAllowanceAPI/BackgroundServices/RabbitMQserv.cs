@@ -114,10 +114,10 @@ namespace FixedServiceAllowanceAPI.BackgroundServices
                 RabbitMQResponce ExternalAPIResponce = JsonSerializer.Deserialize<RabbitMQResponce>(recmess);
 
 
-                string CorrelationId = ea.BasicProperties.CorrelationId;
+                string AsyncName = ea.BasicProperties.CorrelationId;
 
 
-                UpdateRequestToDB(ExternalAPIResponce, CorrelationId, ReqStatuesID);
+                UpdateRequestToDB(ExternalAPIResponce, AsyncName);
             };
 
             channel.BasicConsume(queue: replyQueue.QueueName, autoAck: true, consumer: consumer);
@@ -127,7 +127,7 @@ namespace FixedServiceAllowanceAPI.BackgroundServices
 
             properties.ReplyTo = replyQueue.QueueName;
             RequestStatues requestStatues = _context.RequestStatuesDBS.Find(ReqStatuesID);
-            RabbitMQobj rabbitMQobj = new RabbitMQobj() { JWT = Token };
+            RabbitMQobj rabbitMQobj = new RabbitMQobj() { JWT = Token,RequestStatuseID= ReqStatuesID };
 
             AsyncFixedService asyncFixedService = new AsyncFixedService() { RequestStatuesID = requestStatues, RequestSendTime = DateTime.Now,Statues   ="wating" };
             _context.AsyncFixedServiceDB.Add(asyncFixedService);
@@ -135,10 +135,6 @@ namespace FixedServiceAllowanceAPI.BackgroundServices
             rabbitMQobj.URL = "https://host.docker.internal:40013/DefenseAPI/GetIsFixed";
             properties.CorrelationId = "GetIsFixedService";
             rabbitMQobj.ProcID = asyncFixedService.ID;
-
-
-
-
 
             var mess = JsonSerializer.Serialize(rabbitMQobj);
             var body = Encoding.UTF8.GetBytes(mess);
@@ -149,9 +145,9 @@ namespace FixedServiceAllowanceAPI.BackgroundServices
 
         }
 
-        private void UpdateRequestToDB(RabbitMQResponce externalAPIResponce, string correlationId, int processID)
+        private void UpdateRequestToDB(RabbitMQResponce externalAPIResponce, string AsyncName)
         {
-            switch (correlationId)
+            switch (AsyncName)
             {
                 case "GetIsFixedService":
 
@@ -166,7 +162,7 @@ namespace FixedServiceAllowanceAPI.BackgroundServices
                     break;
 
             }
-            CheckIfFinish(processID);
+            CheckIfFinish(externalAPIResponce.RequestStatuseID);
         }
 
         private void CheckIfFinish(int procID)
@@ -189,9 +185,7 @@ namespace FixedServiceAllowanceAPI.BackgroundServices
 
                 if (asyncFixedService.fixedservice)
                 {
-                    EndOtherPostponment(requestStatues.UserID);
-
-                    AddCert(requestStatues.UserID);
+                    CalculateExtraPAyment(requestStatues);
 
                 }
 
@@ -205,27 +199,57 @@ namespace FixedServiceAllowanceAPI.BackgroundServices
             }
         }
 
-        private void EndOtherPostponment(int UserID)
+        private void CalculateExtraPAyment(RequestStatues requestStatues)
         {
             var factory = new ConnectionFactory() { HostName = "host.docker.internal" };
-            using (var connection = factory.CreateConnection())
-            using (var channel = connection.CreateModel())
+
+            using var connection = factory.CreateConnection();
+
+            using var channel = connection.CreateModel();
+
+
+            var replyQueue = channel.QueueDeclare(queue: "", exclusive: true);
+
+            channel.QueueDeclare(queue: "UserCalcPayment", exclusive: false);
+
+            var consumer = new EventingBasicConsumer(channel);
+
+            consumer.Received += (model, ea) =>
             {
-                channel.ExchangeDeclare(exchange: "EndActiveCert", type: ExchangeType.Fanout);
+                var recbody = ea.Body.ToArray();
 
-                var message = UserID;
-                var body = Encoding.UTF8.GetBytes(message.ToString());
-                channel.BasicPublish(exchange: "EndActiveCert", routingKey: "", basicProperties: null, body: body);
+                var recmess = Encoding.UTF8.GetString(recbody);
 
-            }
-        }
+                RabbitMQResponce ExternalAPIResponce = JsonSerializer.Deserialize<RabbitMQResponce>(recmess);
 
-        private void AddCert(int CUserID)
-        {
-            FixedServiceAllowance tra = new FixedServiceAllowance { UserId = CUserID, DateOfGiven = DateTime.Now };
-            _context.FixedServiceAllowanceContextDBS.Add(tra);
+                AsyncPayment asyncPayment=_context.AsyncPaymentDBS.Where(x=>x.PaymentID==ExternalAPIResponce.ProcID).FirstOrDefault();
+                asyncPayment.EcashURl = ExternalAPIResponce.Responce;
+                _context.AsyncPaymentDBS.Update(asyncPayment);
+                _context.SaveChanges();
+                
+            };
+
+            channel.BasicConsume(queue: replyQueue.QueueName, autoAck: true, consumer: consumer);
+
+
+            var properties = channel.CreateBasicProperties();
+
+            properties.ReplyTo = replyQueue.QueueName;
+            
+            RabbitMQobj rabbitMQobj = new RabbitMQobj() {  RequestStatuseID = requestStatues.ReqStatuesID ,URL= "FixedServiceAllowance" };
+
+            AsyncPayment asyncPayment = new AsyncPayment() { RequestStatuesID = requestStatues, RequestSendTime = DateTime.Now, Statues = "wating" };
+            _context.AsyncPaymentDBS.Add(asyncPayment);
             _context.SaveChanges();
 
+            rabbitMQobj.ProcID = asyncPayment.PaymentID;
+
+            var mess = JsonSerializer.Serialize(rabbitMQobj);
+            var body = Encoding.UTF8.GetBytes(mess);
+
+            channel.BasicPublish("", "UserCalcPayment", properties, body);
+
+            System.Console.ReadLine();
         }
 
         public Task StopAsync(CancellationToken cancellationToken)

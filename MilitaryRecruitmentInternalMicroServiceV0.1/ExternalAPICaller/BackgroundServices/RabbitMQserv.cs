@@ -102,7 +102,7 @@ namespace ExternalAPICaller.BackgroundServices
                 else
                 {
                     RabbitMQResponce rabbitMQResponce = new RabbitMQResponce();
-
+                    rabbitMQResponce.RequestStatuseID = rabbitMQobj.RequestStatuseID;
                     rabbitMQResponce.ProcID = rabbitMQobj.ProcID;
                     rabbitMQResponce.Responce = resp;
 

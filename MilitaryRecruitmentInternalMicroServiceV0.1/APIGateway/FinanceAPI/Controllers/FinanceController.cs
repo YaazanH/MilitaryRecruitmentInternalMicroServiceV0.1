@@ -8,6 +8,8 @@ using System;
 using System.Linq;
 using System.Text;
 using System.Runtime.InteropServices;
+using RabbitMQ.Client;
+
 
 namespace FinanceAPI.Controllers
 {
@@ -67,6 +69,45 @@ namespace FinanceAPI.Controllers
             Uri EcashURi = EcashCallURI(Results.Amount,"0");
 
             return EcashURi;
+        }
+
+
+        [HttpGet]
+        [Route("GetConfirmPay")]
+        public void GetConfirmPay([FromBody]ConfirmPay confirmPay)
+        {
+            var factory = new ConnectionFactory() { HostName = "host.docker.internal" };
+
+            using var connection = factory.CreateConnection();
+
+            using var channel = connection.CreateModel();
+
+            channel.ExchangeDeclare(exchange: "UserConfirmPay", type: ExchangeType.Direct);
+
+            OrderRef orderRef= _context.OrderRefDBS.Where(x=>x.OrderID==Int32.Parse( confirmPay.ConfirmPayOrderRef)).FirstOrDefault();
+            var mess = orderRef.ProcesID;
+            var body = Encoding.UTF8.GetBytes(mess.ToString());
+
+            string RoueKey = "";
+
+            switch (orderRef.PosponemtName)
+            {
+                case "FixedServiceAllowance":
+                    RoueKey = "FixedServiceAllowance";
+                    break;
+
+                case "CashAllowancLessThan42":
+                    RoueKey = "CashAllowancLessThan42";
+                    break;
+
+                case "42":
+                    RoueKey = "CashAllowance";
+                    break;
+
+            }
+            channel.BasicPublish("UserConfirmPay", RoueKey, null, body);
+
+            
         }
     }
 }

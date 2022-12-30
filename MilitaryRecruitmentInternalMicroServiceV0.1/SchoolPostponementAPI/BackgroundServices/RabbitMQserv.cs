@@ -120,7 +120,7 @@ namespace SchoolPostponementAPI.BackgroundServices
                 string CorrelationId = ea.BasicProperties.CorrelationId;
 
 
-                UpdateRequestToDB(ExternalAPIResponce, CorrelationId, ReqStatuesID);
+                UpdateRequestToDB(ExternalAPIResponce, CorrelationId);
             };
 
             channel.BasicConsume(queue: replyQueue.QueueName, autoAck: true, consumer: consumer);
@@ -180,7 +180,7 @@ namespace SchoolPostponementAPI.BackgroundServices
 
         }
 
-        private void UpdateRequestToDB(RabbitMQResponce externalAPIResponce, string correlationId, int processID)
+        private void UpdateRequestToDB(RabbitMQResponce externalAPIResponce, string correlationId)
         {
             switch (correlationId)
             {
@@ -228,7 +228,7 @@ namespace SchoolPostponementAPI.BackgroundServices
 
                     break;
             }
-            CheckIfFinish(processID);
+            CheckIfFinish(externalAPIResponce.RequestStatuseID);
         }
 
         private void CheckIfFinish(int procID)

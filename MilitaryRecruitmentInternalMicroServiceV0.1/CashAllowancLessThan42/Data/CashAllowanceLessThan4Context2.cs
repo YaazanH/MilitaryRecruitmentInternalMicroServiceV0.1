@@ -20,6 +20,7 @@ namespace CashAllowancLessThan42.Data
         public DbSet<CashAllowancLessThan42.Models.UserInfo> UserInfoDBS { get; set; }
 
         public DbSet<CashAllowancLessThan42.Models.RabbitMQobj> RabbitMQobjDBS { get; set; }
+        public DbSet<CashAllowancLessThan42.Models.AsyncPayment> AsyncPaymentDBS { get; set; }
 
 
     }
