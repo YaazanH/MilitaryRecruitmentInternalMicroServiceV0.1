@@ -23,9 +23,12 @@ namespace FixedServiceAllowanceAPI.BackgroundServices
         IConnection connection { get; set; }
         IModel channel { get; set; }
 
-        public RabbitMQserv(IServiceScopeFactory factory)
+        string ExternalIP = "192.168.168.116";
+
+
+        public RabbitMQserv(IServiceScopeFactory Ifactory)
         {
-            _context = factory.CreateScope().ServiceProvider.GetRequiredService<FixedServiceAllowanceContext>();
+            _context = Ifactory.CreateScope().ServiceProvider.GetRequiredService<FixedServiceAllowanceContext>();
         }
 
         protected override Task ExecuteAsync(CancellationToken stoppingToken)
@@ -64,8 +67,10 @@ namespace FixedServiceAllowanceAPI.BackgroundServices
                 var User = _context.FixedServiceAllowanceContextDBS.Where(x => x.UserId == userInfo.UserID).FirstOrDefault();
                 if (User == null)
                 {
+
                     int ReqStatuesID = InsertRequestToDB(userInfo.UserID);
                     SendToExternalAPI(userInfo.JWT, ReqStatuesID);
+
                 }
             };
             channel.BasicConsume(queue: queName, autoAck: true, consumer: consumer);
@@ -92,11 +97,11 @@ namespace FixedServiceAllowanceAPI.BackgroundServices
         public void SendToExternalAPI(String Token, int ReqStatuesID)
         {
 
-            var factory = new ConnectionFactory() { HostName = "host.docker.internal" };
+            /*var factory = new ConnectionFactory() { HostName = "host.docker.internal" };
 
             using var connection = factory.CreateConnection();
 
-            using var channel = connection.CreateModel();
+            using var channel = connection.CreateModel();*/
 
 
             var replyQueue = channel.QueueDeclare(queue: "", exclusive: true);
@@ -132,7 +137,7 @@ namespace FixedServiceAllowanceAPI.BackgroundServices
             AsyncFixedService asyncFixedService = new AsyncFixedService() { RequestStatuesID = requestStatues, RequestSendTime = DateTime.Now,Statues   ="wating" };
             _context.AsyncFixedServiceDB.Add(asyncFixedService);
             _context.SaveChanges();
-            rabbitMQobj.URL = "https://host.docker.internal:40013/DefenseAPI/GetIsFixed";
+            rabbitMQobj.URL = "https://" + ExternalIP + ":40013/DefenseAPI/GetIsFixed";
             properties.CorrelationId = "GetIsFixedService";
             rabbitMQobj.ProcID = asyncFixedService.ID;
 
@@ -173,39 +178,49 @@ namespace FixedServiceAllowanceAPI.BackgroundServices
 
             //in gov process request canceled after certain time
             int NumberOfDaystoAllow = -15;
-
-            if (asyncFixedService.RequestReciveTime > DateTime.Today.AddDays(NumberOfDaystoAllow))
+            if (asyncFixedService.Statues == "Done")
             {
-                requestStatues.DateOfDone = DateTime.Now;
-                requestStatues.Statues = "Done";
-                _context.RequestStatuesDBS.Update(requestStatues);
-                _context.SaveChanges();
 
-
-
-                if (asyncFixedService.fixedservice)
+                if (asyncFixedService.RequestReciveTime > DateTime.Today.AddDays(NumberOfDaystoAllow))
                 {
-                    CalculateExtraPAyment(requestStatues);
+                    requestStatues.DateOfDone = DateTime.Now;
+                    requestStatues.Statues = "Done";
+                    _context.RequestStatuesDBS.Update(requestStatues);
+                    _context.SaveChanges();
+
+                    if (asyncFixedService.fixedservice)
+                    {
+                        CalculateExtraPAyment(requestStatues);
+
+                    }
+                    else
+                    {
+                        PostponmentFalid(requestStatues);
+                    }
 
                 }
+                else
+                {
+                    PostponmentFalid(requestStatues);
+                }
+            }
+        }
 
-            }
-            else
-            {
-                requestStatues.DateOfDone = DateTime.Now;
-                requestStatues.Statues = "Faild";
-                _context.RequestStatuesDBS.Update(requestStatues);
-                _context.SaveChanges();
-            }
+        public void PostponmentFalid(RequestStatues requestStatues)
+        {
+            requestStatues.DateOfDone = DateTime.Now;
+            requestStatues.Statues = "Faild";
+            _context.RequestStatuesDBS.Update(requestStatues);
+            _context.SaveChanges();
         }
 
         private void CalculateExtraPAyment(RequestStatues requestStatues)
         {
-            var factory = new ConnectionFactory() { HostName = "host.docker.internal" };
+            /*var factory = new ConnectionFactory() { HostName = "host.docker.internal" };
 
             using var connection = factory.CreateConnection();
 
-            using var channel = connection.CreateModel();
+            using var channel = connection.CreateModel();*/
 
 
             var replyQueue = channel.QueueDeclare(queue: "", exclusive: true);

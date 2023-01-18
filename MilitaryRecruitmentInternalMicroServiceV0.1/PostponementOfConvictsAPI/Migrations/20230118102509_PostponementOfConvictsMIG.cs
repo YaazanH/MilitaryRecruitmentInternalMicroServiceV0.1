@@ -1,16 +1,32 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace TravelApprovalAPI.Migrations
+namespace PostponementOfConvictsAPI.Migrations
 {
-    public partial class TravelMig : Migration
+    public partial class PostponementOfConvictsMIG : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "PostponementOfConvictsDb",
+                columns: table => new
+                {
+                    ID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserID = table.Column<int>(type: "int", nullable: false),
+                    DateOfGiven = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
+                    DateOfEnd = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PostponementOfConvictsDb", x => x.ID);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "RabbitMQobjDBS",
                 columns: table => new
                 {
+                    RequestStatuseID = table.Column<int>(type: "int", nullable: false),
                     ProcID = table.Column<int>(type: "int", nullable: false),
                     URL = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     UserID = table.Column<int>(type: "int", nullable: false),
@@ -24,6 +40,7 @@ namespace TravelApprovalAPI.Migrations
                 name: "RabbitMQResponceDBS",
                 columns: table => new
                 {
+                    RequestStatuseID = table.Column<int>(type: "int", nullable: false),
                     ProcID = table.Column<int>(type: "int", nullable: false),
                     Responce = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
@@ -37,8 +54,8 @@ namespace TravelApprovalAPI.Migrations
                 {
                     ReqStatuesID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    PostponmentType = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     UserID = table.Column<int>(type: "int", nullable: false),
+                    PostponmentType = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     DateOfRecive = table.Column<DateTime>(type: "datetime2", nullable: false),
                     DateOfDone = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Statues = table.Column<string>(type: "nvarchar(max)", nullable: true)
@@ -46,21 +63,6 @@ namespace TravelApprovalAPI.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_RequestStatuesDBS", x => x.ReqStatuesID);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "TravelApprovalDb",
-                columns: table => new
-                {
-                    ID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    UserID = table.Column<int>(type: "int", nullable: false),
-                    DateOfGiven = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
-                    DateOfEnd = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_TravelApprovalDb", x => x.ID);
                 });
 
             migrationBuilder.CreateTable(
@@ -75,22 +77,22 @@ namespace TravelApprovalAPI.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "AsyncAgeDBS",
+                name: "AsyncEntryDateDb",
                 columns: table => new
                 {
                     ID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     RequestStatuesIDReqStatuesID = table.Column<int>(type: "int", nullable: true),
                     RequestSendTime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Age = table.Column<int>(type: "int", nullable: false),
-                    statuse = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Entrydate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Statues = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     RequestReciveTime = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AsyncAgeDBS", x => x.ID);
+                    table.PrimaryKey("PK_AsyncEntryDateDb", x => x.ID);
                     table.ForeignKey(
-                        name: "FK_AsyncAgeDBS_RequestStatuesDBS_RequestStatuesIDReqStatuesID",
+                        name: "FK_AsyncEntryDateDb_RequestStatuesDBS_RequestStatuesIDReqStatuesID",
                         column: x => x.RequestStatuesIDReqStatuesID,
                         principalTable: "RequestStatuesDBS",
                         principalColumn: "ReqStatuesID",
@@ -98,22 +100,22 @@ namespace TravelApprovalAPI.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "AsynctravelDBS",
+                name: "AsyncInJailDb",
                 columns: table => new
                 {
                     ID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     RequestStatuesIDReqStatuesID = table.Column<int>(type: "int", nullable: true),
                     RequestSendTime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    travel = table.Column<bool>(type: "bit", nullable: false),
-                    statuse = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    InJail = table.Column<bool>(type: "bit", nullable: false),
+                    Statues = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     RequestReciveTime = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AsynctravelDBS", x => x.ID);
+                    table.PrimaryKey("PK_AsyncInJailDb", x => x.ID);
                     table.ForeignKey(
-                        name: "FK_AsynctravelDBS_RequestStatuesDBS_RequestStatuesIDReqStatuesID",
+                        name: "FK_AsyncInJailDb_RequestStatuesDBS_RequestStatuesIDReqStatuesID",
                         column: x => x.RequestStatuesIDReqStatuesID,
                         principalTable: "RequestStatuesDBS",
                         principalColumn: "ReqStatuesID",
@@ -121,45 +123,22 @@ namespace TravelApprovalAPI.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "AsyncUserTransactionsDBS",
+                name: "AsyncYearsRemaningDb",
                 columns: table => new
                 {
                     ID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     RequestStatuesIDReqStatuesID = table.Column<int>(type: "int", nullable: true),
                     RequestSendTime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UserTransactions = table.Column<bool>(type: "bit", nullable: false),
-                    statuse = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Years = table.Column<int>(type: "int", nullable: false),
+                    Statues = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     RequestReciveTime = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AsyncUserTransactionsDBS", x => x.ID);
+                    table.PrimaryKey("PK_AsyncYearsRemaningDb", x => x.ID);
                     table.ForeignKey(
-                        name: "FK_AsyncUserTransactionsDBS_RequestStatuesDBS_RequestStatuesIDReqStatuesID",
-                        column: x => x.RequestStatuesIDReqStatuesID,
-                        principalTable: "RequestStatuesDBS",
-                        principalColumn: "ReqStatuesID",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "AsynLaborDBS",
-                columns: table => new
-                {
-                    ID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    RequestStatuesIDReqStatuesID = table.Column<int>(type: "int", nullable: true),
-                    RequestSendTime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    IsALaborWorker = table.Column<bool>(type: "bit", nullable: false),
-                    statuse = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    RequestReciveTime = table.Column<DateTime>(type: "datetime2", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AsynLaborDBS", x => x.ID);
-                    table.ForeignKey(
-                        name: "FK_AsynLaborDBS_RequestStatuesDBS_RequestStatuesIDReqStatuesID",
+                        name: "FK_AsyncYearsRemaningDb_RequestStatuesDBS_RequestStatuesIDReqStatuesID",
                         column: x => x.RequestStatuesIDReqStatuesID,
                         principalTable: "RequestStatuesDBS",
                         principalColumn: "ReqStatuesID",
@@ -167,48 +146,40 @@ namespace TravelApprovalAPI.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_AsyncAgeDBS_RequestStatuesIDReqStatuesID",
-                table: "AsyncAgeDBS",
+                name: "IX_AsyncEntryDateDb_RequestStatuesIDReqStatuesID",
+                table: "AsyncEntryDateDb",
                 column: "RequestStatuesIDReqStatuesID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_AsynctravelDBS_RequestStatuesIDReqStatuesID",
-                table: "AsynctravelDBS",
+                name: "IX_AsyncInJailDb_RequestStatuesIDReqStatuesID",
+                table: "AsyncInJailDb",
                 column: "RequestStatuesIDReqStatuesID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_AsyncUserTransactionsDBS_RequestStatuesIDReqStatuesID",
-                table: "AsyncUserTransactionsDBS",
-                column: "RequestStatuesIDReqStatuesID");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_AsynLaborDBS_RequestStatuesIDReqStatuesID",
-                table: "AsynLaborDBS",
+                name: "IX_AsyncYearsRemaningDb_RequestStatuesIDReqStatuesID",
+                table: "AsyncYearsRemaningDb",
                 column: "RequestStatuesIDReqStatuesID");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "AsyncAgeDBS");
+                name: "AsyncEntryDateDb");
 
             migrationBuilder.DropTable(
-                name: "AsynctravelDBS");
+                name: "AsyncInJailDb");
 
             migrationBuilder.DropTable(
-                name: "AsyncUserTransactionsDBS");
+                name: "AsyncYearsRemaningDb");
 
             migrationBuilder.DropTable(
-                name: "AsynLaborDBS");
+                name: "PostponementOfConvictsDb");
 
             migrationBuilder.DropTable(
                 name: "RabbitMQobjDBS");
 
             migrationBuilder.DropTable(
                 name: "RabbitMQResponceDBS");
-
-            migrationBuilder.DropTable(
-                name: "TravelApprovalDb");
 
             migrationBuilder.DropTable(
                 name: "UserInfoDBS");

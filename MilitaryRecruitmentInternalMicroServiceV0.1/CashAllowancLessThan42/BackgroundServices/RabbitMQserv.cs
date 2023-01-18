@@ -23,9 +23,11 @@ namespace CashAllowancLessThan42.BackgroundServices
         IConnection connection { get; set; }
         IModel channel { get; set; }
 
-        public RabbitMQserv(IServiceScopeFactory factory)
+        string ExternalIP = "192.168.168.116";
+
+        public RabbitMQserv(IServiceScopeFactory Ifactory)
         {
-            _context = factory.CreateScope().ServiceProvider.GetRequiredService<CashAllowancLessThan42Context>();
+            _context = Ifactory.CreateScope().ServiceProvider.GetRequiredService<CashAllowancLessThan42Context>();
         }
 
         protected override Task ExecuteAsync(CancellationToken stoppingToken)
@@ -92,11 +94,11 @@ namespace CashAllowancLessThan42.BackgroundServices
         public void SendToExternalAPI(String Token, int ReqStatuesID)
         {
 
-            var factory = new ConnectionFactory() { HostName = "host.docker.internal" };
+            /*var factory = new ConnectionFactory() { HostName = "host.docker.internal" };
 
             using var connection = factory.CreateConnection();
 
-            using var channel = connection.CreateModel();
+            using var channel = connection.CreateModel();*/
 
 
             var replyQueue = channel.QueueDeclare(queue: "", exclusive: true);
@@ -128,43 +130,34 @@ namespace CashAllowancLessThan42.BackgroundServices
             properties.ReplyTo = replyQueue.QueueName;
             RequestStatues requestStatues = _context.RequestStatuesDBS.Find(ReqStatuesID);
             RabbitMQobj rabbitMQobj = new RabbitMQobj() { JWT = Token };
-            for (int i = 0; i < 4; i++)
+            for (int i = 0; i < 3; i++)
             {
                 if (i == 0)
                 {
                     Asynctravel asynctravel = new Asynctravel() { RequestStatuesID = requestStatues,RequestSendTime = DateTime.Now,statuse="wating" };
                     _context.AsynctravelDBS.Add(asynctravel);
                     _context.SaveChanges();
-                    rabbitMQobj.URL = "https://host.docker.internal:40011/Passport/GetIstravel";
+                    rabbitMQobj.URL = "https://" + ExternalIP + ":40011/Passport/GetIstravel";
                     properties.CorrelationId = "GetIstravel";
                     rabbitMQobj.ProcID = asynctravel.ID;
                 }
 
-                if (i == 1)
-                {
-                    AsyncUserTransactions asyncUserTransactions = new AsyncUserTransactions() { RequestStatuesID = requestStatues, RequestSendTime = DateTime.Now, statuse = "wating" };
-                    _context.AsyncUserTransactionsDBS.Add(asyncUserTransactions);
-                    _context.SaveChanges();
-                    rabbitMQobj.URL = "";// "https://host.docker.internal:40022/Finance/GetUserTransactions";
-                    properties.CorrelationId = "GetUserTransactions";
-                    rabbitMQobj.ProcID = asyncUserTransactions.ID;
-                }
-                if (i == 2)
+                else if (i == 1)
                 {
                     AsyncDaysOutsideCoun asyncDaysOutsideCoun = new AsyncDaysOutsideCoun() { RequestStatuesID = requestStatues, RequestSendTime = DateTime.Now, statuse = "wating" };
                     _context.AsyncDaysOutsideCounDBS.Add(asyncDaysOutsideCoun);
                     _context.SaveChanges();
                     rabbitMQobj.ProcID = asyncDaysOutsideCoun.ID;
-                    rabbitMQobj.URL = "";// "https://host.docker.internal:40011/Passport/GetNumberOfDaysOutsideCoun";
+                    rabbitMQobj.URL =  "https://" + ExternalIP + ":40011/Passport/GetNumberOfDaysOutsideCoun";
                     properties.CorrelationId = "GetNumberOfDaysOutsideCoun";
                 }
-                if (i == 3)
+                else if (i == 2)
                 {
                     AsyncAge asyncAge = new AsyncAge() { RequestStatuesID = requestStatues, RequestSendTime = DateTime.Now, statuse = "wating" };
                     _context.AsyncAgeDBS.Add(asyncAge);
                     _context.SaveChanges();
                     rabbitMQobj.ProcID = asyncAge.ID;
-                    rabbitMQobj.URL = "";//"https://host.docker.internal:40018/RecordAdminstration/GetAge";
+                    rabbitMQobj.URL = "https://" + ExternalIP + ":40018/RecordAdminstration/GetAge";
                     properties.CorrelationId = "GetAge";
                 }
 
@@ -189,17 +182,6 @@ namespace CashAllowancLessThan42.BackgroundServices
                     asynctravel.RequestReciveTime = DateTime.Now;
                     asynctravel.statuse = "Done";
                     _context.AsynctravelDBS.Update(asynctravel);
-                    _context.SaveChanges();
-
-                    break;
-                case "GetUserTransactions":
-
-                    AsyncUserTransactions asyncUserTransactions = _context.AsyncUserTransactionsDBS.Find(externalAPIResponce.ProcID);
-
-                    asyncUserTransactions.UserTransactions = true;// bool.Parse(externalAPIResponce.Responce);
-                    asyncUserTransactions.RequestReciveTime = DateTime.Now;
-                    asyncUserTransactions.statuse = "Done";
-                    _context.AsyncUserTransactionsDBS.Update(asyncUserTransactions);
                     _context.SaveChanges();
 
                     break;
@@ -231,49 +213,86 @@ namespace CashAllowancLessThan42.BackgroundServices
         private void CheckIfFinish(int procID)
         {
             RequestStatues requestStatues = _context.RequestStatuesDBS.Find(procID);
-            Asynctravel asynctravel = _context.AsynctravelDBS.Where(x => x.RequestStatuesID== requestStatues).FirstOrDefault();
-            AsyncUserTransactions asyncUserTransactions = _context.AsyncUserTransactionsDBS.Where(x => x.RequestStatuesID == requestStatues).FirstOrDefault();
+            Asynctravel asynctravel = _context.AsynctravelDBS.Where(x => x.RequestStatuesID== requestStatues).FirstOrDefault();          
             AsyncDaysOutsideCoun asyncDaysOutsideCoun = _context.AsyncDaysOutsideCounDBS.Where(x => x.RequestStatuesID == requestStatues).FirstOrDefault();
             AsyncAge asyncAge = _context.AsyncAgeDBS.Where(x => x.RequestStatuesID == requestStatues).FirstOrDefault();
 
             //in gov process request canceled after certain time
             int NumberOfDaystoAllow = -15;
-
-            if (asynctravel.RequestReciveTime>DateTime.Today.AddDays(NumberOfDaystoAllow) && asyncUserTransactions.RequestReciveTime > DateTime.Today.AddDays(NumberOfDaystoAllow) && asyncDaysOutsideCoun.RequestReciveTime > DateTime.Today.AddDays(NumberOfDaystoAllow) && asyncAge.RequestReciveTime > DateTime.Today.AddDays(NumberOfDaystoAllow) )
+            if (asyncAge.statuse == "Done" && asyncDaysOutsideCoun.statuse == "Done" && asynctravel.statuse == "Done")
             {
-                requestStatues.DateOfDone = DateTime.Now;
-                requestStatues.Statues = "Done";
-                _context.RequestStatuesDBS.Update(requestStatues);
-                _context.SaveChanges();
-
-                if (asyncAge.Age <= 42)
+                if (asynctravel.RequestReciveTime > DateTime.Today.AddDays(NumberOfDaystoAllow) && asyncDaysOutsideCoun.RequestReciveTime > DateTime.Today.AddDays(NumberOfDaystoAllow) && asyncAge.RequestReciveTime > DateTime.Today.AddDays(NumberOfDaystoAllow))
                 {
-                    if (asynctravel.travel)
+                    requestStatues.DateOfDone = DateTime.Now;
+                    requestStatues.Statues = "Done";
+                    _context.RequestStatuesDBS.Update(requestStatues);
+                    _context.SaveChanges();
+
+                    if (asyncAge.Age <= 42)
                     {
-                        if (asyncUserTransactions.UserTransactions)
+                        if (asynctravel.travel)
                         {
-                            CalculateExtraPAyment(requestStatues);
+
+                            if (asyncDaysOutsideCoun.DaysOutsideCoun >= 1460)
+                            {
+
+                                CalculateExtraPAyment(requestStatues, "CashAllowance7");
+                            }
+
+                            else if (asyncDaysOutsideCoun.DaysOutsideCoun > 1095 && asyncDaysOutsideCoun.DaysOutsideCoun < 1460)
+                            {
+
+                                CalculateExtraPAyment(requestStatues, "CashAllowance8");
+                            }
+
+                            else if (asyncDaysOutsideCoun.DaysOutsideCoun > 730 && asyncDaysOutsideCoun.DaysOutsideCoun < 1095)
+                            {
+
+                                CalculateExtraPAyment(requestStatues, "CashAllowance9");
+                            }
+
+                            else if (asyncDaysOutsideCoun.DaysOutsideCoun > 365 && asyncDaysOutsideCoun.DaysOutsideCoun < 730)
+                            {
+                                CalculateExtraPAyment(requestStatues, "CashAllowance10");
+                            }
+                            else
+                            {
+                                PostponmentFalid(requestStatues);
+                            }
 
                         }
+                        else
+                        {
+                            PostponmentFalid(requestStatues);
+                        }
+                    }
+                    else
+                    {
+                        PostponmentFalid(requestStatues);
                     }
                 }
-            }
-            else
-            {
-                requestStatues.DateOfDone = DateTime.Now;
-                requestStatues.Statues = "Faild";
-                _context.RequestStatuesDBS.Update(requestStatues);
-                _context.SaveChanges();
+                else
+                {
+                    PostponmentFalid(requestStatues);
+                }
             }
         }
 
-        private void CalculateExtraPAyment(RequestStatues requestStatues)
+        public void PostponmentFalid(RequestStatues requestStatues)
         {
-            var factory = new ConnectionFactory() { HostName = "host.docker.internal" };
+            requestStatues.DateOfDone = DateTime.Now;
+            requestStatues.Statues = "Faild";
+            _context.RequestStatuesDBS.Update(requestStatues);
+            _context.SaveChanges();
+        }
+
+        private void CalculateExtraPAyment(RequestStatues requestStatues,string Name)
+        {
+            /*var factory = new ConnectionFactory() { HostName = "host.docker.internal" };
 
             using var connection = factory.CreateConnection();
 
-            using var channel = connection.CreateModel();
+            using var channel = connection.CreateModel();*/
 
 
             var replyQueue = channel.QueueDeclare(queue: "", exclusive: true);
@@ -304,7 +323,7 @@ namespace CashAllowancLessThan42.BackgroundServices
 
             properties.ReplyTo = replyQueue.QueueName;
 
-            RabbitMQobj rabbitMQobj = new RabbitMQobj() { RequestStatuseID = requestStatues.ReqStatuesID, URL = "CashAllowancLessThan42" };
+            RabbitMQobj rabbitMQobj = new RabbitMQobj() { RequestStatuseID = requestStatues.ReqStatuesID, URL = Name };
 
             AsyncPayment asyncPayment = new AsyncPayment() { RequestStatuesID = requestStatues, RequestSendTime = DateTime.Now, Statues = "wating" };
             _context.AsyncPaymentDBS.Add(asyncPayment);

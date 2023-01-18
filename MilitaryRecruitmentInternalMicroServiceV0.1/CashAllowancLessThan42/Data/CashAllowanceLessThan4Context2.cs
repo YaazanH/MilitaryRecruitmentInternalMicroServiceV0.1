@@ -13,7 +13,7 @@ namespace CashAllowancLessThan42.Data
         public DbSet<CashAllowancLessThan42.Models.AsyncAge> AsyncAgeDBS { get; set; }
         public DbSet<CashAllowancLessThan42.Models.AsyncDaysOutsideCoun> AsyncDaysOutsideCounDBS { get; set; }
         public DbSet<CashAllowancLessThan42.Models.Asynctravel> AsynctravelDBS { get; set; }
-        public DbSet<CashAllowancLessThan42.Models.AsyncUserTransactions> AsyncUserTransactionsDBS { get; set; }
+
 
         public DbSet<CashAllowancLessThan42.Models.RabbitMQResponce> RabbitMQResponceDBS { get; set; }
 

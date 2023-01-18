@@ -38,6 +38,9 @@ namespace CashAllowancLessThan42.Migrations
                     b.Property<int?>("RequestStatuesIDReqStatuesID")
                         .HasColumnType("int");
 
+                    b.Property<string>("statuse")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("ID");
 
                     b.HasIndex("RequestStatuesIDReqStatuesID");
@@ -64,6 +67,9 @@ namespace CashAllowancLessThan42.Migrations
                     b.Property<int?>("RequestStatuesIDReqStatuesID")
                         .HasColumnType("int");
 
+                    b.Property<string>("statuse")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("ID");
 
                     b.HasIndex("RequestStatuesIDReqStatuesID");
@@ -71,12 +77,21 @@ namespace CashAllowancLessThan42.Migrations
                     b.ToTable("AsyncDaysOutsideCounDBS");
                 });
 
-            modelBuilder.Entity("CashAllowancLessThan42.Models.AsyncUserTransactions", b =>
+            modelBuilder.Entity("CashAllowancLessThan42.Models.AsyncPayment", b =>
                 {
-                    b.Property<int>("ID")
+                    b.Property<int>("PaymentID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<double>("Amount")
+                        .HasColumnType("float");
+
+                    b.Property<string>("EcashURl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("Payed")
+                        .HasColumnType("bit");
 
                     b.Property<DateTime>("RequestReciveTime")
                         .HasColumnType("datetime2");
@@ -87,14 +102,14 @@ namespace CashAllowancLessThan42.Migrations
                     b.Property<int?>("RequestStatuesIDReqStatuesID")
                         .HasColumnType("int");
 
-                    b.Property<bool>("UserTransactions")
-                        .HasColumnType("bit");
+                    b.Property<string>("Statues")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("ID");
+                    b.HasKey("PaymentID");
 
                     b.HasIndex("RequestStatuesIDReqStatuesID");
 
-                    b.ToTable("AsyncUserTransactionsDBS");
+                    b.ToTable("AsyncPaymentDBS");
                 });
 
             modelBuilder.Entity("CashAllowancLessThan42.Models.Asynctravel", b =>
@@ -112,6 +127,9 @@ namespace CashAllowancLessThan42.Migrations
 
                     b.Property<int?>("RequestStatuesIDReqStatuesID")
                         .HasColumnType("int");
+
+                    b.Property<string>("statuse")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("travel")
                         .HasColumnType("bit");
@@ -141,6 +159,40 @@ namespace CashAllowancLessThan42.Migrations
                     b.ToTable("CashAllowancLessThan42Db");
                 });
 
+            modelBuilder.Entity("CashAllowancLessThan42.Models.RabbitMQResponce", b =>
+                {
+                    b.Property<int>("ProcID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RequestStatuseID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Responce")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.ToTable("RabbitMQResponceDBS");
+                });
+
+            modelBuilder.Entity("CashAllowancLessThan42.Models.RabbitMQobj", b =>
+                {
+                    b.Property<string>("JWT")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ProcID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RequestStatuseID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("URL")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("UserID")
+                        .HasColumnType("int");
+
+                    b.ToTable("RabbitMQobjDBS");
+                });
+
             modelBuilder.Entity("CashAllowancLessThan42.Models.RequestStatues", b =>
                 {
                     b.Property<int>("ReqStatuesID")
@@ -154,6 +206,9 @@ namespace CashAllowancLessThan42.Migrations
                     b.Property<DateTime>("DateOfRecive")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("PostponmentType")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Statues")
                         .HasColumnType("nvarchar(max)");
 
@@ -163,6 +218,17 @@ namespace CashAllowancLessThan42.Migrations
                     b.HasKey("ReqStatuesID");
 
                     b.ToTable("RequestStatuesDBS");
+                });
+
+            modelBuilder.Entity("CashAllowancLessThan42.Models.UserInfo", b =>
+                {
+                    b.Property<string>("JWT")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("UserID")
+                        .HasColumnType("int");
+
+                    b.ToTable("UserInfoDBS");
                 });
 
             modelBuilder.Entity("CashAllowancLessThan42.Models.AsyncAge", b =>
@@ -183,7 +249,7 @@ namespace CashAllowancLessThan42.Migrations
                     b.Navigation("RequestStatuesID");
                 });
 
-            modelBuilder.Entity("CashAllowancLessThan42.Models.AsyncUserTransactions", b =>
+            modelBuilder.Entity("CashAllowancLessThan42.Models.AsyncPayment", b =>
                 {
                     b.HasOne("CashAllowancLessThan42.Models.RequestStatues", "RequestStatuesID")
                         .WithMany()

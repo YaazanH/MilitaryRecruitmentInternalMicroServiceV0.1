@@ -26,9 +26,9 @@ namespace ExternalAPICaller.BackgroundServices
         IConnection connection { get; set; }
         IModel channel { get; set; }
 
-        public RabbitMQserv(IServiceScopeFactory factory)
+        public RabbitMQserv(IServiceScopeFactory Ifactory)
         {
-           // _context = factory.CreateScope().ServiceProvider.GetRequiredService<AlonePostponementContext>();
+            // _context = Ifactory.CreateScope().ServiceProvider.GetRequiredService<AlonePostponementContext>();
         }
         private async Task<string> APICall(string GURI, string Token)
         {

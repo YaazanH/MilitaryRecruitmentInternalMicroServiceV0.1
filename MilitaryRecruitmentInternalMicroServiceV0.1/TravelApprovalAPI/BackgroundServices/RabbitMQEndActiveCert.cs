@@ -23,9 +23,9 @@ namespace TravelApprovalAPI.BackgroundServices
         IConnection connection { get; set; }
         IModel channel { get; set; }
 
-        public RabbitMQEndActiveCert(IServiceScopeFactory factory)
+        public RabbitMQEndActiveCert(IServiceScopeFactory Ifactory)
         {
-            _context = factory.CreateScope().ServiceProvider.GetRequiredService<TravelApprovalContext>();
+            _context = Ifactory.CreateScope().ServiceProvider.GetRequiredService<TravelApprovalContext>();
         }
 
         protected override Task ExecuteAsync(CancellationToken stoppingToken)

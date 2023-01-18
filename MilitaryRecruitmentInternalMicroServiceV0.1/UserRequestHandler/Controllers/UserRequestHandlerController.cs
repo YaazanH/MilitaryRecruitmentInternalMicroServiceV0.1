@@ -67,6 +67,7 @@ namespace UserRequestHandler.Controllers
             UserInfo userInfo = new UserInfo();
             userInfo.UserID = GetCurrentUserID();
             userInfo.JWT=GetCurrentUserToken();
+
             var mess = System.Text.Json.JsonSerializer.Serialize(userInfo);
             var body = Encoding.UTF8.GetBytes(mess);
 

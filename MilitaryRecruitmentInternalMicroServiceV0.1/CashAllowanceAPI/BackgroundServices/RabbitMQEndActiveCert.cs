@@ -23,9 +23,9 @@ namespace CashAllowanceAPI.BackgroundServices
         IConnection connection { get; set; }
         IModel channel { get; set; }
 
-        public RabbitMQEndActiveCert(IServiceScopeFactory factory)
+        public RabbitMQEndActiveCert(IServiceScopeFactory Ifactory)
         {
-            _context = factory.CreateScope().ServiceProvider.GetRequiredService<CashAllowanceContext>();
+            _context = Ifactory.CreateScope().ServiceProvider.GetRequiredService<CashAllowanceContext>();
         }
 
         protected override Task ExecuteAsync(CancellationToken stoppingToken)

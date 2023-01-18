@@ -23,9 +23,9 @@
 //        IConnection connection { get; set; }
 //        IModel channel { get; set; }
 
-//        public RabbitMQserv(IServiceScopeFactory factory)
+//        public RabbitMQserv(IServiceScopeFactory Ifactory)
 //        {
-//            _context = factory.CreateScope().ServiceProvider.GetRequiredService<CashAllowancLessThan42Context>();
+//            _context = Ifactory.CreateScope().ServiceProvider.GetRequiredService<CashAllowancLessThan42Context>();
 //        }
 
 //        protected override Task ExecuteAsync(CancellationToken stoppingToken)

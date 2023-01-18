@@ -19,6 +19,35 @@ namespace ObligatoryServiceAPI.Migrations
                 .HasAnnotation("ProductVersion", "5.0.17")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+            modelBuilder.Entity("ObligatoryServiceAPI.Models.AsyncDonatedBlood", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<bool>("Donated")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("RequestReciveTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("RequestSendTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("RequestStatuesIDReqStatuesID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Statues")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("RequestStatuesIDReqStatuesID");
+
+                    b.ToTable("AsyncDonatedBloodDB");
+                });
+
             modelBuilder.Entity("ObligatoryServiceAPI.Models.ObligatoryService", b =>
                 {
                     b.Property<int>("ID")
@@ -38,6 +67,87 @@ namespace ObligatoryServiceAPI.Migrations
                     b.HasKey("ID");
 
                     b.ToTable("ObligatoryServiceDB");
+                });
+
+            modelBuilder.Entity("ObligatoryServiceAPI.Models.RabbitMQResponce", b =>
+                {
+                    b.Property<int>("ProcID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RequestStatuseID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Responce")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.ToTable("RabbitMQResponceDBS");
+                });
+
+            modelBuilder.Entity("ObligatoryServiceAPI.Models.RabbitMQobj", b =>
+                {
+                    b.Property<string>("JWT")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ProcID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RequestStatuseID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("URL")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("UserID")
+                        .HasColumnType("int");
+
+                    b.ToTable("RabbitMQobjDBS");
+                });
+
+            modelBuilder.Entity("ObligatoryServiceAPI.Models.RequestStatues", b =>
+                {
+                    b.Property<int>("ReqStatuesID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("DateOfDone")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DateOfRecive")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("PostponmentType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Statues")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("UserID")
+                        .HasColumnType("int");
+
+                    b.HasKey("ReqStatuesID");
+
+                    b.ToTable("RequestStatuesDBS");
+                });
+
+            modelBuilder.Entity("ObligatoryServiceAPI.Models.UserInfo", b =>
+                {
+                    b.Property<string>("JWT")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("UserID")
+                        .HasColumnType("int");
+
+                    b.ToTable("UserInfoDBS");
+                });
+
+            modelBuilder.Entity("ObligatoryServiceAPI.Models.AsyncDonatedBlood", b =>
+                {
+                    b.HasOne("ObligatoryServiceAPI.Models.RequestStatues", "RequestStatuesID")
+                        .WithMany()
+                        .HasForeignKey("RequestStatuesIDReqStatuesID");
+
+                    b.Navigation("RequestStatuesID");
                 });
 #pragma warning restore 612, 618
         }

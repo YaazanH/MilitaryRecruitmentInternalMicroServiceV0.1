@@ -77,35 +77,6 @@ namespace TravelApprovalAPI.Migrations
                     b.ToTable("AsyncAgeDBS");
                 });
 
-            modelBuilder.Entity("TravelApprovalAPI.Models.AsyncUserTransactions", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTime>("RequestReciveTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("RequestSendTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("RequestStatuesIDReqStatuesID")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("UserTransactions")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("statuse")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("ID");
-
-                    b.HasIndex("RequestStatuesIDReqStatuesID");
-
-                    b.ToTable("AsyncUserTransactionsDBS");
-                });
-
             modelBuilder.Entity("TravelApprovalAPI.Models.Asynctravel", b =>
                 {
                     b.Property<int>("ID")
@@ -140,6 +111,9 @@ namespace TravelApprovalAPI.Migrations
                     b.Property<int>("ProcID")
                         .HasColumnType("int");
 
+                    b.Property<int>("RequestStatuseID")
+                        .HasColumnType("int");
+
                     b.Property<string>("Responce")
                         .HasColumnType("nvarchar(max)");
 
@@ -152,6 +126,9 @@ namespace TravelApprovalAPI.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("ProcID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RequestStatuseID")
                         .HasColumnType("int");
 
                     b.Property<string>("URL")
@@ -232,15 +209,6 @@ namespace TravelApprovalAPI.Migrations
                 });
 
             modelBuilder.Entity("TravelApprovalAPI.Models.AsyncAge", b =>
-                {
-                    b.HasOne("TravelApprovalAPI.Models.RequestStatues", "RequestStatuesID")
-                        .WithMany()
-                        .HasForeignKey("RequestStatuesIDReqStatuesID");
-
-                    b.Navigation("RequestStatuesID");
-                });
-
-            modelBuilder.Entity("TravelApprovalAPI.Models.AsyncUserTransactions", b =>
                 {
                     b.HasOne("TravelApprovalAPI.Models.RequestStatues", "RequestStatuesID")
                         .WithMany()

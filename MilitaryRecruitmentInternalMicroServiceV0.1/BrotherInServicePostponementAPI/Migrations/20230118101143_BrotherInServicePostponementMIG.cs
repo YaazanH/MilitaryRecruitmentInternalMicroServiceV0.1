@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace BrotherInServicePostponementAPI.Migrations
 {
-    public partial class BrotherInServiceMIG : Migration
+    public partial class BrotherInServicePostponementMIG : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -26,6 +26,7 @@ namespace BrotherInServicePostponementAPI.Migrations
                 name: "RabbitMQobjDBS",
                 columns: table => new
                 {
+                    RequestStatuseID = table.Column<int>(type: "int", nullable: false),
                     ProcID = table.Column<int>(type: "int", nullable: false),
                     URL = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     UserID = table.Column<int>(type: "int", nullable: false),
@@ -39,6 +40,7 @@ namespace BrotherInServicePostponementAPI.Migrations
                 name: "RabbitMQResponceDBS",
                 columns: table => new
                 {
+                    RequestStatuseID = table.Column<int>(type: "int", nullable: false),
                     ProcID = table.Column<int>(type: "int", nullable: false),
                     Responce = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },

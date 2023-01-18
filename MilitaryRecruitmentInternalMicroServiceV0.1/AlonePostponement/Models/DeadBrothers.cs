@@ -17,7 +17,7 @@ namespace AlonePostponement.Models
         //check if all brothers are dead
         public bool AllDeadBrothers { get; set; }
 
-        //public IActionResult Result { get; set; }
+        public string Statues { get; set; }
 
         public DateTime RequestReciveTime { get; set; }
     }

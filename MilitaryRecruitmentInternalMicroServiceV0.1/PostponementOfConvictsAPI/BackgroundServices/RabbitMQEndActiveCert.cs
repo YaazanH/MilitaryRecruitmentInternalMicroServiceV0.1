@@ -23,9 +23,9 @@ namespace PostponementOfConvictsAPI.BackgroundServices
         IConnection connection { get; set; }
         IModel channel { get; set; }
 
-        public RabbitMQEndActiveCert(IServiceScopeFactory factory)
+        public RabbitMQEndActiveCert(IServiceScopeFactory Ifactory)
         {
-            _context = factory.CreateScope().ServiceProvider.GetRequiredService<PostponementOfConvictsContext>();
+            _context = Ifactory.CreateScope().ServiceProvider.GetRequiredService<PostponementOfConvictsContext>();
         }
 
         protected override Task ExecuteAsync(CancellationToken stoppingToken)

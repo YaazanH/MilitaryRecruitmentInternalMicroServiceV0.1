@@ -54,15 +54,13 @@ namespace TravelApprovalAPI.Controllers
             {
 
 
-                Asynctravel asynctravel = _context.AsynctravelDBS.Where(x => x.RequestStatuesID == requestStatues).FirstOrDefault();
-                AsyncUserTransactions asyncUserTransactions = _context.AsyncUserTransactionsDBS.Where(x => x.RequestStatuesID == requestStatues).FirstOrDefault();
+                Asynctravel asynctravel = _context.AsynctravelDBS.Where(x => x.RequestStatuesID == requestStatues).FirstOrDefault();                
                 AsynLabor asynLabor = _context.AsynLaborDBS.Where(x => x.RequestStatuesID == requestStatues).FirstOrDefault();
                 AsyncAge asyncAge = _context.AsyncAgeDBS.Where(x => x.RequestStatuesID == requestStatues).FirstOrDefault();
 
                 Dictionary<string, string> result = new Dictionary<string, string>();
 
-                result.Add("asynctravel", asynctravel.statuse);
-                result.Add("asyncUserTransactions", asyncUserTransactions.statuse);
+                result.Add("asynctravel", asynctravel.statuse);                
                 result.Add("asynLabor", asynLabor.statuse);
                 result.Add("asyncAge", asyncAge.statuse);
 

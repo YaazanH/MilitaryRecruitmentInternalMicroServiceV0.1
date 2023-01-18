@@ -23,9 +23,11 @@ namespace CashAllowanceAPI.BackgroundServices
         IConnection connection { get; set; }
         IModel channel { get; set; }
 
-        public RabbitMQserv(IServiceScopeFactory factory)
+        string ExternalIP = "192.168.168.116";
+
+        public RabbitMQserv(IServiceScopeFactory Ifactory)
         {
-            _context = factory.CreateScope().ServiceProvider.GetRequiredService<CashAllowanceContext>();
+            _context = Ifactory.CreateScope().ServiceProvider.GetRequiredService<CashAllowanceContext>();
         }
 
         protected override Task ExecuteAsync(CancellationToken stoppingToken)
@@ -92,11 +94,11 @@ namespace CashAllowanceAPI.BackgroundServices
         public void SendToExternalAPI(String Token, int ReqStatuesID)
         {
 
-            var factory = new ConnectionFactory() { HostName = "host.docker.internal" };
+           /* var factory = new ConnectionFactory() { HostName = "host.docker.internal" };
 
             using var connection = factory.CreateConnection();
 
-            using var channel = connection.CreateModel();
+            using var channel = connection.CreateModel();*/
 
 
             var replyQueue = channel.QueueDeclare(queue: "", exclusive: true);
@@ -128,33 +130,22 @@ namespace CashAllowanceAPI.BackgroundServices
             properties.ReplyTo = replyQueue.QueueName;
             RequestStatues requestStatues = _context.RequestStatuesDBS.Find(ReqStatuesID);
             RabbitMQobj rabbitMQobj = new RabbitMQobj() { JWT = Token };
-            for (int i = 0; i < 2; i++)
-            {
-                if (i == 0)
-                {
+
                     AsyncAge asyncage = new AsyncAge() { RequestStatuesID = requestStatues,RequestSendTime = DateTime.Now,Statues="wating" };
                     _context.AsyncAgeDb.Add(asyncage);
                     _context.SaveChanges();
-                    rabbitMQobj.URL = "https://host.docker.internal:40018/RecordAdminstration/GetAge";
+                    rabbitMQobj.URL = "https://" + ExternalIP + ":40018/RecordAdminstration/GetAge";
                     properties.CorrelationId = "GetAge";
                     rabbitMQobj.ProcID = asyncage.ID;
-                }
+                
 
-                if (i == 1)
-                {
-                    AsyncUserTransactions asyncUserTransactions = new AsyncUserTransactions() { RequestStatuesID = requestStatues, RequestSendTime = DateTime.Now,Statues="wating" };
-                    _context.AsyncUserTransactionsDb.Add(asyncUserTransactions);
-                    _context.SaveChanges();
-                    rabbitMQobj.URL = "https://host.docker.internal:40022/Finance/GetUserTransactions";
-                    properties.CorrelationId = "GetUserTransactions";
-                    rabbitMQobj.ProcID = asyncUserTransactions.ID;
-                }
+
              
                 var mess = JsonSerializer.Serialize(rabbitMQobj);
                 var body = Encoding.UTF8.GetBytes(mess);
 
                 channel.BasicPublish("", "requestQueue", properties, body);
-            }
+            
             System.Console.ReadLine();
 
         }
@@ -163,18 +154,6 @@ namespace CashAllowanceAPI.BackgroundServices
         {
             switch (correlationId)
             {
-        
-                case "GetUserTransactions":
-
-                    AsyncUserTransactions asyncUserTransactions = _context.AsyncUserTransactionsDb.Find(externalAPIResponce.ProcID);
-
-                    asyncUserTransactions.UserTransactions = true;// bool.Parse(externalAPIResponce.Responce);
-                    asyncUserTransactions.RequestReciveTime = DateTime.Now;
-                    asyncUserTransactions.Statues = "Done";      
-                    _context.AsyncUserTransactionsDb.Update(asyncUserTransactions);
-                    _context.SaveChanges();
-
-                    break;
        
                 case "GetAge":
 
@@ -192,51 +171,92 @@ namespace CashAllowanceAPI.BackgroundServices
 
         private void CheckIfFinish(int procID)
         {
-            RequestStatues requestStatues = _context.RequestStatuesDBS.Find(procID);
-          
-            AsyncUserTransactions asyncUserTransactions = _context.AsyncUserTransactionsDb.Where(x => x.RequestStatuesID == requestStatues).FirstOrDefault();
+            RequestStatues requestStatues = _context.RequestStatuesDBS.Find(procID);                   
            
             AsyncAge asyncAge = _context.AsyncAgeDb.Where(x => x.RequestStatuesID == requestStatues).FirstOrDefault();
 
             //in gov process request canceled after certain time
             int NumberOfDaystoAllow = -15;
-
-
-            if (asyncAge.RequestReciveTime > DateTime.Today.AddDays(NumberOfDaystoAllow) && asyncUserTransactions.RequestReciveTime > DateTime.Today.AddDays(NumberOfDaystoAllow))
+            if (asyncAge.Statues == "Done")
             {
 
-                requestStatues.DateOfDone = DateTime.Now;
-                requestStatues.Statues = "Done";
-                _context.RequestStatuesDBS.Update(requestStatues);
-                _context.SaveChanges();
-                if (asyncAge.Age > 42)
+                if (asyncAge.RequestReciveTime > DateTime.Today.AddDays(NumberOfDaystoAllow))
                 {
 
-
-                    if (asyncUserTransactions.UserTransactions)
+                    requestStatues.DateOfDone = DateTime.Now;
+                    requestStatues.Statues = "Done";
+                    _context.RequestStatuesDBS.Update(requestStatues);
+                    _context.SaveChanges();
+                    if (asyncAge.Age >= 42)
                     {
+                        string typetopay = "";
+                        switch (asyncAge.Age)
+                        {
+                            case 42:
+                                typetopay = "CashAllowance42";
+                                CalculateExtraPAyment(requestStatues, typetopay);
+                                break;
+                            case 43:
+                                typetopay = "CashAllowance43";
+                                CalculateExtraPAyment(requestStatues, typetopay);
+                                break;
+                            case 44:
+                                typetopay = "CashAllowance44";
+                                CalculateExtraPAyment(requestStatues, typetopay);
+                                break;
+                            case 45:
+                                typetopay = "CashAllowance45";
+                                CalculateExtraPAyment(requestStatues, typetopay);
+                                break;
+                            case 46:
+                                typetopay = "CashAllowance46";
+                                CalculateExtraPAyment(requestStatues, typetopay);
+                                break;
+                            case 47:
+                                typetopay = "CashAllowance47";
+                                CalculateExtraPAyment(requestStatues, typetopay);
+                                break;
+                            case 48:
+                                typetopay = "CashAllowance48";
+                                CalculateExtraPAyment(requestStatues, typetopay);
+                                break;
+                            case 49:
+                                typetopay = "CashAllowance49";
+                                CalculateExtraPAyment(requestStatues, typetopay);
+                                break;
+                            case 50:
+                                typetopay = "CashAllowance50";
+                                CalculateExtraPAyment(requestStatues, typetopay);
+                                break;
+                            case 51:
+                                typetopay = "CashAllowance51";
+                                CalculateExtraPAyment(requestStatues, typetopay);
+                                break;
+                            default:
+                                typetopay = "CashAllowance52";
+                                CalculateExtraPAyment(requestStatues, typetopay);
+                                break;
 
-                        CalculateExtraPAyment(requestStatues);
+                        }
 
                     }
-
+                }
+                else
+                {
+                    requestStatues.DateOfDone = DateTime.Now;
+                    requestStatues.Statues = "Faild";
+                    _context.RequestStatuesDBS.Update(requestStatues);
+                    _context.SaveChanges();
                 }
             }
-            else
-            {
-                requestStatues.DateOfDone = DateTime.Now;
-                requestStatues.Statues = "Faild";
-                _context.RequestStatuesDBS.Update(requestStatues);
-                _context.SaveChanges();
-            }
         }
-        private void CalculateExtraPAyment(RequestStatues requestStatues)
+        public void CalculateExtraPAyment(RequestStatues requestStatues,string Name)
         {
-            var factory = new ConnectionFactory() { HostName = "host.docker.internal" };
+           /* var factory = new ConnectionFactory() { HostName = "host.docker.internal" };
 
             using var connection = factory.CreateConnection();
 
-            using var channel = connection.CreateModel();
+            using var channel = connection.CreateModel();*/
 
 
             var replyQueue = channel.QueueDeclare(queue: "", exclusive: true);
@@ -267,7 +287,7 @@ namespace CashAllowanceAPI.BackgroundServices
 
             properties.ReplyTo = replyQueue.QueueName;
 
-            RabbitMQobj rabbitMQobj = new RabbitMQobj() { RequestStatuseID = requestStatues.ReqStatuesID, URL = "CashAllowancLessThan42" };
+            RabbitMQobj rabbitMQobj = new RabbitMQobj() { RequestStatuseID = requestStatues.ReqStatuesID, URL = Name };
 
             AsyncPayment asyncPayment = new AsyncPayment() { RequestStatuesID = requestStatues, RequestSendTime = DateTime.Now, Statues = "wating" };
             _context.AsyncPaymentDBS.Add(asyncPayment);
