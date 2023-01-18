@@ -14,6 +14,8 @@ using System.Threading.Tasks;
 using UserTransactions.Models;
 
 
+
+
 namespace UserTransactions.Controllers
 {
     [ApiController]
@@ -59,36 +61,38 @@ namespace UserTransactions.Controllers
         }
         [HttpGet]
         [Route("GetAllUserTransactions")]
-        public async Task<List<RequestStatues>> GetAllUserTransactions()
+        public async Task<string> GetAllUserTransactions()
         {
             List<RequestStatues> requestStatues = new List<RequestStatues>();
-            List<RequestStatues> AlonePostponementRequestStatues = JsonConvert.DeserializeObject<List<RequestStatues>>(await APICall("https://host.docker.internal:60009/AlonePostponement/GetAllUserTransactions"));
-            List<RequestStatues> BrotherInServicePostponementRequestStatues = JsonConvert.DeserializeObject<List<RequestStatues>>(await APICall("https://host.docker.internal:60001/BrotherInServicePostponement/GetAllUserTransactions"));
-            List<RequestStatues> CashAllowancetponementRequestStatues = JsonConvert.DeserializeObject<List<RequestStatues>>(await APICall("https://host.docker.internal:60002/CashAllowance/GetAllUserTransactions"));
-            List<RequestStatues> CashAllowancLessThan42ponementRequestStatues = JsonConvert.DeserializeObject<List<RequestStatues>>(await APICall("https://host.docker.internal:60003/CashAllowanceLessThan42/GetAllUserTransactions"));
-            List<RequestStatues> FixedServiceAllowanceponementRequestStatues = JsonConvert.DeserializeObject<List<RequestStatues>>(await APICall("https://host.docker.internal:60004/FixedServiceAllowance/GetAllUserTransactions"));
-            List<RequestStatues> ObligatoryServiceponementRequestStatues = JsonConvert.DeserializeObject<List<RequestStatues>>(await APICall("https://host.docker.internal:60005/ObligatoryService/GetAllUserTransactions"));
-            List<RequestStatues> SchoolPostponementRequestStatues = JsonConvert.DeserializeObject<List<RequestStatues>>(await APICall("https://host.docker.internal:60007/SchoolPostponement/GetAllUserTransactions"));
+            //List<RequestStatues> AlonePostponementRequestStatues = JsonConvert.DeserializeObject<List<RequestStatues>>(await APICall("https://host.docker.internal:60009/AlonePostponement/GetAllUserTransactions"));
+            //List<RequestStatues> BrotherInServicePostponementRequestStatues = JsonConvert.DeserializeObject<List<RequestStatues>>(await APICall("https://host.docker.internal:60001/BrotherInServicePostponement/GetAllUserTransactions"));
+            //List<RequestStatues> CashAllowancetponementRequestStatues = JsonConvert.DeserializeObject<List<RequestStatues>>(await APICall("https://host.docker.internal:60002/CashAllowance/GetAllUserTransactions"));
+            //List<RequestStatues> CashAllowancLessThan42ponementRequestStatues = JsonConvert.DeserializeObject<List<RequestStatues>>(await APICall("https://host.docker.internal:60003/CashAllowanceLessThan42/GetAllUserTransactions"));
+            //List<RequestStatues> FixedServiceAllowanceponementRequestStatues = JsonConvert.DeserializeObject<List<RequestStatues>>(await APICall("https://host.docker.internal:60004/FixedServiceAllowance/GetAllUserTransactions"));
+            //List<RequestStatues> ObligatoryServiceponementRequestStatues = JsonConvert.DeserializeObject<List<RequestStatues>>(await APICall("https://host.docker.internal:60005/ObligatoryService/GetAllUserTransactions"));
+            //List<RequestStatues> SchoolPostponementRequestStatues = JsonConvert.DeserializeObject<List<RequestStatues>>(await APICall("https://host.docker.internal:60007/SchoolPostponement/GetAllUserTransactions"));
             List<RequestStatues> TravelApprovalPostponementRequestStatues = JsonConvert.DeserializeObject<List<RequestStatues>>(await APICall("https://host.docker.internal:60008/TravelApproval/GetAllUserTransactions"));
-            List<RequestStatues> ConvictsPostponementRequestStatues = JsonConvert.DeserializeObject<List<RequestStatues>>(await APICall("https://host.docker.internal:60006/PostponementOfConvicts/GetAllUserTransactions"));
+            //List<RequestStatues> ConvictsPostponementRequestStatues = JsonConvert.DeserializeObject<List<RequestStatues>>(await APICall("https://host.docker.internal:60006/PostponementOfConvicts/GetAllUserTransactions"));
 
-            requestStatues.AddRange(AlonePostponementRequestStatues);
-            requestStatues.AddRange(BrotherInServicePostponementRequestStatues);
-            requestStatues.AddRange(CashAllowancetponementRequestStatues);
-            requestStatues.AddRange(CashAllowancLessThan42ponementRequestStatues);
-            requestStatues.AddRange(FixedServiceAllowanceponementRequestStatues);
-            requestStatues.AddRange(ObligatoryServiceponementRequestStatues);
-            requestStatues.AddRange(SchoolPostponementRequestStatues);
+            //requestStatues.AddRange(AlonePostponementRequestStatues);
+            //requestStatues.AddRange(BrotherInServicePostponementRequestStatues);
+            //requestStatues.AddRange(CashAllowancetponementRequestStatues);
+            //requestStatues.AddRange(CashAllowancLessThan42ponementRequestStatues);
+            //requestStatues.AddRange(FixedServiceAllowanceponementRequestStatues);
+            //requestStatues.AddRange(ObligatoryServiceponementRequestStatues);
+            //requestStatues.AddRange(SchoolPostponementRequestStatues);
             requestStatues.AddRange(TravelApprovalPostponementRequestStatues);
-            requestStatues.AddRange(ConvictsPostponementRequestStatues);
-
+            //requestStatues.AddRange(ConvictsPostponementRequestStatues);
+           
             List<RequestStatues>result = requestStatues.OrderByDescending(x => x.DateOfRecive).ToList<RequestStatues>();
-            return result;
+            var jsonString = JsonConvert.SerializeObject(result);
+
+            return jsonString;
         }
 
         [HttpPost]
         [Route("GetAUserTransactions")]
-        public async Task<Dictionary<string, string>> GetAUserTransactions([FromBody] PostponmentInfo postponmentInfo)
+        public async Task<string> GetAUserTransactions([FromBody] PostponmentInfo postponmentInfo)
         {
              Dictionary<string, string> result = new Dictionary<string, string>();
             switch (postponmentInfo.PosponmentName)
@@ -125,9 +129,9 @@ namespace UserTransactions.Controllers
                     result = null;
                     break;
             }
-            
+            var jsonString = JsonConvert.SerializeObject(result);
 
-            return result;
+            return jsonString;
         }
     }
 }

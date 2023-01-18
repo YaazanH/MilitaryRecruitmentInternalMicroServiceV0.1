@@ -12,6 +12,8 @@ namespace AlonePostponement.Models
 
         public string PostponmentType { get; set; }
 
+        public string UserJWT { get; set; }
+
         public DateTime DateOfRecive { get; set; }
 
         public DateTime DateOfDone { get; set; }

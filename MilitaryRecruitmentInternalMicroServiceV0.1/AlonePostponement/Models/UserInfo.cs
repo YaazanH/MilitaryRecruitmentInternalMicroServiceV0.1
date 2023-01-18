@@ -1,5 +1,9 @@
-﻿namespace AlonePostponement.Models
+﻿using Microsoft.EntityFrameworkCore;
+
+namespace AlonePostponement.Models
 {
+    [Keyless]
+
     public class UserInfo
     {
         public int UserID { get; set; }

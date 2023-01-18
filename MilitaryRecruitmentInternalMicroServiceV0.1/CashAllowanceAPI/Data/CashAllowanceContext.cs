@@ -18,7 +18,6 @@ namespace CashAllowanceAPI.Data
 
         public DbSet<CashAllowanceAPI.Models.AsyncAge> AsyncAgeDb { get; set; }
 
-        public DbSet<CashAllowanceAPI.Models.AsyncUserTransactions> AsyncUserTransactionsDb { get; set; }
         public DbSet<CashAllowanceAPI.Models.AsyncPayment> AsyncPaymentDBS { get; set; }
 
 

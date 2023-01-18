@@ -23,9 +23,9 @@ namespace FixedServiceAllowanceAPI.BackgroundServices
         IConnection connection { get; set; }
         IModel channel { get; set; }
 
-        public RabbitMQEndActiveCert(IServiceScopeFactory factory)
+        public RabbitMQEndActiveCert(IServiceScopeFactory Ifactory)
         {
-            _context = factory.CreateScope().ServiceProvider.GetRequiredService<FixedServiceAllowanceContext>();
+            _context = Ifactory.CreateScope().ServiceProvider.GetRequiredService<FixedServiceAllowanceContext>();
         }
 
         protected override Task ExecuteAsync(CancellationToken stoppingToken)

@@ -52,16 +52,11 @@ namespace CashAllowanceAPI.Controllers
 
             RequestStatues requestStatues = _context.RequestStatuesDBS.Where(x => x.ReqStatuesID == Reqid).FirstOrDefault();
             if (requestStatues != null)
-            {
-
-
-                
-                AsyncUserTransactions asyncUserTransactions = _context.AsyncUserTransactionsDb.Where(x => x.RequestStatuesID == requestStatues).FirstOrDefault();                
+            {                
                 AsyncAge asyncAge = _context.AsyncAgeDb.Where(x => x.RequestStatuesID == requestStatues).FirstOrDefault();
 
                 Dictionary<string, string> result = new Dictionary<string, string>();
 
-                result.Add("asyncUserTransactions", asyncUserTransactions.Statues);
                 result.Add("asyncAge", asyncAge.Statues);
 
                 return result;

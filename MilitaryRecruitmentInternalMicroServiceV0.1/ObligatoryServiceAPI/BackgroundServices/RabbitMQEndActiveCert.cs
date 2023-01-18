@@ -23,9 +23,9 @@ namespace ObligatoryServiceAPI.BackgroundServices
         IConnection connection { get; set; }
         IModel channel { get; set; }
 
-        public RabbitMQEndActiveCert(IServiceScopeFactory factory)
+        public RabbitMQEndActiveCert(IServiceScopeFactory Ifactory)
         {
-            _context = factory.CreateScope().ServiceProvider.GetRequiredService<ObligatoryServiceContext>();
+            _context = Ifactory.CreateScope().ServiceProvider.GetRequiredService<ObligatoryServiceContext>();
         }
 
         protected override Task ExecuteAsync(CancellationToken stoppingToken)

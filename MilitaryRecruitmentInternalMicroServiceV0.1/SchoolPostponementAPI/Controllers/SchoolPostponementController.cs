@@ -107,9 +107,9 @@ namespace SchoolPostponementAPI.Controllers
 
                 Dictionary<string, string> result = new Dictionary<string, string>();
 
-                result.Add("asynctravel", asyncDroppedOut.statuse);
-                result.Add("asyncUserTransactions", asyncStudyingNow.statuse);
-                result.Add("asynLabor", asyncStudyYears.statuse);
+                result.Add("asyncDroppedOut", asyncDroppedOut.statuse);
+                result.Add("asyncStudyingNow", asyncStudyingNow.statuse);
+                result.Add("asyncStudyYears", asyncStudyYears.statuse);
                 result.Add("asyncAge", asyncAge.statuse);
 
                 return result;

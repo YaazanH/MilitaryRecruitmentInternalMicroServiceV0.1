@@ -23,9 +23,11 @@ namespace TravelApprovalAPI.BackgroundServices
         IConnection connection { get; set; }
         IModel channel { get; set; }
 
-        public RabbitMQserv(IServiceScopeFactory factory)
+        string ExternalIP = "192.168.168.116";
+
+        public RabbitMQserv(IServiceScopeFactory Ifactory)
         {
-            _context = factory.CreateScope().ServiceProvider.GetRequiredService<TravelApprovalContext>();
+            _context = Ifactory.CreateScope().ServiceProvider.GetRequiredService<TravelApprovalContext>();
         }
 
         protected override Task ExecuteAsync(CancellationToken stoppingToken)
@@ -105,11 +107,11 @@ namespace TravelApprovalAPI.BackgroundServices
         public void SendToExternalAPI(String Token, int ReqStatuesID)
         {
 
-            var factory = new ConnectionFactory() { HostName = "host.docker.internal" };
+           /* var factory = new ConnectionFactory() { HostName = "host.docker.internal" };
 
             using var connection = factory.CreateConnection();
 
-            using var channel = connection.CreateModel();
+            using var channel = connection.CreateModel();*/
 
 
             var replyQueue = channel.QueueDeclare(queue: "", exclusive: true);
@@ -141,43 +143,34 @@ namespace TravelApprovalAPI.BackgroundServices
             properties.ReplyTo = replyQueue.QueueName;
             RequestStatues requestStatues = _context.RequestStatuesDBS.Find(ReqStatuesID);
             RabbitMQobj rabbitMQobj = new RabbitMQobj() { JWT = Token };
-            for (int i = 0; i < 4; i++)
+            for (int i = 0; i < 3; i++)
             {
                 if (i == 0)
                 {
                     Asynctravel asynctravel = new Asynctravel() { RequestStatuesID = requestStatues,RequestSendTime = DateTime.Now ,statuse="wating"};
                     _context.AsynctravelDBS.Add(asynctravel);
                     _context.SaveChanges();
-                    rabbitMQobj.URL = "https://host.docker.internal:40011/Passport/GetIstravel";
+                    rabbitMQobj.URL = "https://"+ExternalIP+":40011/Passport/GetIstravel";
                     properties.CorrelationId = "GetIstravel";
                     rabbitMQobj.ProcID = asynctravel.ID;
                 }
 
-                if (i == 1)
-                {
-                    AsyncUserTransactions asyncUserTransactions = new AsyncUserTransactions() { RequestStatuesID = requestStatues, RequestSendTime = DateTime.Now, statuse = "wating" };
-                    _context.AsyncUserTransactionsDBS.Add(asyncUserTransactions);
-                    _context.SaveChanges();
-                    rabbitMQobj.URL = "https://host.docker.internal:40022/Finance/GetUserTransactions";
-                    properties.CorrelationId = "GetUserTransactions";
-                    rabbitMQobj.ProcID = asyncUserTransactions.ID;
-                }
-                if (i == 2)
+                else if (i == 1)
                 {
                     AsynLabor asynLabor = new AsynLabor() { RequestStatuesID = requestStatues, RequestSendTime = DateTime.Now, statuse = "wating" };
                     _context.AsynLaborDBS.Add(asynLabor);
                     _context.SaveChanges();
                     rabbitMQobj.ProcID = asynLabor.ID;
-                    rabbitMQobj.URL = "https://host.docker.internal:40024/LaborMinAPI/GetIsAWorker";
+                    rabbitMQobj.URL = "https://" + ExternalIP + ":40024/LaborMinAPI/GetIsAWorker";
                     properties.CorrelationId = "GetasynLabor";
                 }
-                if (i == 3)
+                else if(i == 2)
                 {
                     AsyncAge asyncAge = new AsyncAge() { RequestStatuesID = requestStatues, RequestSendTime = DateTime.Now, statuse = "wating" };
                     _context.AsyncAgeDBS.Add(asyncAge);
                     _context.SaveChanges();
                     rabbitMQobj.ProcID = asyncAge.ID;
-                    rabbitMQobj.URL = "https://host.docker.internal:40018/RecordAdminstration/GetAge";
+                    rabbitMQobj.URL = "https://" + ExternalIP + ":40018/RecordAdminstration/GetAge";
                     properties.CorrelationId = "GetAge";
                 }
 
@@ -205,17 +198,7 @@ namespace TravelApprovalAPI.BackgroundServices
                     _context.SaveChanges();
 
                     break;
-                case "GetUserTransactions":
 
-                    AsyncUserTransactions asyncUserTransactions = _context.AsyncUserTransactionsDBS.Find(externalAPIResponce.ProcID);
-
-                    asyncUserTransactions.UserTransactions =  bool.Parse(externalAPIResponce.Responce);
-                    asyncUserTransactions.RequestReciveTime = DateTime.Now;
-                    asyncUserTransactions.statuse = "Done";
-                    _context.AsyncUserTransactionsDBS.Update(asyncUserTransactions);
-                    _context.SaveChanges();
-
-                    break;
                 case "GetasynLabor":
 
                     AsynLabor asynLabor = _context.AsynLaborDBS.Find(externalAPIResponce.ProcID);
@@ -244,58 +227,77 @@ namespace TravelApprovalAPI.BackgroundServices
         private void CheckIfFinish(int procID)
         {
             RequestStatues requestStatues = _context.RequestStatuesDBS.Find(procID);
-            Asynctravel asynctravel = _context.AsynctravelDBS.Where(x => x.RequestStatuesID== requestStatues).FirstOrDefault();
-            AsyncUserTransactions asyncUserTransactions = _context.AsyncUserTransactionsDBS.Where(x => x.RequestStatuesID == requestStatues).FirstOrDefault();
+            Asynctravel asynctravel = _context.AsynctravelDBS.Where(x => x.RequestStatuesID== requestStatues).FirstOrDefault();           
             AsynLabor asynLabor = _context.AsynLaborDBS.Where(x => x.RequestStatuesID == requestStatues).FirstOrDefault();
             AsyncAge asyncAge = _context.AsyncAgeDBS.Where(x => x.RequestStatuesID == requestStatues).FirstOrDefault();
 
             //in gov process request canceled after certain time
             int NumberOfDaystoAllow = -15;
 
-            if (asynctravel.RequestReciveTime>DateTime.Today.AddDays(NumberOfDaystoAllow) && asyncUserTransactions.RequestReciveTime > DateTime.Today.AddDays(NumberOfDaystoAllow) && asynLabor.RequestReciveTime > DateTime.Today.AddDays(NumberOfDaystoAllow) && asyncAge.RequestReciveTime > DateTime.Today.AddDays(NumberOfDaystoAllow) )
+            if (asyncAge.statuse=="Done" && asynLabor.statuse == "Done" && asynctravel.statuse == "Done")
             {
-                requestStatues.DateOfDone = DateTime.Now;
-                requestStatues.Statues = "Done";
-                _context.RequestStatuesDBS.Update(requestStatues);
-                _context.SaveChanges();
-                if (asyncAge.Age <= 42)
+                if (asynctravel.RequestReciveTime > DateTime.Today.AddDays(NumberOfDaystoAllow) && asynLabor.RequestReciveTime > DateTime.Today.AddDays(NumberOfDaystoAllow) && asyncAge.RequestReciveTime > DateTime.Today.AddDays(NumberOfDaystoAllow))
                 {
-                    if (!asynLabor.IsALaborWorker)
+                    requestStatues.DateOfDone = DateTime.Now;
+                    requestStatues.Statues = "Done";
+                    _context.RequestStatuesDBS.Update(requestStatues);
+                    _context.SaveChanges();
+                    if (asyncAge.Age <= 42)
                     {
-                        if (asyncUserTransactions.UserTransactions)
+                        if (!asynLabor.IsALaborWorker)
                         {
+
                             if (asynctravel.travel)
                             {
                                 EndOtherPostponment(requestStatues.UserID);
                                 AddCert(requestStatues.UserID);
                             }
+                            else
+                            {
+                                PostponmentFalid(requestStatues);
+                            }
+
+                        }
+                        else
+                        {
+                            PostponmentFalid(requestStatues);
+
                         }
                     }
+                    else
+                    {
+                        PostponmentFalid(requestStatues);
+
+                    }
+                }
+                else
+                {
+                    PostponmentFalid(requestStatues);
                 }
             }
-            else
-            {
-                requestStatues.DateOfDone = DateTime.Now;
-                requestStatues.Statues = "Faild";
-                _context.RequestStatuesDBS.Update(requestStatues);
-                _context.SaveChanges();
-            }
+            
         }
 
-
+        public void PostponmentFalid(RequestStatues requestStatues)
+        {
+            requestStatues.DateOfDone = DateTime.Now;
+            requestStatues.Statues = "Faild";
+            _context.RequestStatuesDBS.Update(requestStatues);
+            _context.SaveChanges();
+        }
         private void EndOtherPostponment(int UserID)
         {
-            var factory = new ConnectionFactory() { HostName = "host.docker.internal" };
+           /* var factory = new ConnectionFactory() { HostName = "host.docker.internal" };
             using (var connection = factory.CreateConnection())
-            using (var channel = connection.CreateModel())
-            {
+            using (var channel = connection.CreateModel())*/
+            
                 channel.ExchangeDeclare(exchange: "EndActiveCert", type: ExchangeType.Fanout);
 
                 var message = UserID;
                 var body = Encoding.UTF8.GetBytes(message.ToString());
                 channel.BasicPublish(exchange: "EndActiveCert", routingKey: "",basicProperties: null,body: body);
                 
-            }
+            
         }
 
         private void AddCert(int CUserID)

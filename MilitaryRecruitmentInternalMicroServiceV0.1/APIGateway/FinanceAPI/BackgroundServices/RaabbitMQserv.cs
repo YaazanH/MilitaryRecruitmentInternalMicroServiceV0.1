@@ -37,9 +37,9 @@ namespace FinanceAPI.BackgroundServices
             }, stoppingToken);
             return Task.CompletedTask;
         }
-        public RaabbitMQserv(IServiceScopeFactory factory)
+        public RaabbitMQserv(IServiceScopeFactory Ifactory)
         {
-            _context = factory.CreateScope().ServiceProvider.GetRequiredService<FinanceContext>();
+            _context = Ifactory.CreateScope().ServiceProvider.GetRequiredService<FinanceContext>();
         }
 
         private Task startrabbitMQ()
@@ -83,8 +83,8 @@ namespace FinanceAPI.BackgroundServices
                     channel.BasicPublish("", ea.BasicProperties.ReplyTo, properties, body);
                 
             };
-            channel.BasicConsume(queue: "requestQueue", autoAck: true, consumer: consumer);
-
+            channel.BasicConsume(queue: "UserCalcPayment", autoAck: true, consumer: consumer);
+            System.Console.Read();
 
             return null;
         }

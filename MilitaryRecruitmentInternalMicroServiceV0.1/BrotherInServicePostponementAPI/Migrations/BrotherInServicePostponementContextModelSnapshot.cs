@@ -45,6 +45,9 @@ namespace BrotherInServicePostponementAPI.Migrations
                     b.Property<int>("ProcID")
                         .HasColumnType("int");
 
+                    b.Property<int>("RequestStatuseID")
+                        .HasColumnType("int");
+
                     b.Property<string>("Responce")
                         .HasColumnType("nvarchar(max)");
 
@@ -57,6 +60,9 @@ namespace BrotherInServicePostponementAPI.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("ProcID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RequestStatuseID")
                         .HasColumnType("int");
 
                     b.Property<string>("URL")

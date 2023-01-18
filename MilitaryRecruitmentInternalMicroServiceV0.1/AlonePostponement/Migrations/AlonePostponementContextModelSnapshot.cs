@@ -59,6 +59,9 @@ namespace AlonePostponement.Migrations
                     b.Property<int?>("RequestStatuesIDReqStatuesID")
                         .HasColumnType("int");
 
+                    b.Property<string>("Statues")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("ID");
 
                     b.HasIndex("RequestStatuesIDReqStatuesID");
@@ -76,6 +79,9 @@ namespace AlonePostponement.Migrations
                     b.Property<string>("BrotherID")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("NumbersOfBrothers")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("RequestReciveTime")
                         .HasColumnType("datetime2");
 
@@ -84,6 +90,9 @@ namespace AlonePostponement.Migrations
 
                     b.Property<int?>("RequestStatuesIDReqStatuesID")
                         .HasColumnType("int");
+
+                    b.Property<string>("Statues")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("ID");
 
@@ -110,6 +119,9 @@ namespace AlonePostponement.Migrations
 
                     b.Property<int?>("RequestStatuesIDReqStatuesID")
                         .HasColumnType("int");
+
+                    b.Property<string>("Statues")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("ID");
 
@@ -144,6 +156,40 @@ namespace AlonePostponement.Migrations
                     b.ToTable("HaveBrothersDBS");
                 });
 
+            modelBuilder.Entity("AlonePostponement.Models.RabbitMQResponce", b =>
+                {
+                    b.Property<int>("ProcID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RequestStatuseID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Responce")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.ToTable("RabbitMQResponceDBS");
+                });
+
+            modelBuilder.Entity("AlonePostponement.Models.RabbitMQobj", b =>
+                {
+                    b.Property<string>("JWT")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ProcID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RequestStatuseID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("URL")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("UserID")
+                        .HasColumnType("int");
+
+                    b.ToTable("RabbitMQobjDBS");
+                });
+
             modelBuilder.Entity("AlonePostponement.Models.RequestStatues", b =>
                 {
                     b.Property<int>("ReqStatuesID")
@@ -157,15 +203,32 @@ namespace AlonePostponement.Migrations
                     b.Property<DateTime>("DateOfRecive")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("PostponmentType")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Statues")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("UserID")
                         .HasColumnType("int");
 
+                    b.Property<string>("UserJWT")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("ReqStatuesID");
 
                     b.ToTable("RequestStatuesDBS");
+                });
+
+            modelBuilder.Entity("AlonePostponement.Models.UserInfo", b =>
+                {
+                    b.Property<string>("JWT")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("UserID")
+                        .HasColumnType("int");
+
+                    b.ToTable("UserInfoDBS");
                 });
 
             modelBuilder.Entity("AlonePostponement.Models.BrotherEill", b =>

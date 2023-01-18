@@ -10,9 +10,12 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using LoginAPI.Data;
+using Newtonsoft.Json.Linq;
+using Microsoft.AspNetCore.Cors;
 
 namespace LoginAPI.Controller
 {
+    [EnableCors]
     [ApiController]
     [Route("LoginAPI")]
     public class LoginController : ControllerBase
@@ -85,13 +88,13 @@ namespace LoginAPI.Controller
             }
             return null;
         }
-        [Authorize(Roles = "Admin")]
+      //  [Authorize(Roles = "Admin")]
         [HttpPost]
         [Route("AdminToken")]
-        public string GetUserToken(int UserID)
+        public string GetUserToken([FromBody] JObject dataObject)
         {
             Login CurrentUser = new Login();
-            CurrentUser.UserID = UserID;
+            CurrentUser.UserID = int.Parse(dataObject["username"].ToString());
             return Generate(CurrentUser);
         }
     }

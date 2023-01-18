@@ -23,9 +23,12 @@ namespace PostponementOfConvictsAPI.BackgroundServices
         IConnection connection { get; set; }
         IModel channel { get; set; }
 
-        public RabbitMQserv(IServiceScopeFactory factory)
+        string ExternalIP = "192.168.168.116";
+
+
+        public RabbitMQserv(IServiceScopeFactory Ifactory)
         {
-            _context = factory.CreateScope().ServiceProvider.GetRequiredService<PostponementOfConvictsContext>();
+            _context = Ifactory.CreateScope().ServiceProvider.GetRequiredService<PostponementOfConvictsContext>();
         }
 
         protected override Task ExecuteAsync(CancellationToken stoppingToken)
@@ -34,7 +37,7 @@ namespace PostponementOfConvictsAPI.BackgroundServices
             Task.Run(async () =>
             {
                 await startrabbitMQ();
-            }, stoppingToken); startrabbitMQ();
+            }, stoppingToken);
             return Task.CompletedTask;
         }
 
@@ -64,8 +67,18 @@ namespace PostponementOfConvictsAPI.BackgroundServices
                 var User = _context.PostponementOfConvictsDb.Where(x => x.UserID == userInfo.UserID).FirstOrDefault();
                 if (User == null)
                 {
+
                     int ReqStatuesID = InsertRequestToDB(userInfo.UserID);
                     SendToExternalAPI(userInfo.JWT, ReqStatuesID);
+
+                }
+                else
+                {
+                    if (User.DateOfEnd.DateTime > DateTime.Now)
+                    {
+                        int ReqStatuesID = InsertRequestToDB(userInfo.UserID);
+                        SendToExternalAPI(userInfo.JWT, ReqStatuesID);
+                    }
                 }
             };
             channel.BasicConsume(queue: queName, autoAck: true, consumer: consumer);
@@ -91,11 +104,11 @@ namespace PostponementOfConvictsAPI.BackgroundServices
         public void SendToExternalAPI(String Token, int ReqStatuesID)
         {
 
-            var factory = new ConnectionFactory() { HostName = "host.docker.internal" };
+           /* var factory = new ConnectionFactory() { HostName = "host.docker.internal" };
 
             using var connection = factory.CreateConnection();
 
-            using var channel = connection.CreateModel();
+            using var channel = connection.CreateModel();*/
 
 
             var replyQueue = channel.QueueDeclare(queue: "", exclusive: true);
@@ -134,7 +147,7 @@ namespace PostponementOfConvictsAPI.BackgroundServices
                     AsyncInJail asyncInJail = new AsyncInJail() { RequestStatuesID = requestStatues, RequestSendTime = DateTime.Now,Statues="wating" };
                     _context.AsyncInJailDb.Add(asyncInJail);
                     _context.SaveChanges();
-                    rabbitMQobj.URL = "https://host.docker.internal:40015/Jail/GetIfInJail";
+                    rabbitMQobj.URL = "https://" + ExternalIP + ":40015/Jail/GetIfInJail";
                     properties.CorrelationId = "GetInJail";
                     rabbitMQobj.ProcID = asyncInJail.ID;
                 }
@@ -144,7 +157,7 @@ namespace PostponementOfConvictsAPI.BackgroundServices
                     AsyncYearsRemaning asyncYearsRemaning = new AsyncYearsRemaning() { RequestStatuesID = requestStatues, RequestSendTime = DateTime.Now, Statues = "wating" };
                     _context.AsyncYearsRemaningDb.Add(asyncYearsRemaning);
                     _context.SaveChanges();
-                    rabbitMQobj.URL = "https://host.docker.internal:40012/Court/GetYearsRemaining";
+                    rabbitMQobj.URL = "https://" + ExternalIP + ":40012/Court/GetYearsRemaining";
                     properties.CorrelationId = "GetYearsRemaning";
                     rabbitMQobj.ProcID = asyncYearsRemaning.ID;
                 }
@@ -154,7 +167,7 @@ namespace PostponementOfConvictsAPI.BackgroundServices
                     _context.AsyncEntryDateDb.Add(asyncEntryDate);
                     _context.SaveChanges();
                     rabbitMQobj.ProcID = asyncEntryDate.ID;
-                    rabbitMQobj.URL = "https://host.docker.internal:40016/CompetentAuthority/GetEntryDate";
+                    rabbitMQobj.URL = "https://" + ExternalIP + ":40016/CompetentAuthority/GetEntryDate";
                     properties.CorrelationId = "GetEntryDate";
                 }
 
@@ -219,50 +232,59 @@ namespace PostponementOfConvictsAPI.BackgroundServices
 
 
             //in gov process request canceled after certain time
-            int NumberOfDaystoAllow = -15;
+            int NumberOfDaystoAllow = -15;  
 
-
-            if (asyncEntryDate.RequestReciveTime > DateTime.Today.AddDays(NumberOfDaystoAllow) && asyncYearsRemaning.RequestReciveTime > DateTime.Today.AddDays(NumberOfDaystoAllow) && asyncInJail.RequestReciveTime > DateTime.Today.AddDays(NumberOfDaystoAllow))
+            if (asyncInJail.Statues == "Done" && asyncEntryDate.Statues == "Done" && asyncYearsRemaning.Statues == "Done")
             {
-                requestStatues.DateOfDone = DateTime.Now;
-                requestStatues.Statues = "Done";
-                _context.RequestStatuesDBS.Update(requestStatues);
-                _context.SaveChanges();
-
-                if (asyncEntryDate.Entrydate == DateTime.Now || asyncInJail.InJail || asyncYearsRemaning.Years == 5)
+                if (asyncEntryDate.RequestReciveTime > DateTime.Today.AddDays(NumberOfDaystoAllow) && asyncYearsRemaning.RequestReciveTime > DateTime.Today.AddDays(NumberOfDaystoAllow) && asyncInJail.RequestReciveTime > DateTime.Today.AddDays(NumberOfDaystoAllow))
                 {
+                    requestStatues.DateOfDone = DateTime.Now;
+                    requestStatues.Statues = "Done";
+                    _context.RequestStatuesDBS.Update(requestStatues);
+                    _context.SaveChanges();
+
+                    if (asyncEntryDate.Entrydate == DateTime.Now || asyncInJail.InJail || asyncYearsRemaning.Years == 5)
+                    {
 
 
-                    EndOtherPostponment(requestStatues.UserID);
+                        EndOtherPostponment(requestStatues.UserID);
 
-                    AddCert(requestStatues.UserID);
+                        AddCert(requestStatues.UserID);
 
 
 
+                    }
+                    else
+                    {
+                        PostponmentFalid(requestStatues);
+                    }
+                }
+                else
+                {
+                    PostponmentFalid(requestStatues);
                 }
             }
-            else
-            {
-                requestStatues.DateOfDone = DateTime.Now;
-                requestStatues.Statues = "Faild";
-                _context.RequestStatuesDBS.Update(requestStatues);
-                _context.SaveChanges();
-            }
         }
-
+        public void PostponmentFalid(RequestStatues requestStatues)
+        {
+            requestStatues.DateOfDone = DateTime.Now;
+            requestStatues.Statues = "Faild";
+            _context.RequestStatuesDBS.Update(requestStatues);
+            _context.SaveChanges();
+        }
         private void EndOtherPostponment(int UserID)
         {
-            var factory = new ConnectionFactory() { HostName = "host.docker.internal" };
+            /*var factory = new ConnectionFactory() { HostName = "host.docker.internal" };
             using (var connection = factory.CreateConnection())
-            using (var channel = connection.CreateModel())
-            {
+            using (var channel = connection.CreateModel())*/
+            
                 channel.ExchangeDeclare(exchange: "EndActiveCert", type: ExchangeType.Fanout);
 
                 var message = UserID;
                 var body = Encoding.UTF8.GetBytes(message.ToString());
                 channel.BasicPublish(exchange: "EndActiveCert", routingKey: "", basicProperties: null, body: body);
 
-            }
+            
         }
 
         private void AddCert(int CUserID)

@@ -23,9 +23,9 @@ namespace CashAllowancLessThan42.BackgroundServices
         IConnection connection { get; set; }
         IModel channel { get; set; }
 
-        public UserConfirmPaayment(IServiceScopeFactory factory)
+        public UserConfirmPaayment(IServiceScopeFactory Ifactory)
         {
-            _context = factory.CreateScope().ServiceProvider.GetRequiredService<CashAllowancLessThan42Context>();
+            _context = Ifactory.CreateScope().ServiceProvider.GetRequiredService<CashAllowancLessThan42Context>();
         }
 
         protected override Task ExecuteAsync(CancellationToken stoppingToken)
@@ -90,17 +90,17 @@ namespace CashAllowancLessThan42.BackgroundServices
 
         private void EndOtherPostponment(int UserID)
         {
-            var factory = new ConnectionFactory() { HostName = "host.docker.internal" };
+           /* var factory = new ConnectionFactory() { HostName = "host.docker.internal" };
             using (var connection = factory.CreateConnection())
-            using (var channel = connection.CreateModel())
-            {
+            using (var channel = connection.CreateModel())*/
+            
                 channel.ExchangeDeclare(exchange: "EndActiveCert", type: ExchangeType.Fanout);
 
                 var message = UserID;
                 var body = Encoding.UTF8.GetBytes(message.ToString());
                 channel.BasicPublish(exchange: "EndActiveCert", routingKey: "", basicProperties: null, body: body);
 
-            }
+            
         }
 
         private void AddCert(int CUserID)

@@ -23,9 +23,12 @@ namespace ObligatoryServiceAPI.BackgroundServices
         IConnection connection { get; set; }
         IModel channel { get; set; }
 
-        public RabbitMQserv(IServiceScopeFactory factory)
+        string ExternalIP = "192.168.168.116";
+
+
+        public RabbitMQserv(IServiceScopeFactory Ifactory)
         {
-            _context = factory.CreateScope().ServiceProvider.GetRequiredService<ObligatoryServiceContext>();
+            _context = Ifactory.CreateScope().ServiceProvider.GetRequiredService<ObligatoryServiceContext>();
         }
 
         protected override Task ExecuteAsync(CancellationToken stoppingToken)
@@ -64,8 +67,18 @@ namespace ObligatoryServiceAPI.BackgroundServices
                 var User = _context.ObligatoryServiceDB.Where(x => x.UserID == userInfo.UserID).FirstOrDefault();
                 if (User == null)
                 {
+
                     int ReqStatuesID = InsertRequestToDB(userInfo.UserID);
                     SendToExternalAPI(userInfo.JWT, ReqStatuesID);
+
+                }
+                else
+                {
+                    if (User.DateOfEnd.DateTime > DateTime.Now)
+                    {
+                        int ReqStatuesID = InsertRequestToDB(userInfo.UserID);
+                        SendToExternalAPI(userInfo.JWT, ReqStatuesID);
+                    }
                 }
             };
             channel.BasicConsume(queue: queName, autoAck: true, consumer: consumer);
@@ -91,11 +104,11 @@ namespace ObligatoryServiceAPI.BackgroundServices
         public void SendToExternalAPI(String Token, int ReqStatuesID)
         {
 
-            var factory = new ConnectionFactory() { HostName = "host.docker.internal" };
+           /* var factory = new ConnectionFactory() { HostName = "host.docker.internal" };
 
             using var connection = factory.CreateConnection();
 
-            using var channel = connection.CreateModel();
+            using var channel = connection.CreateModel();*/
 
 
             var replyQueue = channel.QueueDeclare(queue: "", exclusive: true);
@@ -135,7 +148,7 @@ namespace ObligatoryServiceAPI.BackgroundServices
             AsyncDonatedBlood asyncDonatedBlood = new AsyncDonatedBlood() { RequestStatuesID = requestStatues, RequestSendTime = DateTime.Now ,Statues="wating"};
             _context.AsyncDonatedBloodDB.Add(asyncDonatedBlood);
             _context.SaveChanges();
-            rabbitMQobj.URL = "https://host.docker.internal:40005/BloodBank/HasDonated";
+            rabbitMQobj.URL = "https://" + ExternalIP + ":40005/BloodBank/HasDonated";
             properties.CorrelationId = "GetHasDonated";
             rabbitMQobj.ProcID = asyncDonatedBlood.ID;
 
@@ -178,49 +191,61 @@ namespace ObligatoryServiceAPI.BackgroundServices
 
             //in gov process request canceled after certain time
             int NumberOfDaystoAllow = -15;
-            if (asyncDonatedBlood.RequestReciveTime > DateTime.Today.AddDays(NumberOfDaystoAllow))
+            if (asyncDonatedBlood.Statues == "Done")
             {
-
-                requestStatues.DateOfDone = DateTime.Now;
-                requestStatues.Statues = "Done";
-                _context.RequestStatuesDBS.Update(requestStatues);
-                _context.SaveChanges();
-
-
-
-
-                if (asyncDonatedBlood.Donated)
+                if (asyncDonatedBlood.RequestReciveTime > DateTime.Today.AddDays(NumberOfDaystoAllow))
                 {
-                    EndOtherPostponment(requestStatues.UserID);
 
-                    AddCert(requestStatues.UserID);
+                    requestStatues.DateOfDone = DateTime.Now;
+                    requestStatues.Statues = "Done";
+                    _context.RequestStatuesDBS.Update(requestStatues);
+                    _context.SaveChanges();
+
+
+
+
+                    if (asyncDonatedBlood.Donated)
+                    {
+                        EndOtherPostponment(requestStatues.UserID);
+
+                        AddCert(requestStatues.UserID);
+
+                    }
+                    else
+                    {
+                        PostponmentFalid(requestStatues);
+                    }
+
 
                 }
-
-
+                else
+                {
+                    PostponmentFalid(requestStatues);
+                }
             }
-            else
-            {
-                requestStatues.DateOfDone = DateTime.Now;
-                requestStatues.Statues = "Faild";
-                _context.RequestStatuesDBS.Update(requestStatues);
-                _context.SaveChanges();
-            }
+        }
+
+        public void PostponmentFalid(RequestStatues requestStatues)
+        {
+            requestStatues.DateOfDone = DateTime.Now;
+            requestStatues.Statues = "Faild";
+            _context.RequestStatuesDBS.Update(requestStatues);
+            _context.SaveChanges();
         }
 
         private void EndOtherPostponment(int UserID)
         {
-            var factory = new ConnectionFactory() { HostName = "host.docker.internal" };
+            /*var factory = new ConnectionFactory() { HostName = "host.docker.internal" };
             using (var connection = factory.CreateConnection())
-            using (var channel = connection.CreateModel())
-            {
+            using (var channel = connection.CreateModel())*/
+            
                 channel.ExchangeDeclare(exchange: "EndActiveCert", type: ExchangeType.Fanout);
 
                 var message = UserID;
                 var body = Encoding.UTF8.GetBytes(message.ToString());
                 channel.BasicPublish(exchange: "EndActiveCert", routingKey: "", basicProperties: null, body: body);
 
-            }
+            
         }
 
         private void AddCert(int CUserID)

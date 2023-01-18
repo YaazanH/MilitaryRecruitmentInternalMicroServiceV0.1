@@ -19,6 +19,70 @@ namespace FixedServiceAllowanceAPI.Migrations
                 .HasAnnotation("ProductVersion", "5.0.17")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+            modelBuilder.Entity("FixedServiceAllowanceAPI.Models.AsyncFixedService", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("RequestReciveTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("RequestSendTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("RequestStatuesIDReqStatuesID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Statues")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("fixedservice")
+                        .HasColumnType("bit");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("RequestStatuesIDReqStatuesID");
+
+                    b.ToTable("AsyncFixedServiceDB");
+                });
+
+            modelBuilder.Entity("FixedServiceAllowanceAPI.Models.AsyncPayment", b =>
+                {
+                    b.Property<int>("PaymentID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<double>("Amount")
+                        .HasColumnType("float");
+
+                    b.Property<string>("EcashURl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("Payed")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("RequestReciveTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("RequestSendTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("RequestStatuesIDReqStatuesID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Statues")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("PaymentID");
+
+                    b.HasIndex("RequestStatuesIDReqStatuesID");
+
+                    b.ToTable("AsyncPaymentDBS");
+                });
+
             modelBuilder.Entity("FixedServiceAllowanceAPI.Models.FixedServiceAllowance", b =>
                 {
                     b.Property<int>("id")
@@ -29,12 +93,102 @@ namespace FixedServiceAllowanceAPI.Migrations
                     b.Property<DateTimeOffset>("DateOfGiven")
                         .HasColumnType("datetimeoffset");
 
-                    b.Property<string>("FullName")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
 
                     b.HasKey("id");
 
                     b.ToTable("FixedServiceAllowanceContextDBS");
+                });
+
+            modelBuilder.Entity("FixedServiceAllowanceAPI.Models.RabbitMQResponce", b =>
+                {
+                    b.Property<int>("ProcID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RequestStatuseID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Responce")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.ToTable("RabbitMQResponceDBS");
+                });
+
+            modelBuilder.Entity("FixedServiceAllowanceAPI.Models.RabbitMQobj", b =>
+                {
+                    b.Property<string>("JWT")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ProcID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RequestStatuseID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("URL")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("UserID")
+                        .HasColumnType("int");
+
+                    b.ToTable("RabbitMQobjDBS");
+                });
+
+            modelBuilder.Entity("FixedServiceAllowanceAPI.Models.RequestStatues", b =>
+                {
+                    b.Property<int>("ReqStatuesID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("DateOfDone")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DateOfRecive")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("PostponmentType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Statues")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("UserID")
+                        .HasColumnType("int");
+
+                    b.HasKey("ReqStatuesID");
+
+                    b.ToTable("RequestStatuesDBS");
+                });
+
+            modelBuilder.Entity("FixedServiceAllowanceAPI.Models.UserInfo", b =>
+                {
+                    b.Property<string>("JWT")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("UserID")
+                        .HasColumnType("int");
+
+                    b.ToTable("UserInfoDBS");
+                });
+
+            modelBuilder.Entity("FixedServiceAllowanceAPI.Models.AsyncFixedService", b =>
+                {
+                    b.HasOne("FixedServiceAllowanceAPI.Models.RequestStatues", "RequestStatuesID")
+                        .WithMany()
+                        .HasForeignKey("RequestStatuesIDReqStatuesID");
+
+                    b.Navigation("RequestStatuesID");
+                });
+
+            modelBuilder.Entity("FixedServiceAllowanceAPI.Models.AsyncPayment", b =>
+                {
+                    b.HasOne("FixedServiceAllowanceAPI.Models.RequestStatues", "RequestStatuesID")
+                        .WithMany()
+                        .HasForeignKey("RequestStatuesIDReqStatuesID");
+
+                    b.Navigation("RequestStatuesID");
                 });
 #pragma warning restore 612, 618
         }

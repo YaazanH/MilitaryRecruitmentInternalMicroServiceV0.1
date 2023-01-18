@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BrotherInServicePostponementAPI.Migrations
 {
     [DbContext(typeof(BrotherInServicePostponementContext))]
-    [Migration("20221228115947_BrotherInServiceMIG")]
-    partial class BrotherInServiceMIG
+    [Migration("20230118101143_BrotherInServicePostponementMIG")]
+    partial class BrotherInServicePostponementMIG
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -47,6 +47,9 @@ namespace BrotherInServicePostponementAPI.Migrations
                     b.Property<int>("ProcID")
                         .HasColumnType("int");
 
+                    b.Property<int>("RequestStatuseID")
+                        .HasColumnType("int");
+
                     b.Property<string>("Responce")
                         .HasColumnType("nvarchar(max)");
 
@@ -59,6 +62,9 @@ namespace BrotherInServicePostponementAPI.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("ProcID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RequestStatuseID")
                         .HasColumnType("int");
 
                     b.Property<string>("URL")

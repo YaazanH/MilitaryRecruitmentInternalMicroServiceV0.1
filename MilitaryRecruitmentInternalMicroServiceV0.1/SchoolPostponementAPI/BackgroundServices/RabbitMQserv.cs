@@ -23,9 +23,12 @@ namespace SchoolPostponementAPI.BackgroundServices
         IConnection connection { get; set; }
         IModel channel { get; set; }
 
-        public RabbitMQserv(IServiceScopeFactory factory)
+        string ExternalIP = "192.168.168.116";
+
+
+        public RabbitMQserv(IServiceScopeFactory Ifactory)
         {
-            _context = factory.CreateScope().ServiceProvider.GetRequiredService<SchoolPostponementContext>();
+            _context = Ifactory.CreateScope().ServiceProvider.GetRequiredService<SchoolPostponementContext>();
         }
 
         protected override Task ExecuteAsync(CancellationToken stoppingToken)
@@ -64,12 +67,19 @@ namespace SchoolPostponementAPI.BackgroundServices
                     var User = _context.schoolDBS.Where(x => x.UserID == userInfo.UserID).FirstOrDefault();
                     if (User == null)
                     {
+
+                        int ReqStatuesID = InsertRequestToDB(userInfo.UserID);
+                        SendToExternalAPI(userInfo.JWT, ReqStatuesID);
+
+                    }
+                    else
+                    {
                         if (User.DateOfEnd.DateTime > DateTime.Now)
                         {
                             int ReqStatuesID = InsertRequestToDB(userInfo.UserID);
                             SendToExternalAPI(userInfo.JWT, ReqStatuesID);
                         }
-                    }                  
+                    }
                 };
                 channel.BasicConsume(queue: queName, autoAck: true, consumer: consumer);
                 System.Console.Read();
@@ -95,11 +105,11 @@ namespace SchoolPostponementAPI.BackgroundServices
         public void SendToExternalAPI(String Token, int ReqStatuesID)
         {
 
-            var factory = new ConnectionFactory() { HostName = "host.docker.internal" };
+           /* var factory = new ConnectionFactory() { HostName = "host.docker.internal" };
 
             using var connection = factory.CreateConnection();
 
-            using var channel = connection.CreateModel();
+            using var channel = connection.CreateModel();*/
 
 
             var replyQueue = channel.QueueDeclare(queue: "", exclusive: true);
@@ -138,7 +148,7 @@ namespace SchoolPostponementAPI.BackgroundServices
                     AsyncStudyYears asyncStudyYears = new AsyncStudyYears() { RequestStatuesID = requestStatues,RequestSendTime = DateTime.Now ,statuse ="wating" };
                     _context.AsyncStudyYearsDBS.Add(asyncStudyYears);
                     _context.SaveChanges();
-                    rabbitMQobj.URL = "https://host.docker.internal:40006/University/GetStudyYears";
+                    rabbitMQobj.URL = "https://" + ExternalIP + ":40006/University/GetStudyYears";
                     properties.CorrelationId = "GetStudyYears";
                     rabbitMQobj.ProcID = asyncStudyYears.ID;
                 }
@@ -148,7 +158,7 @@ namespace SchoolPostponementAPI.BackgroundServices
                     AsyncStudyingNow asyncStudyingNow = new AsyncStudyingNow() { RequestStatuesID = requestStatues, RequestSendTime = DateTime.Now, statuse = "wating" };
                     _context.AsyncStudyingNowDBS.Add(asyncStudyingNow);
                     _context.SaveChanges();
-                    rabbitMQobj.URL = "https://host.docker.internal:40006/University/GetIsStudyingNow";
+                    rabbitMQobj.URL = "https://" + ExternalIP + ":40006/University/GetIsStudyingNow";
                     properties.CorrelationId = "GetStudyingNow";
                     rabbitMQobj.ProcID = asyncStudyingNow.ID;
                 }
@@ -158,7 +168,7 @@ namespace SchoolPostponementAPI.BackgroundServices
                     _context.AsyncDroppedOutDBS.Add(asyncDroppedOut);
                     _context.SaveChanges();
                     rabbitMQobj.ProcID = asyncDroppedOut.ID;
-                    rabbitMQobj.URL = "https://host.docker.internal:40006/EduMinAPI/GetIsDroppedOut";
+                    rabbitMQobj.URL = "https://" + ExternalIP + ":40006/EduMinAPI/GetIsDroppedOut";
                     properties.CorrelationId = "GetIsDroppedOut";
                 }
                 if (i == 3)
@@ -167,7 +177,7 @@ namespace SchoolPostponementAPI.BackgroundServices
                     _context.AsyncAgeDBS.Add(asyncAge);
                     _context.SaveChanges();
                     rabbitMQobj.ProcID = asyncAge.ID;
-                    rabbitMQobj.URL = "https://host.docker.internal:40018/RecordAdminstration/GetAge";
+                    rabbitMQobj.URL = "https://" + ExternalIP + ":40018/RecordAdminstration/GetAge";
                     properties.CorrelationId = "GetAge";
                 }
 
@@ -234,102 +244,124 @@ namespace SchoolPostponementAPI.BackgroundServices
         private void CheckIfFinish(int procID)
         {
             RequestStatues requestStatues = _context.RequestStatuesDBS.Find(procID);
-            AsyncStudyingNow asyncStudyingNow = _context.AsyncStudyingNowDBS.Where(x => x.RequestStatuesID== requestStatues).FirstOrDefault();
+            AsyncStudyingNow asyncStudyingNow = _context.AsyncStudyingNowDBS.Where(x => x.RequestStatuesID == requestStatues).FirstOrDefault();
             AsyncDroppedOut asyncDroppedOut = _context.AsyncDroppedOutDBS.Where(x => x.RequestStatuesID == requestStatues).FirstOrDefault();
             AsyncStudyYears asyncStudyYears = _context.AsyncStudyYearsDBS.Where(x => x.RequestStatuesID == requestStatues).FirstOrDefault();
             AsyncAge asyncAge = _context.AsyncAgeDBS.Where(x => x.RequestStatuesID == requestStatues).FirstOrDefault();
 
             //in gov process request canceled after certain time
             int NumberOfDaystoAllow = -15;
-
-            if (asyncStudyingNow.RequestReciveTime>DateTime.Today.AddDays(NumberOfDaystoAllow) && asyncDroppedOut.RequestReciveTime > DateTime.Today.AddDays(NumberOfDaystoAllow) && asyncStudyYears.RequestReciveTime > DateTime.Today.AddDays(NumberOfDaystoAllow) && asyncAge.RequestReciveTime > DateTime.Today.AddDays(NumberOfDaystoAllow) )
+            if (asyncAge.statuse == "Done" && asyncStudyingNow.statuse == "Done" && asyncDroppedOut.statuse == "Done"&& asyncStudyYears.statuse=="Done")
             {
-                requestStatues.DateOfDone = DateTime.Now;
-                requestStatues.Statues = "Done";
-                _context.RequestStatuesDBS.Update(requestStatues);
-                _context.SaveChanges();
-
-                if (asyncAge.Age < 37)
+                if (asyncStudyingNow.RequestReciveTime > DateTime.Today.AddDays(NumberOfDaystoAllow) && asyncDroppedOut.RequestReciveTime > DateTime.Today.AddDays(NumberOfDaystoAllow) && asyncStudyYears.RequestReciveTime > DateTime.Today.AddDays(NumberOfDaystoAllow) && asyncAge.RequestReciveTime > DateTime.Today.AddDays(NumberOfDaystoAllow))
                 {
-                    if (asyncStudyingNow.StudyingNow)
+                    requestStatues.DateOfDone = DateTime.Now;
+                    requestStatues.Statues = "Done";
+                    _context.RequestStatuesDBS.Update(requestStatues);
+                    _context.SaveChanges();
+
+                    if (asyncAge.Age < 37)
                     {
-                        if (asyncDroppedOut.IsDroppedOut)
+                        if (asyncStudyingNow.StudyingNow)
                         {
-                            switch (asyncStudyYears.StudyYears)
+                            if (!asyncDroppedOut.IsDroppedOut)
                             {
-                                case "2":
-                                    if (asyncAge.Age < 24)
-                                    {
-                                        EndOtherPostponment(requestStatues.UserID);
+                                switch (asyncStudyYears.StudyYears)
+                                {
+                                    case "2":
+                                        if (asyncAge.Age < 24)
+                                        {
+                                            EndOtherPostponment(requestStatues.UserID);
 
-                                        AddCert(requestStatues.UserID);
-                                        
-                                    }
-                                    break;
-                                case "3":
-                                    if (asyncAge.Age < 25)
-                                    {
-                                        EndOtherPostponment(requestStatues.UserID);
+                                            AddCert(requestStatues.UserID);
 
-                                        AddCert(requestStatues.UserID);
-                                       
-                                    }
-                                    break;
-                                case "4":
-                                    if (asyncAge.Age < 26)
-                                    {
-                                        EndOtherPostponment(requestStatues.UserID);
+                                        }
+                                        break;
+                                    case "3":
+                                        if (asyncAge.Age < 25)
+                                        {
+                                            EndOtherPostponment(requestStatues.UserID);
 
-                                        AddCert(requestStatues.UserID);
-                                        
-                                    }
-                                    break;
-                                case "5":
-                                    if (asyncAge.Age < 27)
-                                    {
-                                        EndOtherPostponment(requestStatues.UserID);
+                                            AddCert(requestStatues.UserID);
 
-                                        AddCert(requestStatues.UserID);
-                                       
-                                    }
-                                    break;
-                                case "6":
-                                    if (asyncAge.Age < 29)
-                                    {
-                                        EndOtherPostponment(requestStatues.UserID);
+                                        }
+                                        break;
+                                    case "4":
+                                        if (asyncAge.Age < 26)
+                                        {
+                                            EndOtherPostponment(requestStatues.UserID);
 
-                                        AddCert(requestStatues.UserID);
-                                        
-                                    }
-                                    break;
+                                            AddCert(requestStatues.UserID);
+
+                                        }
+                                        break;
+                                    case "5":
+                                        if (asyncAge.Age < 27)
+                                        {
+                                            EndOtherPostponment(requestStatues.UserID);
+
+                                            AddCert(requestStatues.UserID);
+
+                                        }
+                                        break;
+                                    case "6":
+                                        if (asyncAge.Age < 29)
+                                        {
+                                            EndOtherPostponment(requestStatues.UserID);
+
+                                            AddCert(requestStatues.UserID);
+
+                                        }
+                                        break;
+                                    default:
+                                        PostponmentFalid(requestStatues);
+                                        break;
+                                }
+                            }
+                            else
+                            {
+                                PostponmentFalid(requestStatues);
                             }
                         }
+                        else
+                        {
+                            PostponmentFalid(requestStatues);
+                        }
+                    }
+                    else
+                    {
+                        PostponmentFalid(requestStatues);
                     }
                 }
-            }
 
-            else
+                else
+                {
+                    PostponmentFalid(requestStatues);
+                }
+            }
+        }
+
+            public void PostponmentFalid(RequestStatues requestStatues)
             {
                 requestStatues.DateOfDone = DateTime.Now;
                 requestStatues.Statues = "Faild";
                 _context.RequestStatuesDBS.Update(requestStatues);
                 _context.SaveChanges();
             }
-        }
 
         private void EndOtherPostponment(int UserID)
         {
-            var factory = new ConnectionFactory() { HostName = "host.docker.internal" };
+            /*var factory = new ConnectionFactory() { HostName = "host.docker.internal" };
             using (var connection = factory.CreateConnection())
-            using (var channel = connection.CreateModel())
-            {
-                channel.ExchangeDeclare(exchange: "EndActiveCert", type: ExchangeType.Fanout);
+            using (var channel = connection.CreateModel())*/
 
-                var message = UserID;
-                var body = Encoding.UTF8.GetBytes(message.ToString());
-                channel.BasicPublish(exchange: "EndActiveCert", routingKey: "", basicProperties: null, body: body);
+            channel.ExchangeDeclare(exchange: "EndActiveCert", type: ExchangeType.Fanout);
 
-            }
+            var message = UserID;
+            var body = Encoding.UTF8.GetBytes(message.ToString());
+            channel.BasicPublish(exchange: "EndActiveCert", routingKey: "", basicProperties: null, body: body);
+
+
         }
 
         private void AddCert(int CUserID)

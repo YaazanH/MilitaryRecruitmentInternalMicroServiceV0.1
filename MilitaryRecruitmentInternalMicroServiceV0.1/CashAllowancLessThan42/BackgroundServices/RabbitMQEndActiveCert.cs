@@ -23,9 +23,9 @@ namespace CashAllowancLessThan42.BackgroundServices
         IConnection connection { get; set; }
         IModel channel { get; set; }
 
-        public RabbitMQEndActiveCert(IServiceScopeFactory factory)
+        public RabbitMQEndActiveCert(IServiceScopeFactory Ifactory)
         {
-            _context = factory.CreateScope().ServiceProvider.GetRequiredService<CashAllowancLessThan42Context>();
+            _context = Ifactory.CreateScope().ServiceProvider.GetRequiredService<CashAllowancLessThan42Context>();
         }
 
         protected override Task ExecuteAsync(CancellationToken stoppingToken)
