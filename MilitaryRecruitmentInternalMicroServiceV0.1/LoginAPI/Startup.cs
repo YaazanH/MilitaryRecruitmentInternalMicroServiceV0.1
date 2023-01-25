@@ -27,7 +27,7 @@ namespace LoginAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddCors();
+            //services.AddCors();
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
                 {
@@ -63,8 +63,9 @@ namespace LoginAPI
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env,LoginContext db)
         {
+            db.Database.Migrate();
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -77,12 +78,13 @@ namespace LoginAPI
 
             app.UseRouting();
 
-            app.UseCors(options =>
+           /* app.UseCors(options =>
             {
-                options.AllowAnyOrigin()
+                options.AllowAnyHeader()
                 .AllowAnyMethod()
-                .AllowAnyHeader();
-            });
+                .SetIsOriginAllowed(_ => true)
+                .AllowCredentials();
+            });*/
 
             app.UseAuthorization();
 

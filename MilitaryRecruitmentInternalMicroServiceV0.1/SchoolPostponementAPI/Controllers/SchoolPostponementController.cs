@@ -45,45 +45,28 @@ namespace SchoolPostponementAPI.Controllers
             _context.SaveChanges();
 
         }
-        private async Task<string> APICall(string GURI)
+       
+
+        [HttpGet]
+        [Route("GetNumberOfRequests")]
+        public int GetNumberOfRequests()
         {
-            var authorization = Request.Headers[HeaderNames.Authorization];
+            int result = _context.schoolDBS.Count();
+            result += _context.RequestStatuesDBS.Where(x => x.Statues == "wating" || x.Statues == "Faild").Count();
 
-            AuthenticationHeaderValue.TryParse(authorization, out var authentication);
-
-            string Token = "";
-
-
-            if (AuthenticationHeaderValue.TryParse(authorization, out var headerValue))
-            {
-                Token = headerValue.Parameter;
-            }
-
-            Uri uri = new Uri(GURI);
-
-            HttpClientHandler clientHandler = new HttpClientHandler();
-            clientHandler.ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => { return true; };
-
-            using (var Client = new HttpClient(clientHandler))
-            {
-                Client.BaseAddress = uri;
-                Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Token);
-                using (HttpResponseMessage response = await Client.GetAsync(Client.BaseAddress))
-                {
-                    if (response.IsSuccessStatusCode)
-                    {
-                        return response.Content.ReadAsStringAsync().Result;
-                    }
-                    else
-                    {
-                        return null;
-                    }
-                }
-            }
+            return result;
         }
 
         [HttpGet]
-        [Route("GetAllUserTransactions")]
+        [Route("GetAllTransactions/")]
+        public List<RequestStatues> GetAllTransactions()
+        {
+            List<RequestStatues> result = _context.RequestStatuesDBS.OrderByDescending(x => x.DateOfRecive).ToList<RequestStatues>();
+            return result;
+        }
+
+        [HttpGet]
+        [Route("GetAllUserTransactions/")]
         public List<RequestStatues> GetAllUserTransactions()
         {
             int CUserID = GetCurrentUserID();
@@ -91,10 +74,40 @@ namespace SchoolPostponementAPI.Controllers
             return result;
         }
 
+
+
+        [HttpGet]
+        [Route("GetNumberOfRequestsApproved")]
+        public int GetNumberOfRequestsApproved()
+        {
+            int result = _context.RequestStatuesDBS.Where(x => x.Statues == "Done").Count();
+
+            return result;
+        }
+
+        [HttpGet]
+        [Route("GetNumberOfRequestsProcessing")]
+        public int GetNumberOfRequestsProcessing()
+        {
+            int result = _context.RequestStatuesDBS.Where(x => x.Statues == "wating").Count();
+
+            return result;
+        }
+
+        [HttpGet]
+        [Route("GetNumberOfRequestsFaild")]
+        public int GetNumberOfRequestsFaild()
+        {
+            int result = _context.RequestStatuesDBS.Where(x => x.Statues == "Faild").Count();
+
+            return result;
+        }
+
         [HttpGet]
         [Route("GetAUserTransactions")]
         public Dictionary<string, string> GetAUserTransactions(int Reqid)
         {
+            Dictionary<string, string> result = new Dictionary<string, string>();
             RequestStatues requestStatues = _context.RequestStatuesDBS.Where(x => x.ReqStatuesID == Reqid).FirstOrDefault();
             if (requestStatues != null)
             {
@@ -105,7 +118,7 @@ namespace SchoolPostponementAPI.Controllers
                 AsyncStudyYears asyncStudyYears = _context.AsyncStudyYearsDBS.Where(x => x.RequestStatuesID == requestStatues).FirstOrDefault();
                 AsyncAge asyncAge = _context.AsyncAgeDBS.Where(x => x.RequestStatuesID == requestStatues).FirstOrDefault();
 
-                Dictionary<string, string> result = new Dictionary<string, string>();
+                
 
                 result.Add("asyncDroppedOut", asyncDroppedOut.statuse);
                 result.Add("asyncStudyingNow", asyncStudyingNow.statuse);
@@ -116,7 +129,7 @@ namespace SchoolPostponementAPI.Controllers
             }
             else
             {
-                return null;
+                return result;
             }
         }
 

@@ -39,23 +39,46 @@ namespace AlonePostponement.Controllers
         }
 
         [HttpGet]
-        [Route("GetAllUserTransactions")]
+        [Route("GetAllTransactions/")]
+        public List<RequestStatues> GetAllTransactions()
+        {
+            List<RequestStatues> result = _context.RequestStatuesDBS.OrderByDescending(x => x.DateOfRecive).ToList<RequestStatues>();
+            return result;
+        }
+
+        [HttpGet]
+        [Route("GetAllUserTransactions/")]
         public List<RequestStatues> GetAllUserTransactions()
         {
             int CUserID = GetCurrentUserID();
             List<RequestStatues> result = _context.RequestStatuesDBS.Where(x => x.UserID == CUserID).OrderByDescending(x => x.DateOfRecive).Take(10).ToList<RequestStatues>();
             return result;
         }
-
         [HttpGet]
-        [Route("GetAUserTransactions")]
-        public IDictionary GetAUserTransactions(int Reqid)
+        [Route("GetAUserTransactions/")]
+        public Dictionary<string, string> GetAUserTransactions(int Reqid)
         {
-            IDictionary result = new Dictionary<string, object>();
-            RequestStatues requestStatues = _context.RequestStatuesDBS.Find(Reqid);
-            result.Add("BrotherEill", _context.BrotherEillDBS.Where(x => x.RequestStatuesID == requestStatues).FirstOrDefault());
+            Dictionary<string, string> result = new Dictionary<string, string>();
+            RequestStatues requestStatues = _context.RequestStatuesDBS.Where(x => x.ReqStatuesID == Reqid).FirstOrDefault();
+            if (requestStatues != null)
+            {
 
-            return result;
+
+                BrotherEill brotherEill = _context.BrotherEillDBS.Where(x => x.RequestStatuesID == requestStatues).FirstOrDefault();
+                BrothersID brothersID = _context.BrothersIDDBS.Where(x => x.RequestStatuesID == requestStatues).FirstOrDefault();
+                DeadBrothers deadBrothers = _context.DeadBrothersDBS.Where(x => x.RequestStatuesID == requestStatues).FirstOrDefault();
+
+
+                result.Add("asynctravel", brotherEill.Statues);
+                result.Add("asynLabor", brothersID.Statues);
+                result.Add("asyncAge", deadBrothers.Statues);
+
+                return result;
+            }
+            else
+            {
+                return result;
+            }
         }
 
         [HttpGet]
@@ -63,6 +86,7 @@ namespace AlonePostponement.Controllers
         public int GetNumberOfRequests()
         {
             int result = _context.AlonePostponementDBS.Count();
+            result += _context.RequestStatuesDBS.Where(x=>x.Statues=="wating"|| x.Statues == "Faild").Count();
 
             return result;
         }
@@ -71,7 +95,7 @@ namespace AlonePostponement.Controllers
         [Route("GetNumberOfRequestsApproved")]
         public int GetNumberOfRequestsApproved()
         {
-            int result = _context.RequestStatuesDBS.Where(x => x.Statues == "wrong").Count();
+            int result = _context.RequestStatuesDBS.Where(x => x.Statues == "Done").Count();
 
             return result;
         }
@@ -86,10 +110,10 @@ namespace AlonePostponement.Controllers
         }
 
         [HttpGet]
-        [Route("GetNumberOfRequestsDeleted")]
-        public int GetNumberOfRequestsDeleted()
+        [Route("GetNumberOfRequestsFaild")]
+        public int GetNumberOfRequestsFaild()
         {
-            int result = _context.RequestStatuesDBS.Where(x => x.Statues == "deleted").Count();
+            int result = _context.RequestStatuesDBS.Where(x => x.Statues == "Faild").Count();
 
             return result;
         }
