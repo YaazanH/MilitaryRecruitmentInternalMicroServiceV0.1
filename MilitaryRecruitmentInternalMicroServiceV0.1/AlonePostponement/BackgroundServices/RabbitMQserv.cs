@@ -103,6 +103,7 @@ namespace AlonePostponement.BackgroundServices
             rs.DateOfRecive = DateTime.Now;
             rs.UserJWT = user.JWT;
             rs.Statues = "wating";
+            rs.PostponmentType = "AlonePostponement";
             _context.RequestStatuesDBS.Add(rs);
             _context.SaveChanges();
 

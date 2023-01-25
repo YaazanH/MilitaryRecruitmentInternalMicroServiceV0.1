@@ -12,10 +12,11 @@ using System.Text;
 using LoginAPI.Data;
 using Newtonsoft.Json.Linq;
 using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace LoginAPI.Controller
 {
-    [EnableCors]
+    //[EnableCors]
     [ApiController]
     [Route("LoginAPI")]
     public class LoginController : ControllerBase
@@ -69,8 +70,8 @@ namespace LoginAPI.Controller
                 new Claim(ClaimTypes.PrimarySid,user.UserID.ToString()),
                 new Claim(ClaimTypes.Role,user.Role),
             };
-            var token = new JwtSecurityToken(_config["jwt:Issuer"],
-                _config["jwt:Audience"],
+            var token = new JwtSecurityToken("https://192.168.168.103:60050/",
+                "https://192.168.168.103:60050/",
                 claims,
                 expires: DateTime.Now.AddDays(1),
                 signingCredentials: credentials);
@@ -88,14 +89,17 @@ namespace LoginAPI.Controller
             }
             return null;
         }
-      //  [Authorize(Roles = "Admin")]
-        [HttpPost]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [Authorize(Roles = "Admin")]
+        [HttpGet]
         [Route("AdminToken")]
-        public string GetUserToken([FromBody] JObject dataObject)
+        public string GetUserToken(string id)//[FromBody] JObject dataObject)
         {
             Login CurrentUser = new Login();
-            CurrentUser.UserID = int.Parse(dataObject["username"].ToString());
-            return Generate(CurrentUser);
+            CurrentUser.UserID = int.Parse(id); //dataObject["username"].ToString());
+            CurrentUser.Role = "user";
+            string token = Generate(CurrentUser);
+            return token;
         }
     }
 }

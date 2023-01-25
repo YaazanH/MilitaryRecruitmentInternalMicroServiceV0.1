@@ -45,7 +45,7 @@ namespace FinanceAPI.Controllers
             string MerchSecret = "70JWCXM60MX7A32ENV03XHQBD5FF4VSQIJV3KUUV5HFP0Y5M9DJDV8QZKHSGRHBE";
             string Currency = "SYP";
             string Lang = "AR";
-            string Verficode = CreateMD5(MerchID+MerchSecret+Amount.ToString()+orderRef);
+            string Verficode = CreateMD5(MerchID+MerchSecret+Amount.ToString()+orderRef).ToUpper();
 
 
             return new Uri(x1+ "/" +TerminalKey +"/" +MerchID+"/"+ Verficode + "/"+Currency + "/" + Amount.ToString()+ "/" + Lang + "/" + orderRef); ;

@@ -37,6 +37,14 @@ namespace TravelApprovalAPI.Controllers
         }
 
         [HttpGet]
+        [Route("GetAllTransactions/")]
+        public List<RequestStatues> GetAllTransactions()
+        {
+            List<RequestStatues> result = _context.RequestStatuesDBS.OrderByDescending(x => x.DateOfRecive).ToList<RequestStatues>();
+            return result;
+        }
+
+        [HttpGet]
         [Route("GetAllUserTransactions/")]
         public List<RequestStatues> GetAllUserTransactions()
         {
@@ -49,6 +57,7 @@ namespace TravelApprovalAPI.Controllers
         [Route("GetAUserTransactions/")]
         public Dictionary<string, string> GetAUserTransactions(int Reqid)
         {
+            Dictionary<string, string> result = new Dictionary<string, string>();
             RequestStatues requestStatues = _context.RequestStatuesDBS.Where(x => x.ReqStatuesID == Reqid).FirstOrDefault();
             if (requestStatues != null)
             {
@@ -58,7 +67,6 @@ namespace TravelApprovalAPI.Controllers
                 AsynLabor asynLabor = _context.AsynLaborDBS.Where(x => x.RequestStatuesID == requestStatues).FirstOrDefault();
                 AsyncAge asyncAge = _context.AsyncAgeDBS.Where(x => x.RequestStatuesID == requestStatues).FirstOrDefault();
 
-                Dictionary<string, string> result = new Dictionary<string, string>();
 
                 result.Add("asynctravel", asynctravel.statuse);                
                 result.Add("asynLabor", asynLabor.statuse);
@@ -68,7 +76,7 @@ namespace TravelApprovalAPI.Controllers
             }
             else
             {
-                return null;
+                return result;
             }
         }
 
@@ -77,6 +85,7 @@ namespace TravelApprovalAPI.Controllers
         public int GetNumberOfRequests()
         {
             int result = _context.TravelApprovalDb.Count();
+            result += _context.RequestStatuesDBS.Where(x => x.Statues == "wating" || x.Statues == "Faild").Count();
 
             return result;
         }
@@ -85,7 +94,7 @@ namespace TravelApprovalAPI.Controllers
         [Route("GetNumberOfRequestsApproved")]
         public int GetNumberOfRequestsApproved()
         {
-            int result = _context.RequestStatuesDBS.Where(x => x.Statues == "wrong").Count();
+            int result = _context.RequestStatuesDBS.Where(x => x.Statues == "Done").Count();
 
             return result;
         }
@@ -100,10 +109,10 @@ namespace TravelApprovalAPI.Controllers
         }
 
         [HttpGet]
-        [Route("GetNumberOfRequestsDeleted")]
-        public int GetNumberOfRequestsDeleted()
+        [Route("GetNumberOfRequestsFaild")]
+        public int GetNumberOfRequestsFaild()
         {
-            int result = _context.RequestStatuesDBS.Where(x => x.Statues == "deleted").Count();
+            int result = _context.RequestStatuesDBS.Where(x => x.Statues == "Faild").Count();
 
             return result;
         }

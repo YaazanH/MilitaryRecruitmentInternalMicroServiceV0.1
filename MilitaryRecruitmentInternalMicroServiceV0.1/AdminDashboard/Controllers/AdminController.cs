@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using AdminDashboard.Models;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Net.Http.Headers;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,20 +12,23 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Security.Claims;
+using System.Text;
 using System.Threading.Tasks;
 
 
 namespace AdminDashboard.Controllers
 {
+    
     [ApiController]
     [Route("AdminDashboard")]
-   // [Authorize(Roles ="admin")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [Authorize(Roles = "Admin")]
 
 
     public class AdminController : Controller
     {
 
-        public async Task<string> APICall(string GURI)
+        public async Task<string> APICall(string GURI,string Type)
         {
             var authorization = Request.Headers[HeaderNames.Authorization];
 
@@ -46,21 +51,78 @@ namespace AdminDashboard.Controllers
             {
                 Client.BaseAddress = uri;
                 Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Token);
-                using (HttpResponseMessage response = await Client.GetAsync(Client.BaseAddress))
+                try
                 {
-                    if (response.IsSuccessStatusCode)
+                    using (HttpResponseMessage response = await Client.GetAsync(Client.BaseAddress))
                     {
-                        return response.Content.ReadAsStringAsync().Result;
-                    }
-                    else
-                    {
-                        return null;
+                        if (response.IsSuccessStatusCode)
+                        {
+                            return response.Content.ReadAsStringAsync().Result;
+                        }
+                        else
+                        {
+                            string jsonString;
+                            switch (Type)
+                            {
+                                case "GetAllPosponment":
+
+                                    jsonString = JsonConvert.SerializeObject(0);
+                                    return jsonString;
+
+
+                                case "GetAllOfPosponment":
+                                    jsonString = JsonConvert.SerializeObject(0);
+                                    return jsonString;
+
+                                case "Token":
+                                    jsonString = JsonConvert.SerializeObject("0");
+                                    return jsonString;
+
+                                case "GetAllTransactionsURL":
+                                    List<RequestStatues> list = new List<RequestStatues>();
+                                    jsonString = JsonConvert.SerializeObject(list);
+                                    return jsonString;
+
+                                default:
+                                    return null;
+                            }
+                        }
                     }
                 }
+                catch (Exception)
+                {
+
+                    string jsonString;
+                    switch (Type)
+                    {
+                        case "GetAllPosponment":
+                            
+                            jsonString = JsonConvert.SerializeObject(0);
+                            return jsonString;
+
+
+                        case "GetAllOfPosponment":
+                            jsonString = JsonConvert.SerializeObject(0);
+                            return jsonString;
+
+                        case "Token":
+                            jsonString = JsonConvert.SerializeObject("0");
+                            return jsonString;
+
+                        case "GetAllTransactionsURL":
+                            List<RequestStatues> list = new List<RequestStatues>();
+                            jsonString = JsonConvert.SerializeObject(list);
+                            return jsonString;
+
+                        default:
+                            return null;
+                    }
+                }
+                
             }
         }
 
-        public async Task<string> APICall2(string GURI,string Token)
+        public async Task<string> APICall2(string GURI, string Token,HttpContent Data)
         {
 
             Uri uri = new Uri(GURI);
@@ -72,466 +134,240 @@ namespace AdminDashboard.Controllers
             {
                 Client.BaseAddress = uri;
                 Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Token);
-                using (HttpResponseMessage response = await Client.GetAsync(Client.BaseAddress))
+                try
                 {
-                    if (response.IsSuccessStatusCode)
+                    using (HttpResponseMessage response = await Client.PostAsync(Client.BaseAddress, Data))
                     {
-                        return response.Content.ReadAsStringAsync().Result;
-                    }
-                    else
-                    {
-                        return null;
+                        if (response.IsSuccessStatusCode)
+                        {
+                            return response.Content.ReadAsStringAsync().Result;
+                        }
+                        else
+                        {
+                            return "Faild";
+                        }
                     }
                 }
+                catch (Exception)
+                {
+                    return "Faild";
+                }
+                
             }
         }
 
-        public async Task<IActionResult> RequestPostponmentforUser (int RequestUserId)
+        [HttpPost]
+        [Route("PostRequestPostponmentforUser")]
+        public async Task<IActionResult> RequestPostponmentforUser([FromBody] JObject dataObject)
         {
-            string UserToken= JsonConvert.DeserializeObject<string>(await APICall("https://host.docker.internal:60050/LoginAPI/AdminToken" + RequestUserId));
-            string RequestStatus = JsonConvert.DeserializeObject<string>(await APICall2("https://192.168.168.103:60053/UserRequestHandler/GetUserRequestHandler", UserToken));
-            return Ok(RequestStatus);
+            var UserToken = await APICall("https://host.docker.internal:60050/LoginAPI/AdminToken?id=" + dataObject["userID"].ToString(), "Token");
+            if (UserToken!="0")
+            {              
+                var PID= dataObject["PostponementID"].ToString();    
+                var json = JsonConvert.SerializeObject(new { PostponementID = dataObject["PostponementID"].ToString() });
+                HttpContent data = new StringContent(json, Encoding.UTF8, "application/json");
+                var RequestStatus = await APICall2("https://host.docker.internal:60053/UserRequestHandler/GetUserRequestHandler", UserToken,data);
+                return Ok(RequestStatus);
+
+            }
+            return Ok("faild");
+            
         }
 
         [HttpGet]
-        [Route("GetAloneAll")]
-        public async Task<int>  AloneAll()
+        [Route("GetAllPosponment")]
+        public async Task<string> GetAllPosponment()
         {
-            int num = JsonConvert.DeserializeObject<int>(await APICall("https://host.docker.internal:40018/AlonePostponement/GetNumberOfRequests"));
-            return num;
+            Dictionary<string, string> AllPosponment = new Dictionary<string, string>();
+            int AloneNum = JsonConvert.DeserializeObject<int>(await APICall("https://host.docker.internal:60009/AlonePostponement/GetNumberOfRequests", "GetAllPosponment"));
+            int BrotherInServiceNum = JsonConvert.DeserializeObject<int>(await APICall("https://host.docker.internal:60001/BrotherInServicePostponement/GetNumberOfRequests", "GetAllPosponment"));
+            int CashAllowanceLessThan42Num = JsonConvert.DeserializeObject<int>(await APICall("https://host.docker.internal:60003/CashAllowanceLessThan42/GetNumberOfRequests", "GetAllPosponment"));
+            int FixedServiceAllowanceNum = JsonConvert.DeserializeObject<int>(await APICall("https://host.docker.internal:60004/FixedServiceAllowance/GetNumberOfRequests", "GetAllPosponment"));
+            int ObligatoryServiceNum = JsonConvert.DeserializeObject<int>(await APICall("https://host.docker.internal:60005/ObligatoryService/GetNumberOfRequests", "GetAllPosponment"));
+            int PostponementOfConvictsNum = JsonConvert.DeserializeObject<int>(await APICall("https://host.docker.internal:60006/PostponementOfConvicts/GetNumberOfRequests", "GetAllPosponment"));
+            int SchoolPostponementNum = JsonConvert.DeserializeObject<int>(await APICall("https://host.docker.internal:60007/SchoolPostponement/GetNumberOfRequests", "GetAllPosponment"));
+            int TravelApprovalNum = JsonConvert.DeserializeObject<int>(await APICall("https://host.docker.internal:60008/TravelApproval/GetNumberOfRequests", "GetAllPosponment"));
+            int CashAllowanceNum = JsonConvert.DeserializeObject<int>(await APICall("https://host.docker.internal:60002/CashAllowance/GetNumberOfRequests", "GetAllPosponment"));
+
+            AllPosponment.Add("1", AloneNum.ToString());
+            AllPosponment.Add("2", BrotherInServiceNum.ToString());
+            AllPosponment.Add("4", CashAllowanceLessThan42Num.ToString());
+            AllPosponment.Add("5", FixedServiceAllowanceNum.ToString());
+            AllPosponment.Add("6", ObligatoryServiceNum.ToString());
+            AllPosponment.Add("7", PostponementOfConvictsNum.ToString());
+            AllPosponment.Add("8", SchoolPostponementNum.ToString());
+            AllPosponment.Add("9", TravelApprovalNum.ToString());
+            AllPosponment.Add("3", CashAllowanceNum.ToString());
+
+
+            var jsonString = JsonConvert.SerializeObject(AllPosponment);
+
+            return jsonString;
         }
 
-        [HttpGet]
-        [Route("GetAloneApproved")]
-        public async Task<int> AloneApproved()
-        {
-            int num = JsonConvert.DeserializeObject<int>(await APICall("https://host.docker.internal:40018/AlonePostponement/GetNumberOfRequestsApproved"));
-            return num;
-        }
 
-        [HttpGet]
-        [Route("GetAlonePreocessing")]
-        public async Task<int> AlonePreocessing()
+        [HttpPost]
+        [Route("GetAllOfPosponment")]
+        public async Task<string> GetAllOfPosponment([FromBody] JObject dataObject)
         {
-            int num = JsonConvert.DeserializeObject<int>(await APICall("https://host.docker.internal:40018/AlonePostponement/GetNumberOfRequestsProcessing"));
-            return num;
-        }
+            Dictionary<string, string> GetAllPostDic = new Dictionary<string, string>();
+            int GetApproved = 0, GetWating = 0, GetFaild = 0;
+            string RequestsApprovedURL = "";
+            string RequestsProcessingURL = "";
+            string RequestsFaildgURL = "";
+            switch (Int32.Parse(dataObject["PostponementID"].ToString()))
+            {
+                case 1:
+                     RequestsApprovedURL="https://host.docker.internal:60009/AlonePostponement/GetNumberOfRequestsApproved";
+                     RequestsProcessingURL = "https://host.docker.internal:60009/AlonePostponement/GetNumberOfRequestsProcessing";
+                     RequestsFaildgURL = "https://host.docker.internal:60009/AlonePostponement/GetNumberOfRequestsFaild";
 
-        [HttpGet]
-        [Route("GetAloneDeleted")]
-        public async Task<int> AloneDeleted()
-        {
-            int num = JsonConvert.DeserializeObject<int>(await APICall("https://host.docker.internal:40018/AlonePostponement/GetNumberOfRequestsDeleted"));
-            return num;
-        }
 
-        [HttpGet]
-        [Route("GetAloneUserPostponment")]
-        public async Task<Models.AlonePostponement> GetAloneUserPostponment()
-        {
-            Models.AlonePostponement Pos = JsonConvert.DeserializeObject<Models.AlonePostponement>(await APICall("https://host.docker.internal:40018/AlonePostponement/SearchUserPostponment"));
-            return Pos;
-        }
+                    break;
 
-        [HttpGet]
-        [Route("GetAllAloneUserPostponment")]
-        public async Task<List<Models.AlonePostponement>> GetAllAloneUserPostponment()
-        {
-            List<Models.AlonePostponement> Pos = JsonConvert.DeserializeObject<List<Models.AlonePostponement>>(await APICall("https://host.docker.internal:40018/AlonePostponement/SearchAllPostponment"));
-            return Pos;
-        }
+                case 2:
+                     RequestsApprovedURL="https://host.docker.internal:60001/BrotherInServicePostponement/GetNumberOfRequestsApproved";
+                    RequestsProcessingURL = "https://host.docker.internal:60001/BrotherInServicePostponement/GetNumberOfRequestsProcessing";
+                     RequestsFaildgURL = "https://host.docker.internal:60001/BrotherInServicePostponement/GetNumberOfRequestsFaild";
 
-        [HttpGet]
-        [Route("GetBrotherInServiceAll")]
-        public async Task<int> BrotherInServiceAll()
-        {
-            int num = JsonConvert.DeserializeObject<int>(await APICall("https://host.docker.internal:40018/BrotherInServicePostponement/GetNumberOfRequests"));
-            return num;
-        }
 
-        [HttpGet]
-        [Route("GetBrotherInServiceApproved")]
-        public async Task<int> BrotherInServiceApproved()
-        {
-            int num = JsonConvert.DeserializeObject<int>(await APICall("https://host.docker.internal:40018/BrotherInServicePostponement/GetNumberOfRequestsApproved"));
-            return num;
-        }
+                    break;
 
-        [HttpGet]
-        [Route("GetBrotherInServicePreocessing")]
-        public async Task<int> BrotherInServicePreocessing()
-        {
-            int num = JsonConvert.DeserializeObject<int>(await APICall("https://host.docker.internal:40018/BrotherInServicePostponement/GetNumberOfRequestsProcessing"));
-            return num;
-        }
+                case 3:
+                    RequestsApprovedURL = "https://host.docker.internal:60002/CashAllowance/GetNumberOfRequestsApproved";
+                     RequestsProcessingURL = "https://host.docker.internal:60002/CashAllowance/GetNumberOfRequestsProcessing";
+                     RequestsFaildgURL = "https://host.docker.internal:60002/CashAllowance/GetNumberOfRequestsFaild";
 
-        [HttpGet]
-        [Route("GetBrotherInServiceDeleted")]
-        public async Task<int> BrotherInServiceDeleted()
-        {
-            int num = JsonConvert.DeserializeObject<int>(await APICall("https://host.docker.internal:40018/BrotherInServicePostponement/GetNumberOfRequestsDeleted"));
-            return num;
-        }
 
-        [HttpGet]
-        [Route("GetBrotherInServicePostponment")]
-        public async Task<Models.BrotherInServicePostponement> GetBrotherInServicePostponment()
-        {
-            Models.BrotherInServicePostponement Pos = JsonConvert.DeserializeObject<Models.BrotherInServicePostponement>(await APICall("https://host.docker.internal:40018/BrotherInServicePostponement/SearchUserPostponment"));
-            return Pos;
-        }
-        [HttpGet]
-        [Route("GetAllBrotherInServicePostponment")]
-        public async Task<List<Models.BrotherInServicePostponement>> GetAllBrotherInServicePostponment()
-        {
-            List<Models.BrotherInServicePostponement> Pos = JsonConvert.DeserializeObject<List<Models.BrotherInServicePostponement>>(await APICall("https://host.docker.internal:40018/BrotherInServicePostponement/SearchAllPostponment"));
-            return Pos;
-        }
+                    break;
 
-        [HttpGet]
-        [Route("GetCashLessAll")]
-        public async Task<int> CashLessAll()
-        {
-            int num = JsonConvert.DeserializeObject<int>(await APICall("https://host.docker.internal:40018/CashAllowanceLessThan42/GetNumberOfRequests"));
-            return num;
-        }
+                case 4:
+                    RequestsApprovedURL = "https://host.docker.internal:60003/CashAllowanceLessThan42/GetNumberOfRequestsApproved";
+                     RequestsProcessingURL = "https://host.docker.internal:60003/CashAllowanceLessThan42/GetNumberOfRequestsProcessing";
+                     RequestsFaildgURL = "https://host.docker.internal:60003/CashAllowanceLessThan42/GetNumberOfRequestsFaild";
 
-        [HttpGet]
-        [Route("GetCashLessApproved")]
-        public async Task<int> CashLessApproved()
-        {
-            int num = JsonConvert.DeserializeObject<int>(await APICall("https://host.docker.internal:40018/CashAllowanceLessThan42/GetNumberOfRequestsApproved"));
-            return num;
-        }
 
-        [HttpGet]
-        [Route("GetCashLessPreocessing")]
-        public async Task<int> CashLessPreocessing()
-        {
-            int num = JsonConvert.DeserializeObject<int>(await APICall("https://host.docker.internal:40018/CashAllowanceLessThan42/GetNumberOfRequestsProcessing"));
-            return num;
-        }
+                    break;
 
-        [HttpGet]
-        [Route("GetCashLessDeleted")]
-        public async Task<int> CashLessDeleted()
-        {
-            int num = JsonConvert.DeserializeObject<int>(await APICall("https://host.docker.internal:40018/CashAllowanceLessThan42/GetNumberOfRequestsDeleted"));
-            return num;
-        }
+                case 5:
+                     RequestsApprovedURL = "https://host.docker.internal:60004/FixedServiceAllowance/GetNumberOfRequestsApproved";
+                     RequestsProcessingURL = "https://host.docker.internal:60004/FixedServiceAllowance/GetNumberOfRequestsProcessing";
+                     RequestsFaildgURL = "https://host.docker.internal:60004/FixedServiceAllowance/GetNumberOfRequestsFaild";
 
-        [HttpGet]
-        [Route("GetCashLessPostponment")]
-        public async Task<Models.CashAllowancLessThan42Model> GetCashLessPostponment()
-        {
-            Models.CashAllowancLessThan42Model Pos = JsonConvert.DeserializeObject<Models.CashAllowancLessThan42Model>(await APICall("https://host.docker.internal:40018/CashAllowanceLessThan42/SearchUserPostponment"));
-            return Pos;
-        }
+                    break;
 
-        [HttpGet]
-        [Route("GetAllCashLessPostponment")]
-        public async Task<List<Models.CashAllowancLessThan42Model>> GetAllCashLessPostponment()
-        {
-            List<Models.CashAllowancLessThan42Model> Pos = JsonConvert.DeserializeObject<List<Models.CashAllowancLessThan42Model>>(await APICall("https://host.docker.internal:40018/CashAllowanceLessThan42/SearchAllPostponment"));
-            return Pos;
+                case 6:
+                    RequestsApprovedURL = "https://host.docker.internal:60005/ObligatoryService/GetNumberOfRequestsApproved";
+                     RequestsProcessingURL = "https://host.docker.internal:60005/ObligatoryService/GetNumberOfRequestsProcessing";
+                     RequestsFaildgURL = "https://host.docker.internal:60005/ObligatoryService/GetNumberOfRequestsFaild";
+
+                    break;
+
+                case 7:
+                    RequestsApprovedURL = "https://host.docker.internal:60006/PostponementOfConvicts/GetNumberOfRequestsApproved";
+                     RequestsProcessingURL = "https://host.docker.internal:60006/PostponementOfConvicts/GetNumberOfRequestsProcessing";
+                     RequestsFaildgURL = "https://host.docker.internal:60006/PostponementOfConvicts/GetNumberOfRequestsFaild";
+
+                    break;
+
+                case 8:
+                    RequestsApprovedURL = "https://host.docker.internal:60007/SchoolPostponement/GetNumberOfRequestsApproved";
+                     RequestsProcessingURL = "https://host.docker.internal:60007/SchoolPostponement/GetNumberOfRequestsProcessing";
+                     RequestsFaildgURL = "https://host.docker.internal:60007/SchoolPostponement/GetNumberOfRequestsFaild";
+
+                    break;
+
+                case 9:
+                    RequestsApprovedURL = "https://host.docker.internal:60008/TravelApproval/GetNumberOfRequestsApproved";
+                     RequestsProcessingURL = "https://host.docker.internal:60008/TravelApproval/GetNumberOfRequestsProcessing";
+                     RequestsFaildgURL = "https://host.docker.internal:60008/TravelApproval/GetNumberOfRequestsFaild";
+
+                    break;
+
+            }
+
+            GetApproved = JsonConvert.DeserializeObject<int>(await APICall(RequestsApprovedURL, "GetAllOfPosponment"));
+            GetWating = JsonConvert.DeserializeObject<int>(await APICall(RequestsProcessingURL, "GetAllOfPosponment"));
+            GetFaild = JsonConvert.DeserializeObject<int>(await APICall(RequestsFaildgURL, "GetAllOfPosponment"));
+
+            GetAllPostDic.Add("proccessingPostponments", GetWating.ToString());
+            GetAllPostDic.Add("completedPostponments", GetApproved.ToString());
+            GetAllPostDic.Add("failedPostponments", GetFaild.ToString());
+
+            var jsonString = JsonConvert.SerializeObject(GetAllPostDic);
+
+            return jsonString;
         }
 
 
 
-        [HttpGet]
-        [Route("GetFixedServiceAllowanceAll")]
-        public async Task<int> FixedServiceAllowanceAll()
+        [HttpPost]
+        [Route("GetAllTransactions")]
+        public async Task<string> GetAllTransactions([FromBody] JObject dataObject)
         {
-            int num = JsonConvert.DeserializeObject<int>(await APICall("https://host.docker.internal:40018/FixedServiceAllowance/GetNumberOfRequests"));
-            return num;
+            string GetAllTransactionsURL = "";
+
+            switch (Int32.Parse(dataObject["PostponementID"].ToString()))
+            {
+                case 1:
+                    GetAllTransactionsURL = "https://host.docker.internal:60009/AlonePostponement/GetAllTransactions";
+                   
+
+                    break;
+
+                case 2:
+                    GetAllTransactionsURL = "https://host.docker.internal:60001/BrotherInServicePostponement/GetAllTransactions";
+                   
+                    break;
+
+                case 3:
+                    GetAllTransactionsURL = "https://host.docker.internal:60002/CashAllowance/GetAllTransactions";
+                    
+
+                    break;
+
+                case 4:
+                    GetAllTransactionsURL = "https://host.docker.internal:60003/CashAllowanceLessThan42/GetAllTransactions";
+                    
+
+                    break;
+
+                case 5:
+                    GetAllTransactionsURL = "https://host.docker.internal:60004/FixedServiceAllowance/GetAllTransactions";
+                    
+                    break;
+
+                case 6:
+                    GetAllTransactionsURL = "https://host.docker.internal:60005/ObligatoryService/GetAllTransactions";
+                    
+                    break;
+
+                case 7:
+                    GetAllTransactionsURL = "https://host.docker.internal:60006/PostponementOfConvicts/GetAllTransactions";
+                     
+                    break;
+
+                case 8:
+                    GetAllTransactionsURL = "https://host.docker.internal:60007/SchoolPostponement/GetAllTransactions";
+                    
+                    break;
+
+                case 9:
+                    GetAllTransactionsURL = "https://host.docker.internal:60008/TravelApproval/GetAllTransactions";
+                    
+                    break;
+
+            }
+
+            List<RequestStatues> result = JsonConvert.DeserializeObject<List<RequestStatues>>(await APICall(GetAllTransactionsURL, "GetAllTransactions"));
+            
+           
+            var jsonString = JsonConvert.SerializeObject(result);
+
+            return jsonString;
         }
 
-        [HttpGet]
-        [Route("GetFixedServiceAllowanceApproved")]
-        public async Task<int> FixedServiceAllowanceApproved()
-        {
-            int num = JsonConvert.DeserializeObject<int>(await APICall("https://host.docker.internal:40018/FixedServiceAllowance/GetNumberOfRequestsApproved"));
-            return num;
-        }
-
-        [HttpGet]
-        [Route("GetFixedServiceAllowancePreocessing")]
-        public async Task<int> FixedServiceAllowancePreocessing()
-        {
-            int num = JsonConvert.DeserializeObject<int>(await APICall("https://host.docker.internal:40018/FixedServiceAllowance/GetNumberOfRequestsProcessing"));
-            return num;
-        }
-
-        [HttpGet]
-        [Route("GetFixedServiceAllowanceDeleted")]
-        public async Task<int> FixedServiceAllowanceDeleted()
-        {
-            int num = JsonConvert.DeserializeObject<int>(await APICall("https://host.docker.internal:40018/FixedServiceAllowance/GetNumberOfRequestsDeleted"));
-            return num;
-        }
-
-        [HttpGet]
-        [Route("GetFixedServiceAllowancePostponment")]
-        public async Task<Models.FixedServiceAllowance> GetFixedServiceAllowancePostponment()
-        {
-            Models.FixedServiceAllowance Pos = JsonConvert.DeserializeObject<Models.FixedServiceAllowance>(await APICall("https://host.docker.internal:40018/FixedServiceAllowance/SearchUserPostponment"));
-            return Pos;
-        }
-
-        [HttpGet]
-        [Route("GetAllFixedServiceAllowancePostponment")]
-        public async Task<List<Models.FixedServiceAllowance>> GetAllFixedServiceAllowancePostponment()
-        {
-            List<Models.FixedServiceAllowance> Pos = JsonConvert.DeserializeObject<List<Models.FixedServiceAllowance>>(await APICall("https://host.docker.internal:40018/FixedServiceAllowance/SearchAllPostponment"));
-            return Pos;
-        }
-        [HttpGet]
-        [Route("GetObligatoryServiceAll")]
-        public async Task<int> ObligatoryServiceAll()
-        {
-            int num = JsonConvert.DeserializeObject<int>(await APICall("https://host.docker.internal:40018/ObligatoryService/GetNumberOfRequests"));
-            return num;
-        }
-
-        [HttpGet]
-        [Route("GetObligatoryServiceApproved")]
-        public async Task<int> ObligatoryServiceApproved()
-        {
-            int num = JsonConvert.DeserializeObject<int>(await APICall("https://host.docker.internal:40018/ObligatoryService/GetNumberOfRequestsApproved"));
-            return num;
-        }
-        [HttpGet]
-        [Route("GetObligatoryServicePreocessing")]
-
-        public async Task<int> ObligatoryServicePreocessing()
-        {
-            int num = JsonConvert.DeserializeObject<int>(await APICall("https://host.docker.internal:40018/ObligatoryService/GetNumberOfRequestsProcessing"));
-            return num;
-        }
-        [HttpGet]
-        [Route("GetObligatoryServiceDeleted")]
-
-        public async Task<int> ObligatoryServiceDeleted()
-        {
-            int num = JsonConvert.DeserializeObject<int>(await APICall("https://host.docker.internal:40018/ObligatoryService/GetNumberOfRequestsDeleted"));
-            return num;
-        }
-
-        [HttpGet]
-        [Route("GetObligatoryServicePostponment")]
-        public async Task<Models.ObligatoryService> GetObligatoryServicePostponment()
-        {
-            Models.ObligatoryService Pos = JsonConvert.DeserializeObject<Models.ObligatoryService>(await APICall("https://host.docker.internal:40018/ObligatoryService/SearchUserPostponment"));
-            return Pos;
-        }
-
-        [HttpGet]
-        [Route("GetAllObligatoryServicePostponment")]
-        public async Task<List<Models.ObligatoryService>> GetAllObligatoryServicePostponment()
-        {
-            List<Models.ObligatoryService> Pos = JsonConvert.DeserializeObject<List<Models.ObligatoryService>>(await APICall("https://host.docker.internal:40018/ObligatoryService/SearchAllPostponment"));
-            return Pos;
-        }
-
-        [HttpGet]
-        [Route("GetPostponementOfConvictsAll")]
-        public async Task<int> PostponementOfConvictsAll()
-        {
-            int num = JsonConvert.DeserializeObject<int>(await APICall("https://host.docker.internal:40018/PostponementOfConvicts/GetNumberOfRequests"));
-            return num;
-        }
-
-        [HttpGet]
-        [Route("GetPostponementOfConvictsApproved")]
-        public async Task<int> PostponementOfConvictsApproved()
-        {
-            int num = JsonConvert.DeserializeObject<int>(await APICall("https://host.docker.internal:40018/PostponementOfConvicts/GetNumberOfRequestsApproved"));
-            return num;
-        }
-
-        [HttpGet]
-        [Route("GetPostponementOfConvictsPreocessing")]
-        public async Task<int> PostponementOfConvictsPreocessing()
-        {
-            int num = JsonConvert.DeserializeObject<int>(await APICall("https://host.docker.internal:40018/PostponementOfConvicts/GetNumberOfRequestsProcessing"));
-            return num;
-        }
-
-        [HttpGet]
-        [Route("GetPostponementOfConvictsDeleted")]
-        public async Task<int> PostponementOfConvictsDeleted()
-        {
-            int num = JsonConvert.DeserializeObject<int>(await APICall("https://host.docker.internal:40018/PostponementOfConvicts/GetNumberOfRequestsDeleted"));
-            return num;
-        }
-
-        [HttpGet]
-        [Route("GetPostponementOfConvictsPostponment")]
-        public async Task<Models.PostponementOfConvicts> GetPostponementOfConvictsPostponment()
-        {
-            Models.PostponementOfConvicts Pos = JsonConvert.DeserializeObject<Models.PostponementOfConvicts>(await APICall("https://host.docker.internal:40018/PostponementOfConvicts/SearchUserPostponment"));
-            return Pos;
-        }
-
-        [HttpGet]
-        [Route("GetAllPostponementOfConvictsPostponment")]
-        public async Task<List<Models.PostponementOfConvicts>> GetAllPostponementOfConvictsPostponment()
-        {
-            List<Models.PostponementOfConvicts> Pos = JsonConvert.DeserializeObject<List<Models.PostponementOfConvicts>>(await APICall("https://host.docker.internal:40018/PostponementOfConvicts/SearchAllPostponment"));
-            return Pos;
-        }
-
-
-
-        [HttpGet]
-        [Route("GetSchoolPostponementAll")]
-        public async Task<int> SchoolPostponementAll()
-        {
-            int num = JsonConvert.DeserializeObject<int>(await APICall("https://host.docker.internal:40018/SchoolPostponement/GetNumberOfRequests"));
-            return num;
-        }
-
-        [HttpGet]
-        [Route("GetSchoolPostponementApproved")]
-        public async Task<int> SchoolPostponementApproved()
-        {
-            int num = JsonConvert.DeserializeObject<int>(await APICall("https://host.docker.internal:40018/SchoolPostponement/GetNumberOfRequestsApproved"));
-            return num;
-        }
-
-        [HttpGet]
-        [Route("GetSchoolPostponementPreocessing")]
-        public async Task<int> SchoolPostponementPreocessing()
-        {
-            int num = JsonConvert.DeserializeObject<int>(await APICall("https://host.docker.internal:40018/SchoolPostponement/GetNumberOfRequestsProcessing"));
-            return num;
-        }
-
-        [HttpGet]
-        [Route("GetSchoolPostponementDeleted")]
-        public async Task<int> SchoolPostponementDeleted()
-        {
-            int num = JsonConvert.DeserializeObject<int>(await APICall("https://host.docker.internal:40018/SchoolPostponement/GetNumberOfRequestsDeleted"));
-            return num;
-        }
-
-        [HttpGet]
-        [Route("GetSchoolPostponementPostponment")]
-        public async Task<Models.SchoolPostponement> GetSchoolPostponementPostponment()
-        {
-            Models.SchoolPostponement Pos = JsonConvert.DeserializeObject<Models.SchoolPostponement>(await APICall("https://host.docker.internal:40018/SchoolPostponement/SearchUserPostponment"));
-            return Pos;
-        }
-
-        [HttpGet]
-        [Route("GetAllSchoolPostponementPostponment")]
-        public async Task<List<Models.SchoolPostponement>> GetAllSchoolPostponementPostponment()
-        {
-            List<Models.SchoolPostponement> Pos = JsonConvert.DeserializeObject<List<Models.SchoolPostponement>>(await APICall("https://host.docker.internal:40018/SchoolPostponement/SearchAllPostponment"));
-            return Pos;
-        }
-
-
-
-        [HttpGet]
-        [Route("GetTravelApprovalAll")]
-        public async Task<int> TravelApprovalAll()
-        {
-            int num = JsonConvert.DeserializeObject<int>(await APICall("https://host.docker.internal:40018/TravelApproval/GetNumberOfRequests"));
-            return num;
-        }
-
-        [HttpGet]
-        [Route("GetTravelApprovalApproved")]
-        public async Task<int> TravelApprovalApproved()
-        {
-            int num = JsonConvert.DeserializeObject<int>(await APICall("https://host.docker.internal:40018/TravelApproval/GetNumberOfRequestsApproved"));
-            return num;
-        }
-
-        [HttpGet]
-        [Route("GetTravelApprovalPreocessing")]
-        public async Task<int> TravelApprovalPreocessing()
-        {
-            int num = JsonConvert.DeserializeObject<int>(await APICall("https://host.docker.internal:40018/TravelApproval/GetNumberOfRequestsProcessing"));
-            return num;
-        }
-
-        [HttpGet]
-        [Route("GetTravelApprovalDeleted")]
-        public async Task<int> TravelApprovalDeleted()
-        {
-            int num = JsonConvert.DeserializeObject<int>(await APICall("https://host.docker.internal:40018/TravelApproval/GetNumberOfRequestsDeleted"));
-            return num;
-        }
-
-        [HttpGet]
-        [Route("GetTravelApprovalPostponment")]
-        public async Task<Models.TravelApproval> GetTravelApprovalPostponment()
-        {
-            Models.TravelApproval Pos = JsonConvert.DeserializeObject<Models.TravelApproval>(await APICall("https://host.docker.internal:40018/TravelApproval/SearchUserPostponment"));
-            return Pos;
-        }
-
-        [HttpGet]
-        [Route("GetAllTravelApprovalPostponment")]
-        public async Task<List<Models.TravelApproval>> GetAllTravelApprovalPostponment()
-        {
-            List<Models.TravelApproval> Pos = JsonConvert.DeserializeObject<List<Models.TravelApproval>>(await APICall("https://host.docker.internal:40018/TravelApproval/SearchAllPostponment"));
-            return Pos;
-        }
-
-
-
-        [HttpGet]
-        [Route("GetCashAllowancelAll")]
-        public async Task<int> CashAllowancelAll()
-        {
-            int num = JsonConvert.DeserializeObject<int>(await APICall("https://host.docker.internal:40018/CashAllowance/GetNumberOfRequests"));
-            return num;
-        }
-
-        [HttpGet]
-        [Route("GetCashAllowanceApproved")]
-        public async Task<int> CashAllowanceApproved()
-        {
-            int num = JsonConvert.DeserializeObject<int>(await APICall("https://host.docker.internal:40018/CashAllowance/GetNumberOfRequestsApproved"));
-            return num;
-        }
-
-        [HttpGet]
-        [Route("GetCashAllowancePreocessing")]
-        public async Task<int> CashAllowancePreocessing()
-        {
-            int num = JsonConvert.DeserializeObject<int>(await APICall("https://host.docker.internal:40018/CashAllowance/GetNumberOfRequestsProcessing"));
-            return num;
-        }
-
-
-        [HttpGet]
-        [Route("GetCashAllowanceDeleted")]
-        public async Task<int> CashAllowanceDeleted()
-        {
-            int num = JsonConvert.DeserializeObject<int>(await APICall("https://host.docker.internal:40018/CashAllowance/GetNumberOfRequestsDeleted"));
-            return num;
-        }
-
-
-        [HttpGet]
-        [Route("GetCashAllowancePostponment")]
-        public async Task<Models.CashAllowance> GetCashAllowancePostponment()
-        {
-            Models.CashAllowance Pos = JsonConvert.DeserializeObject<Models.CashAllowance>(await APICall("https://host.docker.internal:40018/CashAllowance/SearchUserPostponment"));
-            return Pos;
-        }
-
-        [HttpGet]
-        [Route("GetAllCashAllowancePostponment")]
-        public async Task<List<Models.CashAllowance>> GetAllCashAllowancePostponment()
-        {
-            List<Models.CashAllowance> Pos = JsonConvert.DeserializeObject<List<Models.CashAllowance>>(await APICall("https://host.docker.internal:40018/CashAllowance/SearchAllPostponment"));
-            return Pos;
-        }
+        
     }
-      
+
 }

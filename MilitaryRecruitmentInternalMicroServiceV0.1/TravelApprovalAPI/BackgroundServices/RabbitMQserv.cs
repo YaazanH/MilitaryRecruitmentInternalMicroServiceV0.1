@@ -145,7 +145,7 @@ namespace TravelApprovalAPI.BackgroundServices
             RabbitMQobj rabbitMQobj = new RabbitMQobj() { JWT = Token };
             for (int i = 0; i < 3; i++)
             {
-                if (i == 0)
+                if (i == 2)
                 {
                     Asynctravel asynctravel = new Asynctravel() { RequestStatuesID = requestStatues,RequestSendTime = DateTime.Now ,statuse="wating"};
                     _context.AsynctravelDBS.Add(asynctravel);
@@ -164,7 +164,7 @@ namespace TravelApprovalAPI.BackgroundServices
                     rabbitMQobj.URL = "https://" + ExternalIP + ":40024/LaborMinAPI/GetIsAWorker";
                     properties.CorrelationId = "GetasynLabor";
                 }
-                else if(i == 2)
+                else if(i == 0)
                 {
                     AsyncAge asyncAge = new AsyncAge() { RequestStatuesID = requestStatues, RequestSendTime = DateTime.Now, statuse = "wating" };
                     _context.AsyncAgeDBS.Add(asyncAge);

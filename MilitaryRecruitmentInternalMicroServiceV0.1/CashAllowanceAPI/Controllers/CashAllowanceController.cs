@@ -37,7 +37,16 @@ namespace CashAllowanceAPI.Controllers
         }
 
         [HttpGet]
-        [Route("GetAllUserTransactions")]
+        [Route("GetAllTransactions/")]
+        public List<RequestStatues> GetAllTransactions()
+        {
+            List<RequestStatues> result = _context.RequestStatuesDBS.OrderByDescending(x => x.DateOfRecive).ToList<RequestStatues>();
+            return result;
+        }
+
+
+        [HttpGet]
+        [Route("GetAllUserTransactions/")]
         public List<RequestStatues> GetAllUserTransactions()
         {
             int CUserID = GetCurrentUserID();
@@ -49,13 +58,13 @@ namespace CashAllowanceAPI.Controllers
         [Route("GetAUserTransactions")]
         public Dictionary<string, string> GetAUserTransactions(int Reqid)
         {
-
+            Dictionary<string, string> result = new Dictionary<string, string>();
             RequestStatues requestStatues = _context.RequestStatuesDBS.Where(x => x.ReqStatuesID == Reqid).FirstOrDefault();
             if (requestStatues != null)
             {                
                 AsyncAge asyncAge = _context.AsyncAgeDb.Where(x => x.RequestStatuesID == requestStatues).FirstOrDefault();
 
-                Dictionary<string, string> result = new Dictionary<string, string>();
+                
 
                 result.Add("asyncAge", asyncAge.Statues);
 
@@ -63,15 +72,19 @@ namespace CashAllowanceAPI.Controllers
             }
             else
             {
-                return null;
+                return result;
             }
         }
+
+
 
         [HttpGet]
         [Route("GetNumberOfRequests")]
         public int GetNumberOfRequests()
         {
             int result = _context.CashAllowanceDb.Count();
+            result += _context.RequestStatuesDBS.Where(x => x.Statues == "wating" || x.Statues == "Faild").Count();
+
 
             return result;
         }
@@ -80,7 +93,7 @@ namespace CashAllowanceAPI.Controllers
         [Route("GetNumberOfRequestsApproved")]
         public int GetNumberOfRequestsApproved()
         {
-            int result = _context.RequestStatuesDBS.Where(x => x.Statues == "wrong").Count();
+            int result = _context.RequestStatuesDBS.Where(x => x.Statues == "Done").Count();
 
             return result;
         }
@@ -95,10 +108,10 @@ namespace CashAllowanceAPI.Controllers
         }
 
         [HttpGet]
-        [Route("GetNumberOfRequestsDeleted")]
-        public int GetNumberOfRequestsDeleted()
+        [Route("GetNumberOfRequestsFaild")]
+        public int GetNumberOfRequestsFaild()
         {
-            int result = _context.RequestStatuesDBS.Where(x => x.Statues == "deleted").Count();
+            int result = _context.RequestStatuesDBS.Where(x => x.Statues == "Faild").Count();
 
             return result;
         }
@@ -125,24 +138,9 @@ namespace CashAllowanceAPI.Controllers
 
             return result;
         }
-        /*
-        [HttpGet]
-        [Route("GetAllUserTransactions")]
-        public List<RequestStatues> GetAllUserTransactions()
-        {
-            int CUserID = GetCurrentUserID();
-            List<RequestStatues> result = _context.RequestStatuesDBS.Where(x => x.UserID == CUserID).OrderByDescending(x => x.DateOfRecive).Take(10).ToList<RequestStatues>();
-            return result;
-        }
+        
 
-        [HttpGet]
-        [Route("GetAUserTransactions")]
-        public RequestStatues GetAUserTransactions(int Reqid)
-        {
-            RequestStatues result = _context.RequestStatuesDBS.Where(x => x.ReqStatuesID == Reqid).FirstOrDefault();
-            return result;
-        }
-*/
+
 
 
 

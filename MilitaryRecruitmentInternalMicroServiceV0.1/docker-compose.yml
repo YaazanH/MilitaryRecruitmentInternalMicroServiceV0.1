@@ -20,7 +20,7 @@ services:
     ports:
       - "8501:8500"
       - "8601:8600/udp"
-    command:  consul agent -dev -server -ui -node=server-1 -bootstrap-expect=1 -client="0.0.0.0"
+    command: consul agent -dev -server -ui -node=server-1 -bootstrap-expect=1 -client="0.0.0.0"
 
   uptime-kuma:
     image: louislam/uptime-kuma
@@ -37,6 +37,9 @@ services:
       dockerfile: SchoolPostponementAPI/Dockerfile
     ports:
       - "60017:443"
+    depends_on:
+      RabbitMQ:
+        condition: service_healthy
 
   travelapprovalapi:
     image: ${DOCKER_REGISTRY-}travelapprovalapi
@@ -44,8 +47,11 @@ services:
       context: .
       dockerfile: TravelApprovalAPI/Dockerfile
     ports:
-      - "61008:80"
+      #- "61008:80"
       - "60008:443"
+    depends_on:
+      RabbitMQ:
+        condition: service_healthy
 
   cashallowanceapi:
     image: ${DOCKER_REGISTRY-}cashallowanceapi
@@ -55,6 +61,9 @@ services:
     ports:
 
       - "60002:443"
+    depends_on:
+      RabbitMQ:
+        condition: service_healthy
 
   cashallowanclessthan42:
     image: ${DOCKER_REGISTRY-}cashallowanclessthan42
@@ -63,6 +72,9 @@ services:
       dockerfile: CashAllowancLessThan42/Dockerfile
     ports:
       - "60003:443"
+    depends_on:
+      RabbitMQ:
+        condition: service_healthy
 
   alonepostponement:
     image: ${DOCKER_REGISTRY-}alonepostponement
@@ -72,6 +84,9 @@ services:
     ports:
 
       - "60009:443"
+    depends_on:
+      RabbitMQ:
+        condition: service_healthy
 
   brotherinservicepostponementapi:
     image: ${DOCKER_REGISTRY-}brotherinservicepostponementapi
@@ -80,6 +95,9 @@ services:
       dockerfile: BrotherInServicePostponementAPI/Dockerfile
     ports:
       - "60001:443"
+    depends_on:
+      RabbitMQ:
+        condition: service_healthy
 
   loginapi:
     image: ${DOCKER_REGISTRY-}loginapi
@@ -89,6 +107,9 @@ services:
     ports:
 
       - "60050:443"
+    depends_on:
+      RabbitMQ:
+        condition: service_healthy
 
   fixedserviceallowanceapi:
     image: ${DOCKER_REGISTRY-}fixedserviceallowanceapi
@@ -98,6 +119,9 @@ services:
     ports:
 
       - "60004:443"
+    depends_on:
+      RabbitMQ:
+        condition: service_healthy
 
   postponementofconvictsapi:
     image: ${DOCKER_REGISTRY-}postponementofconvictsapi
@@ -106,6 +130,9 @@ services:
       dockerfile: PostponementOfConvictsAPI/Dockerfile
     ports:
       - "60006:443"
+    depends_on:
+      RabbitMQ:
+        condition: service_healthy
 
   obligatoryserviceapi:
     image: ${DOCKER_REGISTRY-}obligatoryserviceapi
@@ -114,14 +141,21 @@ services:
       dockerfile: ObligatoryServiceAPI/Dockerfile
     ports:
       - "60005:443"
+    depends_on:
+      RabbitMQ:
+        condition: service_healthy
 
   RabbitMQ:
     image: rabbitmq:3.9-management
     container_name: RabbitMQ
     ports:
-      -  "5672:5672" 
-      -  "15672:15672"
-
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - ~/.docker-conf/rabbitmq/data/:/var/lib/rabbitmq/
+      - ~/.docker-conf/rabbitmq/log/:/var/log/rabbitmq
+    healthcheck:
+      test: "exit 0"
 
   userrequesthandler:
     image: ${DOCKER_REGISTRY-}userrequesthandler
@@ -131,6 +165,9 @@ services:
     ports:
 
       - "60053:443"
+    depends_on:
+      RabbitMQ:
+        condition: service_healthy
 
   externalapicaller:
     image: ${DOCKER_REGISTRY-}externalapicaller
@@ -139,6 +176,9 @@ services:
       dockerfile: ExternalAPICaller/Dockerfile
     ports:
       - "60052:443"
+    depends_on:
+      RabbitMQ:
+        condition: service_healthy
 
   usertransactions:
     image: ${DOCKER_REGISTRY-}usertransactions
@@ -147,6 +187,9 @@ services:
       dockerfile: UserTransactions/Dockerfile
     ports:
       - "60054:443"
+    depends_on:
+      RabbitMQ:
+        condition: service_healthy
 
   admindashboard:
     image: ${DOCKER_REGISTRY-}admindashboard
@@ -156,6 +199,9 @@ services:
     ports:
 
       - "60055:443"
+    depends_on:
+      RabbitMQ:
+        condition: service_healthy
 
   financeapi:
     image: ${DOCKER_REGISTRY-}financeapi
@@ -165,9 +211,11 @@ services:
     ports:
 
       - "60056:443"
+    depends_on:
+      RabbitMQ:
+        condition: service_healthy
 
 volumes:
   sqlvol2:
-
 
 

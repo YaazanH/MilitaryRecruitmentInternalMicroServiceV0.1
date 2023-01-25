@@ -23,21 +23,29 @@ namespace PostponementOfConvictsAPI.Controllers
     {
         private readonly PostponementOfConvictsContext _context;
         public PostponementOfConvictsController(PostponementOfConvictsContext context)
+        {
+            _context = context;
+        }
+        private int GetCurrentUserID()
+        {
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            if (identity != null)
             {
-                _context = context;
+                return Int32.Parse(identity.Claims.FirstOrDefault(o => o.Type == ClaimTypes.PrimarySid)?.Value);
             }
-            private int GetCurrentUserID()
-            {
-                var identity = HttpContext.User.Identity as ClaimsIdentity;
-                if (identity != null)
-                {
-                    return Int32.Parse(identity.Claims.FirstOrDefault(o => o.Type == ClaimTypes.PrimarySid)?.Value);
-                }
-                return 0;
-            }
+            return 0;
+        }
 
         [HttpGet]
-        [Route("GetAllUserTransactions")]
+        [Route("GetAllTransactions/")]
+        public List<RequestStatues> GetAllTransactions()
+        {
+            List<RequestStatues> result = _context.RequestStatuesDBS.OrderByDescending(x => x.DateOfRecive).ToList<RequestStatues>();
+            return result;
+        }
+
+        [HttpGet]
+        [Route("GetAllUserTransactions/")]
         public List<RequestStatues> GetAllUserTransactions()
         {
             int CUserID = GetCurrentUserID();
@@ -49,6 +57,7 @@ namespace PostponementOfConvictsAPI.Controllers
         [Route("GetAUserTransactions")]
         public Dictionary<string, string> GetAUserTransactions(int Reqid)
         {
+            Dictionary<string, string> result = new Dictionary<string, string>();
             RequestStatues requestStatues = _context.RequestStatuesDBS.Where(x => x.ReqStatuesID == Reqid).FirstOrDefault();
             if (requestStatues != null)
             {
@@ -59,7 +68,7 @@ namespace PostponementOfConvictsAPI.Controllers
                 AsyncYearsRemaning asyncYearsRemaning = _context.AsyncYearsRemaningDb.Where(x => x.RequestStatuesID == requestStatues).FirstOrDefault();
                 
 
-                Dictionary<string, string> result = new Dictionary<string, string>();
+                
 
                 result.Add("asyncEntryDate", asyncEntryDate.Statues);
                 result.Add("asyncInJail", asyncInJail.Statues);
@@ -70,7 +79,7 @@ namespace PostponementOfConvictsAPI.Controllers
             }
             else
             {
-                return null;
+                return result;
             }
         }
 
@@ -79,6 +88,7 @@ namespace PostponementOfConvictsAPI.Controllers
         public int GetNumberOfRequests()
         {
             int result = _context.PostponementOfConvictsDb.Count();
+            result += _context.RequestStatuesDBS.Where(x => x.Statues == "wating" || x.Statues == "Faild").Count();
 
             return result;
         }
@@ -87,7 +97,7 @@ namespace PostponementOfConvictsAPI.Controllers
         [Route("GetNumberOfRequestsApproved")]
         public int GetNumberOfRequestsApproved()
         {
-            int result = _context.RequestStatuesDBS.Where(x => x.Statues == "wrong").Count();
+            int result = _context.RequestStatuesDBS.Where(x => x.Statues == "Done").Count();
 
             return result;
         }
@@ -102,10 +112,10 @@ namespace PostponementOfConvictsAPI.Controllers
         }
 
         [HttpGet]
-        [Route("GetNumberOfRequestsDeleted")]
-        public int GetNumberOfRequestsDeleted()
+        [Route("GetNumberOfRequestsFaild")]
+        public int GetNumberOfRequestsFaild()
         {
-            int result = _context.RequestStatuesDBS.Where(x => x.Statues == "deleted").Count();
+            int result = _context.RequestStatuesDBS.Where(x => x.Statues == "Faild").Count();
 
             return result;
         }
