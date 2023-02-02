@@ -49,12 +49,12 @@ namespace CashAllowancLessThan42
                 Port = serviceUri.Port,
                 ID = _serviceConfiguration.ServiceId,
                 Tags = new[] { $"https://host.docker.internal:{serviceUri.Port}/HealthMinister/GetHaveProb?id=4" },
-                Check = new AgentCheckRegistration()
+                /*Check = new AgentCheckRegistration()
                 {
                     HTTP = $"http://host.docker.internal:{serviceUri.Port}/HealthMinister/GetHaveProb?id=4",
                     Interval = TimeSpan.FromSeconds(10)
                     
-                }
+                }*/
             };
 
             await _consulClient.Agent.ServiceDeregister(_serviceConfiguration.ServiceId, cancellationToken);

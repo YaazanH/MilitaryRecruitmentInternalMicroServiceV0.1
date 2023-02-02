@@ -49,7 +49,8 @@ namespace FinanceAPI.BackgroundServices
             this.channel = connection.CreateModel();
 
 
-            channel.QueueDeclare(queue: "UserCalcPayment", exclusive: false);
+
+            channel.QueueDeclare(queue: "UserCalcPayment",durable: true, autoDelete: false, exclusive: false, arguments: null);
 
             var consumer = new EventingBasicConsumer(channel);
 
@@ -79,8 +80,9 @@ namespace FinanceAPI.BackgroundServices
 
                     var mess = System.Text.Json.JsonSerializer.Serialize(rabbitMQResponce);
                     var body = Encoding.UTF8.GetBytes(mess);
+                properties.Persistent = true;
 
-                    channel.BasicPublish("", ea.BasicProperties.ReplyTo, properties, body);
+                channel.BasicPublish("", ea.BasicProperties.ReplyTo, properties, body);
                 
             };
             channel.BasicConsume(queue: "UserCalcPayment", autoAck: true, consumer: consumer);

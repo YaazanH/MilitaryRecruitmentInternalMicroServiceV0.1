@@ -46,7 +46,7 @@ namespace FixedServiceAllowanceAPI.BackgroundServices
 
             channel.ExchangeDeclare(exchange: "UserConfirmPay", ExchangeType.Fanout);
 
-            var queName = channel.QueueDeclare().QueueName;
+            var queName = channel.QueueDeclare(queue: "CashAloConfPay", durable: true, autoDelete: false, exclusive: false, arguments: null).QueueName;
 
             channel.QueueBind(queue: queName, exchange: "UserConfirmPay", routingKey: "CashAllowance");
 
@@ -98,9 +98,11 @@ namespace FixedServiceAllowanceAPI.BackgroundServices
 
                 var message = UserID;
                 var body = Encoding.UTF8.GetBytes(message.ToString());
-                channel.BasicPublish(exchange: "EndActiveCert", routingKey: "", basicProperties: null, body: body);
+            var prop = channel.CreateBasicProperties();
+            prop.Persistent = true;
+            channel.BasicPublish(exchange: "EndActiveCert", routingKey: "", prop, body: body);
 
-            
+
         }
         private void AddCert(int CUserID)
         {

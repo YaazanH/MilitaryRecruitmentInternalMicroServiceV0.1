@@ -105,7 +105,10 @@ namespace FinanceAPI.Controllers
                     break;
 
             }
-            channel.BasicPublish("UserConfirmPay", RoueKey, null, body);
+            var properties = channel.CreateBasicProperties();
+            properties.Persistent = true;
+
+            channel.BasicPublish("UserConfirmPay", RoueKey, properties, body);
         }
     }
 }

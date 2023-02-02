@@ -57,7 +57,7 @@ namespace AlonePostponement.BackgroundServices
 
             channel.ExchangeDeclare(exchange: "UserRequestExch", ExchangeType.Direct);
 
-            var queName = channel.QueueDeclare().QueueName;
+            var queName = channel.QueueDeclare(queue: "Alone", durable: true, autoDelete: false, exclusive: false, arguments: null).QueueName;
 
             channel.QueueBind(queue: queName, exchange: "UserRequestExch", routingKey: "AlonePostponement");
 
@@ -120,9 +120,11 @@ namespace AlonePostponement.BackgroundServices
             using var channel = connection.CreateModel();*/
 
 
-            var replyQueue = channel.QueueDeclare(queue: "", exclusive: true);
+            var replyQueue = channel.QueueDeclare(queue: "AloneReply", durable: true, autoDelete: false, exclusive: false, arguments: null);
 
-            channel.QueueDeclare(queue: "requestQueue", exclusive: false);
+            
+
+            channel.QueueDeclare(queue: "requestQueue", durable: true, autoDelete: false, exclusive: false, arguments: null );
 
             var consumer = new EventingBasicConsumer(channel);
 
@@ -201,7 +203,7 @@ namespace AlonePostponement.BackgroundServices
 
             var mess = JsonSerializer.Serialize(rabbitMQobj);
             var body = Encoding.UTF8.GetBytes(mess);
-
+            properties.Persistent=true;
             channel.BasicPublish("", "requestQueue", properties, body);
 
             System.Console.ReadLine();
@@ -357,9 +359,11 @@ namespace AlonePostponement.BackgroundServices
 
                 var message = UserID;
                 var body = Encoding.UTF8.GetBytes(message.ToString());
-                channel.BasicPublish(exchange: "EndActiveCert", routingKey: "", basicProperties: null, body: body);
+            var prop = channel.CreateBasicProperties();
+            prop.Persistent = true;
+            channel.BasicPublish(exchange: "EndActiveCert", routingKey: "", prop, body: body);
 
-            
+
         }
 
 

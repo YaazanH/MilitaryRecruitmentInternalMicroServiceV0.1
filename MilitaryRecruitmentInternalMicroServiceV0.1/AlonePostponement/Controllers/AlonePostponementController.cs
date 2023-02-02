@@ -40,6 +40,7 @@ namespace AlonePostponement.Controllers
 
         [HttpGet]
         [Route("GetAllTransactions/")]
+        [Authorize(Roles = "Admin")]
         public List<RequestStatues> GetAllTransactions()
         {
             List<RequestStatues> result = _context.RequestStatuesDBS.OrderByDescending(x => x.DateOfRecive).ToList<RequestStatues>();
@@ -81,8 +82,10 @@ namespace AlonePostponement.Controllers
             }
         }
 
+ 
         [HttpGet]
         [Route("GetNumberOfRequests")]
+        [Authorize(Roles = "Admin")]
         public int GetNumberOfRequests()
         {
             int result = _context.AlonePostponementDBS.Count();
@@ -93,15 +96,18 @@ namespace AlonePostponement.Controllers
 
         [HttpGet]
         [Route("GetNumberOfRequestsApproved")]
+        [Authorize(Roles = "Admin")]
         public int GetNumberOfRequestsApproved()
         {
             int result = _context.RequestStatuesDBS.Where(x => x.Statues == "Done").Count();
 
             return result;
         }
-        
+
+
         [HttpGet]
         [Route("GetNumberOfRequestsProcessing")]
+        [Authorize(Roles = "Admin")]
         public int GetNumberOfRequestsProcessing()
         {
             int result = _context.RequestStatuesDBS.Where(x => x.Statues == "wating").Count();
@@ -109,8 +115,10 @@ namespace AlonePostponement.Controllers
             return result;
         }
 
+
         [HttpGet]
         [Route("GetNumberOfRequestsFaild")]
+        [Authorize(Roles = "Admin")]
         public int GetNumberOfRequestsFaild()
         {
             int result = _context.RequestStatuesDBS.Where(x => x.Statues == "Faild").Count();

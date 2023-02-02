@@ -51,7 +51,8 @@ namespace TravelApprovalAPI.BackgroundServices
 
                 channel.ExchangeDeclare(exchange: "UserRequestExch", ExchangeType.Direct);
 
-                var queName = channel.QueueDeclare().QueueName;
+            var queName = channel.QueueDeclare(queue:"Travel",durable: true,autoDelete: false,exclusive: false,arguments: null).QueueName;
+            //var queName = channel.QueueDeclare(/*queue: "travel"*/).QueueName;
 
                 channel.QueueBind(queue: queName, exchange: "UserRequestExch", routingKey: "TravelApproval");
 
@@ -82,6 +83,7 @@ namespace TravelApprovalAPI.BackgroundServices
                             SendToExternalAPI(userInfo.JWT, ReqStatuesID);
                         }
                     }
+                   //channel.BasicAck(deliveryTag:ea.DeliveryTag,multiple:true);
                 };
                 channel.BasicConsume(queue: queName, autoAck: true, consumer: consumer);
                 System.Console.Read();
@@ -114,9 +116,11 @@ namespace TravelApprovalAPI.BackgroundServices
             using var channel = connection.CreateModel();*/
 
 
-            var replyQueue = channel.QueueDeclare(queue: "", exclusive: true);
+            var replyQueue = channel.QueueDeclare(queue: "Travelreply", durable: true, autoDelete: false, exclusive: false, arguments: null);
 
-            channel.QueueDeclare(queue: "requestQueue", exclusive: false);
+            
+
+            channel.QueueDeclare(queue: "requestQueue", exclusive: false, durable: true, autoDelete: false, arguments: null);
 
             var consumer = new EventingBasicConsumer(channel);
 
@@ -139,7 +143,7 @@ namespace TravelApprovalAPI.BackgroundServices
 
 
             var properties = channel.CreateBasicProperties();
-
+            properties.Persistent=true;
             properties.ReplyTo = replyQueue.QueueName;
             RequestStatues requestStatues = _context.RequestStatuesDBS.Find(ReqStatuesID);
             RabbitMQobj rabbitMQobj = new RabbitMQobj() { JWT = Token };
@@ -176,6 +180,7 @@ namespace TravelApprovalAPI.BackgroundServices
 
                 var mess = JsonSerializer.Serialize(rabbitMQobj);
                 var body = Encoding.UTF8.GetBytes(mess);
+                properties.Persistent = true;
 
                 channel.BasicPublish("", "requestQueue", properties, body);
             }
@@ -287,17 +292,19 @@ namespace TravelApprovalAPI.BackgroundServices
         }
         private void EndOtherPostponment(int UserID)
         {
-           /* var factory = new ConnectionFactory() { HostName = "host.docker.internal" };
-            using (var connection = factory.CreateConnection())
-            using (var channel = connection.CreateModel())*/
-            
-                channel.ExchangeDeclare(exchange: "EndActiveCert", type: ExchangeType.Fanout);
+            /* var factory = new ConnectionFactory() { HostName = "host.docker.internal" };
+             using (var connection = factory.CreateConnection())
+             using (var channel = connection.CreateModel())*/
 
-                var message = UserID;
-                var body = Encoding.UTF8.GetBytes(message.ToString());
-                channel.BasicPublish(exchange: "EndActiveCert", routingKey: "",basicProperties: null,body: body);
-                
-            
+            channel.ExchangeDeclare(exchange: "EndActiveCert", type: ExchangeType.Fanout);
+
+            var message = UserID;
+            var body = Encoding.UTF8.GetBytes(message.ToString());
+            var prop = channel.CreateBasicProperties();
+            prop.Persistent = true;
+            channel.BasicPublish(exchange: "EndActiveCert", routingKey: "", prop, body: body);
+
+
         }
 
         private void AddCert(int CUserID)

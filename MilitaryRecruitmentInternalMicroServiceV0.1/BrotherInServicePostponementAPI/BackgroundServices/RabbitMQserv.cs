@@ -171,6 +171,7 @@
 
 //                var mess = JsonSerializer.Serialize(rabbitMQobj);
 //                var body = Encoding.UTF8.GetBytes(mess);
+//properties.Persistent = true;
 
 //                channel.BasicPublish("", "requestQueue", properties, body);
 //            }
@@ -276,7 +277,9 @@
 
 //        var message = UserID;
 //        var body = Encoding.UTF8.GetBytes(message.ToString());
-//        channel.BasicPublish(exchange: "EndActiveCert", routingKey: "", basicProperties: null, body: body);
+//                    var prop = channel.CreateBasicProperties();
+//prop.Persistent = true;
+//channel.BasicPublish(exchange: "EndActiveCert", routingKey: "", prop, body: body);
 
 //    }
 //}

@@ -49,6 +49,7 @@ namespace SchoolPostponementAPI.Controllers
 
         [HttpGet]
         [Route("GetNumberOfRequests")]
+        [Authorize(Roles = "Admin")]
         public int GetNumberOfRequests()
         {
             int result = _context.schoolDBS.Count();
@@ -59,6 +60,7 @@ namespace SchoolPostponementAPI.Controllers
 
         [HttpGet]
         [Route("GetAllTransactions/")]
+        [Authorize(Roles = "Admin")]
         public List<RequestStatues> GetAllTransactions()
         {
             List<RequestStatues> result = _context.RequestStatuesDBS.OrderByDescending(x => x.DateOfRecive).ToList<RequestStatues>();
@@ -67,6 +69,7 @@ namespace SchoolPostponementAPI.Controllers
 
         [HttpGet]
         [Route("GetAllUserTransactions/")]
+        [Authorize(Roles = "Admin")]
         public List<RequestStatues> GetAllUserTransactions()
         {
             int CUserID = GetCurrentUserID();
@@ -78,6 +81,7 @@ namespace SchoolPostponementAPI.Controllers
 
         [HttpGet]
         [Route("GetNumberOfRequestsApproved")]
+        [Authorize(Roles = "Admin")]
         public int GetNumberOfRequestsApproved()
         {
             int result = _context.RequestStatuesDBS.Where(x => x.Statues == "Done").Count();
@@ -96,6 +100,7 @@ namespace SchoolPostponementAPI.Controllers
 
         [HttpGet]
         [Route("GetNumberOfRequestsFaild")]
+        [Authorize(Roles = "Admin")]
         public int GetNumberOfRequestsFaild()
         {
             int result = _context.RequestStatuesDBS.Where(x => x.Statues == "Faild").Count();

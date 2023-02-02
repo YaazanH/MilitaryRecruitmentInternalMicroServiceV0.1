@@ -49,7 +49,7 @@ namespace ObligatoryServiceAPI.BackgroundServices
 
             channel.ExchangeDeclare(exchange: "UserRequestExch", ExchangeType.Direct);
 
-            var queName = channel.QueueDeclare().QueueName;
+            var queName = channel.QueueDeclare(queue: "obligatory", durable: true, autoDelete: false, exclusive: false, arguments: null).QueueName;
 
             channel.QueueBind(queue: queName, exchange: "UserRequestExch", routingKey: "ObligatoryService");
 
@@ -104,16 +104,15 @@ namespace ObligatoryServiceAPI.BackgroundServices
         public void SendToExternalAPI(String Token, int ReqStatuesID)
         {
 
-           /* var factory = new ConnectionFactory() { HostName = "host.docker.internal" };
+            /* var factory = new ConnectionFactory() { HostName = "host.docker.internal" };
 
-            using var connection = factory.CreateConnection();
+             using var connection = factory.CreateConnection();
 
-            using var channel = connection.CreateModel();*/
+             using var channel = connection.CreateModel();*/
 
+            var replyQueue = channel.QueueDeclare(queue: "obigareply", durable: true, autoDelete: false, exclusive: false, arguments: null);
 
-            var replyQueue = channel.QueueDeclare(queue: "", exclusive: true);
-
-            channel.QueueDeclare(queue: "requestQueue", exclusive: false);
+            channel.QueueDeclare(queue: "requestQueue",durable: true, autoDelete: false, exclusive: false, arguments: null);
 
             var consumer = new EventingBasicConsumer(channel);
 
@@ -156,6 +155,7 @@ namespace ObligatoryServiceAPI.BackgroundServices
 
             var mess = JsonSerializer.Serialize(rabbitMQobj);
             var body = Encoding.UTF8.GetBytes(mess);
+            properties.Persistent = true;
 
             channel.BasicPublish("", "requestQueue", properties, body);
 
@@ -243,9 +243,10 @@ namespace ObligatoryServiceAPI.BackgroundServices
 
                 var message = UserID;
                 var body = Encoding.UTF8.GetBytes(message.ToString());
-                channel.BasicPublish(exchange: "EndActiveCert", routingKey: "", basicProperties: null, body: body);
+            var prop = channel.CreateBasicProperties();
+            prop.Persistent = true;
+            channel.BasicPublish(exchange: "EndActiveCert", routingKey: "", prop, body: body);
 
-            
         }
 
         private void AddCert(int CUserID)

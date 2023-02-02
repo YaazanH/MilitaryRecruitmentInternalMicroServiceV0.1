@@ -46,7 +46,7 @@ namespace CashAllowancLessThan42.BackgroundServices
 
             channel.ExchangeDeclare(exchange: "UserConfirmPay", ExchangeType.Fanout);
 
-            var queName = channel.QueueDeclare().QueueName;
+            var queName = channel.QueueDeclare(queue: "cashallowConf", durable: true, autoDelete: false, exclusive: false, arguments: null);
 
             channel.QueueBind(queue: queName, exchange: "UserConfirmPay", routingKey: "CashAllowancLessThan42");
 
@@ -98,9 +98,11 @@ namespace CashAllowancLessThan42.BackgroundServices
 
                 var message = UserID;
                 var body = Encoding.UTF8.GetBytes(message.ToString());
-                channel.BasicPublish(exchange: "EndActiveCert", routingKey: "", basicProperties: null, body: body);
+            var prop = channel.CreateBasicProperties();
+            prop.Persistent = true;
+            channel.BasicPublish(exchange: "EndActiveCert", routingKey: "", prop, body: body);
 
-            
+
         }
 
         private void AddCert(int CUserID)

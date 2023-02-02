@@ -46,7 +46,8 @@ namespace CashAllowancLessThan42.BackgroundServices
 
             channel.ExchangeDeclare(exchange: "EndActiveCert", ExchangeType.Fanout);
 
-            var queName = channel.QueueDeclare().QueueName;
+            var queName = channel.QueueDeclare(queue: "EndActiv", durable: true, autoDelete: false, exclusive: false, arguments: null).QueueName;
+
 
             channel.QueueBind(queue: queName, exchange: "EndActiveCert", routingKey: "");
 
