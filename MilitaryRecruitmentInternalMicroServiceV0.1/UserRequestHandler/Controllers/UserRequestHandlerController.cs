@@ -115,7 +115,10 @@ namespace UserRequestHandler.Controllers
                     return NotFound();
 
                 }
-                channel.BasicPublish("UserRequestExch", RoueKey, null, body);
+            var properties = channel.CreateBasicProperties();
+            properties.Persistent = true;
+
+            channel.BasicPublish("UserRequestExch", RoueKey, properties, body);
 
                 return Ok("The request has been received and is now being processed");
         }

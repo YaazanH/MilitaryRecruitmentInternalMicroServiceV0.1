@@ -47,9 +47,10 @@ namespace CashAllowanceAPI.BackgroundServices
 
                 channel.ExchangeDeclare(exchange: "UserRequestExch", ExchangeType.Direct);
 
-                var queName = channel.QueueDeclare().QueueName;
+            var queName = channel.QueueDeclare(queue: "CashAllow", durable: true, autoDelete: false, exclusive: false, arguments: null).QueueName;
 
-                channel.QueueBind(queue: queName, exchange: "UserRequestExch", routingKey: "CashAllowance");
+
+            channel.QueueBind(queue: queName, exchange: "UserRequestExch", routingKey: "CashAllowance");
 
                 var consumer = new EventingBasicConsumer(channel);
 
@@ -94,16 +95,16 @@ namespace CashAllowanceAPI.BackgroundServices
         public void SendToExternalAPI(String Token, int ReqStatuesID)
         {
 
-           /* var factory = new ConnectionFactory() { HostName = "host.docker.internal" };
+            /* var factory = new ConnectionFactory() { HostName = "host.docker.internal" };
 
-            using var connection = factory.CreateConnection();
+             using var connection = factory.CreateConnection();
 
-            using var channel = connection.CreateModel();*/
+             using var channel = connection.CreateModel();*/
+
+            var replyQueue = channel.QueueDeclare(queue: "cashreply", durable: true, autoDelete: false, exclusive: false, arguments: null);
 
 
-            var replyQueue = channel.QueueDeclare(queue: "", exclusive: true);
-
-            channel.QueueDeclare(queue: "requestQueue", exclusive: false);
+            channel.QueueDeclare(queue: "requestQueue",durable: true, autoDelete: false, exclusive: false, arguments: null );
 
             var consumer = new EventingBasicConsumer(channel);
 
@@ -143,8 +144,9 @@ namespace CashAllowanceAPI.BackgroundServices
              
                 var mess = JsonSerializer.Serialize(rabbitMQobj);
                 var body = Encoding.UTF8.GetBytes(mess);
+            properties.Persistent = true;
 
-                channel.BasicPublish("", "requestQueue", properties, body);
+            channel.BasicPublish("", "requestQueue", properties, body);
             
             System.Console.ReadLine();
 
@@ -252,16 +254,15 @@ namespace CashAllowanceAPI.BackgroundServices
         }
         public void CalculateExtraPAyment(RequestStatues requestStatues,string Name)
         {
-           /* var factory = new ConnectionFactory() { HostName = "host.docker.internal" };
+            /* var factory = new ConnectionFactory() { HostName = "host.docker.internal" };
 
-            using var connection = factory.CreateConnection();
+             using var connection = factory.CreateConnection();
 
-            using var channel = connection.CreateModel();*/
+             using var channel = connection.CreateModel();*/
 
+            var replyQueue = channel.QueueDeclare(queue: "cashallopay", durable: true, autoDelete: false, exclusive: false, arguments: null);
 
-            var replyQueue = channel.QueueDeclare(queue: "", exclusive: true);
-
-            channel.QueueDeclare(queue: "UserCalcPayment", exclusive: false);
+            channel.QueueDeclare(queue: "UserCalcPayment", durable: true, autoDelete: false, exclusive: false, arguments: null);
 
             var consumer = new EventingBasicConsumer(channel);
 
@@ -297,6 +298,7 @@ namespace CashAllowanceAPI.BackgroundServices
 
             var mess = JsonSerializer.Serialize(rabbitMQobj);
             var body = Encoding.UTF8.GetBytes(mess);
+            properties.Persistent = true;
 
             channel.BasicPublish("", "UserCalcPayment", properties, body);
 

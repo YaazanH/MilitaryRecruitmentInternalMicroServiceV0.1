@@ -49,12 +49,12 @@ namespace LoginAPI
                 Port = serviceUri.Port,
                 ID = _serviceConfiguration.ServiceId,
                 Tags = new[] { $"https://{serviceUri.Host}:{serviceUri.Port}/HighEduMin/GetIsAStudent?id=1" },
-                Check = new AgentCheckRegistration()
+                /*Check = new AgentCheckRegistration()
                 {
                     HTTP = $"http://{serviceUri.Host}:49933/HighEduMin/GetIsAStudent?id=1",
                     Interval = TimeSpan.FromSeconds(10)
 
-                }
+                }*/
             };
 
             await _consulClient.Agent.ServiceDeregister(_serviceConfiguration.ServiceId, cancellationToken);

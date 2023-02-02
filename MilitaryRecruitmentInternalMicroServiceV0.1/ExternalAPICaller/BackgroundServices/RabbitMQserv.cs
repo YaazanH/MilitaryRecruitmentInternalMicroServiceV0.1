@@ -72,8 +72,7 @@ namespace ExternalAPICaller.BackgroundServices
             this.connection = factory.CreateConnection();
             this.channel = connection.CreateModel();
 
-
-            channel.QueueDeclare(queue: "requestQueue", exclusive: false);
+            channel.QueueDeclare(queue: "requestQueue",durable: true, autoDelete: false, exclusive: false, arguments: null);
 
             var consumer = new EventingBasicConsumer(channel);
 
@@ -96,6 +95,7 @@ namespace ExternalAPICaller.BackgroundServices
 
                     var mess2 = System.Text.Json.JsonSerializer.Serialize(rabbitMQobj);
                     var body2 = Encoding.UTF8.GetBytes(mess2);
+                    properties.Persistent = true;
 
                     channel.BasicPublish("", "requestQueue", properties, body2);
                 }
@@ -108,6 +108,7 @@ namespace ExternalAPICaller.BackgroundServices
 
                     var mess = System.Text.Json.JsonSerializer.Serialize(rabbitMQResponce);
                     var body = Encoding.UTF8.GetBytes(mess);
+                    properties.Persistent = true;
 
                     channel.BasicPublish("", ea.BasicProperties.ReplyTo, properties, body);
                 }

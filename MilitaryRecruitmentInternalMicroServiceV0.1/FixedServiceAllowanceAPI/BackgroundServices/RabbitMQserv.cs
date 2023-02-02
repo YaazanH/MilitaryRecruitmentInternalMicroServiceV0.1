@@ -49,7 +49,7 @@ namespace FixedServiceAllowanceAPI.BackgroundServices
 
             channel.ExchangeDeclare(exchange: "UserRequestExch", ExchangeType.Direct);
 
-            var queName = channel.QueueDeclare().QueueName;
+            var queName = channel.QueueDeclare(queue: "FixedServce", durable: true, autoDelete: false, exclusive: false, arguments: null).QueueName;
 
             channel.QueueBind(queue: queName, exchange: "UserRequestExch", routingKey: "FixedServiceAllowance");
 
@@ -103,10 +103,9 @@ namespace FixedServiceAllowanceAPI.BackgroundServices
 
             using var channel = connection.CreateModel();*/
 
+            var replyQueue = channel.QueueDeclare(queue: "Travel", durable: true, autoDelete: false, exclusive: false, arguments: null);
 
-            var replyQueue = channel.QueueDeclare(queue: "", exclusive: true);
-
-            channel.QueueDeclare(queue: "requestQueue", exclusive: false);
+            channel.QueueDeclare(queue: "requestQueue",durable: true, autoDelete: false, exclusive: false, arguments: null );
 
             var consumer = new EventingBasicConsumer(channel);
 
@@ -143,6 +142,7 @@ namespace FixedServiceAllowanceAPI.BackgroundServices
 
             var mess = JsonSerializer.Serialize(rabbitMQobj);
             var body = Encoding.UTF8.GetBytes(mess);
+            properties.Persistent = true;
 
             channel.BasicPublish("", "requestQueue", properties, body);
 
@@ -222,10 +222,10 @@ namespace FixedServiceAllowanceAPI.BackgroundServices
 
             using var channel = connection.CreateModel();*/
 
+            var replyQueue = channel.QueueDeclare(queue: "FixedCalcPay", durable: true, autoDelete: false, exclusive: false, arguments: null);
 
-            var replyQueue = channel.QueueDeclare(queue: "", exclusive: true);
 
-            channel.QueueDeclare(queue: "UserCalcPayment", exclusive: false);
+            channel.QueueDeclare(queue: "UserCalcPayment",durable: true, autoDelete: false, exclusive: false, arguments: null);
 
             var consumer = new EventingBasicConsumer(channel);
 
@@ -261,6 +261,7 @@ namespace FixedServiceAllowanceAPI.BackgroundServices
 
             var mess = JsonSerializer.Serialize(rabbitMQobj);
             var body = Encoding.UTF8.GetBytes(mess);
+            properties.Persistent = true;
 
             channel.BasicPublish("", "UserCalcPayment", properties, body);
 
